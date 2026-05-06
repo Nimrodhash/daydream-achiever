@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daydream Achiever – מדריך לימוד</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #2563eb; --blue-light: #eff6ff; --blue-mid: #bfdbfe;
+  --amber: #d97706; --amber-light: #fffbeb; --amber-mid: #fde68a;
+  --green: #059669; --green-light: #ecfdf5; --green-mid: #a7f3d0;
+  --red: #dc2626; --red-light: #fef2f2; --red-mid: #fecaca;
+  --purple: #7c3aed; --purple-light: #f5f3ff;
+  --gray: #64748b; --border: #e2e8f0;
+  --bg: #f8fafc; --surface: #ffffff;
+  --text: #0f172a; --muted: #64748b;
+  --radius: 14px; --shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Heebo', 'Arial', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ─── HEADER ─── */
+.hero { background: linear-gradient(135deg,#1d4ed8 0%,#4f46e5 100%); color: #fff; padding: 2.5rem 1.5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content:''; position:absolute; inset:0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+.hero h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.5px; position: relative; }
+.hero-sub { font-size: 0.95rem; opacity: 0.85; margin-top: 0.4rem; position: relative; direction: rtl; }
+.hero-chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 1.2rem; position: relative; }
+.chip { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 99px; padding: 4px 14px; font-size: 0.82rem; font-weight: 500; }
+
+/* ─── TABS ─── */
+.tabs { background: #fff; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.tabs-inner { display: flex; justify-content: center; gap: 0; max-width: 700px; margin: 0 auto; }
+.tab-btn { flex: 1; padding: 1rem 0.5rem; border: none; background: transparent; cursor: pointer; font-family: 'Heebo', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-btn:hover:not(.active) { color: var(--text); background: var(--bg); }
+
+/* ─── SECTIONS ─── */
+.section { display: none; max-width: 860px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+.section.active { display: block; }
+.sec-title { font-size: 1.35rem; font-weight: 800; color: var(--text); direction: rtl; }
+.sec-sub { font-size: 0.88rem; color: var(--muted); margin-top: 0.25rem; direction: rtl; }
+.sec-header { margin-bottom: 1.5rem; }
+
+/* ─── MODE SWITCHER (vocab) ─── */
+.mode-switch { display: flex; background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 1.5rem; }
+.mode-btn { flex: 1; padding: 0.55rem; border-radius: 7px; border: none; background: transparent; cursor: pointer; font-family: 'Heebo',sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--muted); transition: all 0.2s; }
+.mode-btn.active { background: #fff; color: var(--blue); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
+
+/* ─── PROGRESS ─── */
+.progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.2rem; direction: rtl; }
+.progress-bar { flex: 1; height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 99px; transition: width 0.5s; }
+.progress-text { font-size: 0.82rem; font-weight: 600; color: var(--blue); white-space: nowrap; }
+
+/* ─── FLASHCARDS ─── */
+.fc-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.2rem; direction: rtl; }
+.btn { padding: 0.5rem 1.1rem; border-radius: 9px; border: 1.5px solid var(--border); background: #fff; cursor: pointer; font-family: 'Heebo',sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); transition: all 0.15s; }
+.btn:hover { background: var(--bg); }
+.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-primary:hover { opacity: 0.88; }
+.btn-success { background: var(--green); color: #fff; border-color: var(--green); }
+
+.fc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; }
+.fc-wrap { perspective: 900px; height: 130px; cursor: pointer; }
+.fc-wrap.known { opacity: 0.4; }
+.fc-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(.4,.2,.2,1); border-radius: var(--radius); }
+.fc-wrap.flipped .fc-inner { transform: rotateY(180deg); }
+.fc-face { position: absolute; inset: 0; border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.9rem; text-align: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.fc-front { background: #fff; border: 1.5px solid var(--border); box-shadow: var(--shadow); }
+.fc-front:hover { border-color: var(--blue-mid); box-shadow: 0 4px 20px rgba(37,99,235,0.12); transform: translateY(-2px); }
+.fc-word { font-size: 1.05rem; font-weight: 700; color: var(--blue); direction: ltr; }
+.fc-hint { font-size: 0.72rem; color: var(--muted); margin-top: 5px; }
+.fc-known-mark { font-size: 0.7rem; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+.fc-back { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%); transform: rotateY(180deg); }
+.fc-he { font-size: 1.1rem; font-weight: 700; color: #fff; direction: rtl; }
+.fc-en-small { font-size: 0.78rem; color: rgba(255,255,255,0.7); direction: ltr; margin-top: 4px; }
+
+/* ─── MATCHING GAME ─── */
+.match-header { text-align: center; margin-bottom: 1.2rem; }
+.match-round { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.3rem; }
+.match-score-display { font-size: 1.2rem; font-weight: 800; color: var(--blue); }
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+.match-col { display: flex; flex-direction: column; gap: 8px; }
+.match-col-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 4px; text-align: center; }
+.match-item { padding: 0.65rem 1rem; border-radius: 10px; border: 2px solid var(--border); background: #fff; cursor: pointer; font-weight: 600; font-size: 0.9rem; text-align: center; transition: all 0.2s; user-select: none; min-height: 46px; display: flex; align-items: center; justify-content: center; }
+.match-item:hover:not(.matched):not(.selected) { border-color: var(--blue-mid); background: var(--blue-light); }
+.match-item.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+.match-item.matched { background: var(--green-light); border-color: var(--green); color: var(--green); cursor: default; opacity: 0.7; }
+.match-item.wrong { border-color: var(--red); background: var(--red-light); animation: shake 0.4s ease; }
+.match-en { direction: ltr; }
+.match-he { direction: rtl; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.match-celebrate { text-align: center; padding: 2rem; background: var(--green-light); border: 2px solid var(--green); border-radius: var(--radius); margin-top: 1rem; display: none; }
+.match-celebrate.show { display: block; }
+.match-celebrate h3 { font-size: 1.4rem; color: var(--green); direction: rtl; }
+
+/* ─── TEXT PARAGRAPHS ─── */
+.text-banner { background: linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%); color: #fff; border-radius: var(--radius); padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; direction: rtl; }
+.text-banner h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+.text-banner p { font-size: 0.88rem; opacity: 0.9; }
+
+.para-block { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); margin-bottom: 0.9rem; overflow: hidden; transition: box-shadow 0.2s; }
+.para-block:hover { box-shadow: var(--shadow); }
+.para-trigger { display: flex; align-items: center; gap: 10px; padding: 0.9rem 1.1rem; cursor: pointer; direction: rtl; }
+.para-num { width: 32px; height: 32px; background: var(--blue); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+.para-info { flex: 1; }
+.para-title-he { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+.para-title-en { font-size: 0.78rem; color: var(--muted); direction: ltr; }
+.para-badge { font-size: 0.7rem; padding: 2px 10px; border-radius: 99px; font-weight: 600; flex-shrink: 0; }
+.badge-key { background: #fff7ed; color: #c2410c; }
+.badge-science { background: #eff6ff; color: #1d4ed8; }
+.badge-expert { background: #f5f3ff; color: #6d28d9; }
+.badge-warning { background: #fef2f2; color: #b91c1c; }
+.badge-conclusion { background: #ecfdf5; color: #065f46; }
+.para-chevron { font-size: 1rem; color: var(--muted); transition: transform 0.3s; margin-right: auto; margin-left: 0; }
+.para-trigger.open .para-chevron { transform: rotate(180deg); }
+
+.para-body { border-top: 1px solid var(--border); display: none; }
+.para-body.open { display: block; }
+.para-text-en { background: #f8fafc; padding: 1rem 1.2rem; font-size: 0.9rem; line-height: 1.75; color: var(--text); direction: ltr; border-bottom: 1px solid var(--border); }
+.para-text-he { padding: 1rem 1.2rem; font-size: 0.92rem; line-height: 1.8; color: var(--text); direction: rtl; border-bottom: 1px solid var(--border); background: #fffbf5; }
+.para-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 0.4rem; display: block; }
+.para-notes { padding: 0.9rem 1.2rem; direction: rtl; }
+.para-notes-title { font-size: 0.82rem; font-weight: 700; color: var(--amber); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 5px; }
+.note-item { display: flex; gap: 8px; margin-bottom: 0.5rem; font-size: 0.87rem; align-items: flex-start; }
+.note-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 7px; }
+.note-texts { display: flex; flex-direction: column; gap: 1px; }
+.note-he { font-weight: 500; direction: rtl; }
+.note-en { font-size: 0.8rem; color: var(--muted); direction: ltr; }
+
+/* ─── QUIZ GAME ─── */
+.quiz-container { max-width: 620px; margin: 0 auto; }
+.quiz-start { text-align: center; background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; box-shadow: var(--shadow); direction: rtl; }
+.quiz-start h3 { font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 0.6rem; }
+.quiz-start p { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.5rem; }
+.quiz-rules { background: var(--blue-light); border-radius: 10px; padding: 1rem 1.2rem; text-align: right; margin-bottom: 1.5rem; }
+.quiz-rules li { font-size: 0.87rem; color: var(--text); margin-bottom: 0.3rem; padding-right: 1rem; position: relative; }
+.quiz-rules li::before { content: '•'; position: absolute; right: 0; color: var(--blue); }
+
+.quiz-progress { display: flex; align-items: center; gap: 10px; margin-bottom: 1.2rem; direction: rtl; }
+.quiz-q-num { font-size: 0.82rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+
+.quiz-card { background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.8rem; box-shadow: var(--shadow); margin-bottom: 1rem; }
+.quiz-q-he { font-size: 1.05rem; font-weight: 700; color: var(--text); direction: rtl; margin-bottom: 0.5rem; }
+.quiz-q-en { font-size: 0.85rem; color: var(--muted); direction: ltr; padding: 0.5rem 0.8rem; background: var(--bg); border-radius: 8px; margin-bottom: 1.2rem; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+@media(max-width:520px){ .quiz-options { grid-template-columns: 1fr; } }
+.quiz-opt { padding: 0.75rem 1rem; border: 2px solid var(--border); border-radius: 10px; background: #fff; cursor: pointer; font-family: 'Heebo',sans-serif; font-size: 0.88rem; font-weight: 500; color: var(--text); transition: all 0.18s; text-align: right; direction: rtl; line-height: 1.5; }
+.quiz-opt:hover:not(:disabled) { border-color: var(--blue-mid); background: var(--blue-light); }
+.quiz-opt.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong { background: var(--red-light); border-color: var(--red); color: var(--red); }
+.quiz-opt:disabled { cursor: default; }
+
+.quiz-feedback { border-radius: 10px; padding: 0.9rem 1rem; margin-top: 1rem; font-size: 0.88rem; direction: rtl; display: none; }
+.quiz-feedback.correct { background: var(--green-light); border: 1.5px solid var(--green); color: #065f46; display: block; }
+.quiz-feedback.wrong { background: var(--red-light); border: 1.5px solid var(--red); color: #b91c1c; display: block; }
+.quiz-feedback strong { font-weight: 700; }
+
+.quiz-next-btn { width: 100%; padding: 0.9rem; border-radius: 10px; border: none; background: var(--blue); color: #fff; font-family: 'Heebo',sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 0.8rem; transition: opacity 0.2s; display: none; }
+.quiz-next-btn.show { display: block; }
+.quiz-next-btn:hover { opacity: 0.88; }
+
+.quiz-scoreboard { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; direction: rtl; }
+.score-chip { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 0.5rem 1.1rem; font-size: 0.9rem; font-weight: 700; }
+.score-chip.correct { color: var(--green); border-color: var(--green); }
+.score-chip.wrong { color: var(--red); border-color: var(--red); }
+
+.quiz-result { text-align: center; background: #fff; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 2.5rem 1.5rem; box-shadow: var(--shadow); direction: rtl; }
+.result-score { font-size: 3rem; font-weight: 800; color: var(--blue); }
+.result-msg { font-size: 1.1rem; font-weight: 600; margin: 0.5rem 0 0.3rem; }
+.result-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.5rem; }
+.result-stars { font-size: 2rem; margin-bottom: 0.5rem; }
+
+/* ─── FOOTER ─── */
+footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); direction: rtl; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="hero">
+  <h1>☁️ Daydream Achiever – מדריך לימוד</h1>
+  <p class="hero-sub">מאת Jonah Lehrer · הכנה מלאה לבחינה באנגלית</p>
+  <div class="hero-chips">
+    <span class="chip">📚 19 מילים</span>
+    <span class="chip">🎮 משחק התאמה</span>
+    <span class="chip">📄 טקסט עם תרגום</span>
+    <span class="chip">🎯 חידון שאלות</span>
+  </div>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="showTab('vocab')">📚 מילים</button>
+    <button class="tab-btn" onclick="showTab('text')">📄 טקסט</button>
+    <button class="tab-btn" onclick="showTab('quiz')">🎯 שאלות</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ VOCAB ══════════════════════════════════════ -->
+<div class="section active" id="tab-vocab">
+  <div class="sec-header">
+    <h2 class="sec-title">📚 מילים ללמידה</h2>
+    <p class="sec-sub">19 מילים חשובות — כרטיסיות ומשחק התאמה</p>
+  </div>
+
+  <div class="mode-switch">
+    <button class="mode-btn active" onclick="setMode('cards')">🃏 כרטיסיות</button>
+    <button class="mode-btn" onclick="setMode('match')">🔗 משחק התאמה</button>
+  </div>
+
+  <!-- ── Flashcards ── -->
+  <div id="mode-cards">
+    <div class="fc-controls">
+      <button class="btn btn-primary" onclick="shuffleCards()">🔀 ערבוב</button>
+      <button class="btn" onclick="resetKnown()">↺ אפס התקדמות</button>
+      <button class="btn" id="show-unknown-btn" onclick="showUnknown()">👁 הצג לא ידועות</button>
+    </div>
+    <div class="progress-row">
+      <span class="progress-text" id="progress-label">0 / 19</span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <span style="font-size:0.8rem;color:var(--muted);white-space:nowrap">ידועות ✓</span>
+    </div>
+    <p style="font-size:0.8rem;color:var(--muted);direction:rtl;margin-bottom:1rem">לחץ על כרטיסייה להפוך • לחץ פעמיים לסמן כ"ידוע"</p>
+    <div class="fc-grid" id="fc-grid"></div>
+  </div>
+
+  <!-- ── Matching Game ── -->
+  <div id="mode-match" style="display:none">
+    <div class="match-header">
+    <div class="match-round" id="match-round-label">סיבוב 1 מתוך 3</div>
+      <div class="match-score-display" id="match-score-disp">0 זוגות מותאמו ✓</div>
+    </div>
+    <div class="progress-row" style="margin-bottom:1rem">
+      <span class="progress-text" id="match-prog-text">0 / 19</span>
+      <div class="progress-bar"><div class="progress-fill" id="match-prog-fill" style="width:0%"></div></div>
+    </div>
+    <div class="match-grid">
+      <div class="match-col">
+        <div class="match-col-label" style="direction:ltr">English →</div>
+        <div id="match-en-col"></div>
+      </div>
+      <div class="match-col">
+        <div class="match-col-label" style="direction:rtl">← עברית</div>
+        <div id="match-he-col"></div>
+      </div>
+    </div>
+    <div class="match-celebrate" id="match-celebrate">
+      <h3>🎉 כל הכבוד! התאמת את כל המילים!</h3>
+      <p style="color:var(--green);margin-top:0.5rem;font-weight:600">אתה מוכן לבחינה!</p>
+      <button class="btn btn-primary" style="margin-top:1rem" onclick="startMatch()">שחק שוב 🔄</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ TEXT ══════════════════════════════════════ -->
+<div class="section" id="tab-text">
+  <div class="sec-header">
+    <h2 class="sec-title">📄 הטקסט עם תרגום</h2>
+    <p class="sec-sub">לחץ על כל פסקה לפתוח • תרגום לעברית + נקודות חשובות לבחינה</p>
+  </div>
+
+  <div class="text-banner">
+    <h3>📌 על מה הטקסט?</h3>
+    <p>מדענים גילו שחלימה בהקיץ היא <strong>תכונה יסודית של המוח</strong> — לא עצלות! היא חיונית ליצירתיות, לפיתוח חברתי ולבריאות הנפשית.</p>
+  </div>
+
+  <div id="para-list"></div>
+</div>
+
+<!-- ══════════════════════════════════════ QUIZ ══════════════════════════════════════ -->
+<div class="section" id="tab-quiz">
+  <div class="sec-header">
+    <h2 class="sec-title">🎯 חידון שאלות</h2>
+    <p class="sec-sub">20 שאלות על הטקסט — בחר את התשובה הנכונה!</p>
+  </div>
+
+  <div class="quiz-container">
+    <!-- Start screen -->
+    <div class="quiz-start" id="quiz-start">
+      <div style="font-size:3rem;margin-bottom:0.8rem">🎯</div>
+      <h3>מוכן לחידון?</h3>
+      <p>20 שאלות על הטקסט "Daydream Achiever" — השאלות הן מהמורה + שאלות נוספות.</p>
+      <ul class="quiz-rules">
+        <li>לכל שאלה יש 4 אפשרויות</li>
+        <li>בחר את התשובה הנכונה</li>
+        <li>ראה הסבר לכל שאלה</li>
+        <li>קבל ציון בסוף!</li>
+      </ul>
+      <button class="btn btn-primary" style="font-size:1rem;padding:0.8rem 2rem" onclick="startQuiz()">התחל חידון ▶</button>
+    </div>
+
+    <!-- Quiz in-progress -->
+    <div id="quiz-game" style="display:none">
+      <div class="quiz-scoreboard">
+        <span class="score-chip correct">✓ <span id="q-correct">0</span> נכון</span>
+        <span class="score-chip wrong">✗ <span id="q-wrong">0</span> טעות</span>
+      </div>
+      <div class="quiz-progress">
+        <span class="quiz-q-num" id="quiz-q-num">שאלה 1 מתוך 20</span>
+        <div class="progress-bar" style="flex:1"><div class="progress-fill" id="quiz-prog" style="width:5%"></div></div>
+      </div>
+      <div class="quiz-card">
+        <div class="quiz-q-he" id="quiz-q-he"></div>
+        <div class="quiz-q-en" id="quiz-q-en"></div>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+      </div>
+      <button class="quiz-next-btn" id="quiz-next-btn" onclick="nextQuestion()">הבא ←</button>
+    </div>
+
+    <!-- Result screen -->
+    <div id="quiz-result" style="display:none" class="quiz-result">
+      <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+      <div class="result-score" id="result-score">0/20</div>
+      <div class="result-msg" id="result-msg"></div>
+      <div class="result-sub" id="result-sub"></div>
+      <button class="btn btn-primary" style="margin-top:1rem;font-size:1rem;padding:0.8rem 2rem" onclick="restartQuiz()">שחק שוב 🔄</button>
+    </div>
+  </div>
+</div>
+
+<footer>מדריך לימוד · Daydream Achiever by Jonah Lehrer · נוצר לצורכי לימוד לבחינה</footer>
+
+<script>
+// ══════════════════════════════ DATA ══════════════════════════════
+
+const vocab = [
+  {en:"Researchers",he:"חוקרים"},{en:"Data",he:"נתונים"},{en:"Survey",he:"סקר"},
+  {en:"Proof",he:"הוכחה"},{en:"Demonstrate",he:"להדגים / להראות"},{en:"The assumption",he:"הנחה"},
+  {en:"The findings",he:"ממצאים / תוצאות"},{en:"The process",he:"תהליך"},{en:"Participants",he:"משתתפים"},
+  {en:"Control group",he:"קבוצת ביקורת"},{en:"Experimental group",he:"קבוצת ניסוי"},{en:"Questionnaire",he:"שאלון"},
+  {en:"Study / Studies",he:"מחקר / מחקרים"},{en:"Theorized",he:"גיבש תיאוריה"},{en:"Analyzed",he:"ניתח"},
+  {en:"Suggest",he:"מציע / השערה"},{en:"Refute",he:"לסתור / לא מסכים"},{en:"Method",he:"שיטה"},
+  {en:"Confirm",he:"לאשר / לאמת"}
+];
+
+const paragraphs=[
+  {num:"1",badge:"badge-key",badge_text:"דוגמה מרכזית",
+   title_he:"ארתור פריי ובעיית הסימנייה",title_en:"Arthur Fry and his bookmark problem",
+   text_en:"On a Sunday morning in 1974, Arthur Fry sat in a Presbyterian church in Minnesota. An engineer at 3M, Fry was also a choir singer. He used to insert small paper scraps into his choir book to find the right hymns — but the papers kept falling out.",
+   text_he:"בבוקר יום ראשון בשנת 1974, ישב ארתור פריי בכנסייה פרסביטריאנית במינסוטה. פריי, מהנדס בחברת 3M, שר גם במקהלת הכנסייה. הוא נהג להכניס פתקי נייר קטנים לסידור שלו כדי למצוא את ההמנונים הנכונים — אך הפתקים נפלו שוב ושוב.",
+   notes:[
+     {he:"מציג בעיה פשוטה שתיפתר על ידי חלימה בהקיץ",en:"Sets up a simple problem that daydreaming will solve"},
+     {he:"פריי הוא אדם רגיל — המצאות גדולות קורות לכל אחד",en:"Fry is an ordinary person — great inventions can happen to anyone"}
+   ]},
+  {num:"2",badge:"badge-key",badge_text:"הרעיון הגדול",
+   title_he:"החלום שיצר את ה-Post-it",title_en:"The daydream that created Post-it notes",
+   text_en:"But then, while listening to the Sunday sermon, Fry started to daydream. Instead of focusing on the pastor's words, he thought: \"What I really need is a little bookmark that will stick to the paper but will not tear it.\" That errant thought would later become the yellow Post-it note — one of the most successful office products of all time.",
+   text_he:"אך אז, בזמן שהאזין לדרשה, פריי התחיל לחלום בהקיץ. במקום להקשיב לכומר, הוא חשב: 'מה שאני צריך זה סימניה שתדבק לנייר אבל לא תקרע אותו.' אותה מחשבה שוטה — תוצר של מחשבה נודדת — הפכה לדף ה-Post-it הצהוב, אחד ממוצרי המשרד המוצלחים ביותר בכל הזמנים.",
+   notes:[
+     {he:"זוהי הדוגמה המרכזית של הטקסט — חלימה בהקיץ = פריצת דרך יצירתית",en:"Central example of the article — daydreaming = creative breakthrough"},
+     {he:"'מחשבה נודדת' (errant thought) = מחשבה שחרגה מהנושא הנוכחי",en:"'Errant thought' = a thought that wandered from the current topic"}
+   ]},
+  {num:"3",badge:"badge-warning",badge_text:"הדעה הישנה",
+   title_he:"הדעה השלילית על חלימה בהקיץ",title_en:"The negative view of daydreaming",
+   text_en:"Daydreaming is usually cast in a negative light. Children are told to 'focus.' In a culture obsessed with efficiency, daydreaming is seen as a lazy habit or lack of discipline — a sign of procrastination, not productivity.",
+   text_he:"חלימה בהקיץ נחשבת לרוב לדבר שלילי. ילדים בבית הספר מתבקשים 'להתרכז'. בתרבות שמאדירה יעילות, חלימה בהקיץ נתפסת כהרגל של עצלן, חוסר משמעת, סימן לדחיינות — לא לפרודוקטיביות.",
+   notes:[
+     {he:"איינשטיין מוזכר כדוגמה נגדית — גם גאונים גדולים חלמו בהקיץ",en:"Einstein is mentioned as a counter-example — even great geniuses daydreamed"},
+     {he:"שאלה אפשרית: 'למה מוזכר איינשטיין?' — כדוגמה לגאון שחלם בהקיץ",en:"Exam Q: 'Why is Einstein mentioned?' — as an example of a genius who daydreamed"}
+   ]},
+  {num:"4",badge:"badge-key",badge_text:"הטיעון המרכזי",
+   title_he:"הדעה החדשה: 'מצב ברירת המחדל'",title_en:"The new view: daydreaming as 'default mode'",
+   text_en:"In recent years, scientists have begun to see daydreaming very differently. They've demonstrated that daydreaming is a fundamental feature of the human mind — often referred to as our 'default' mode of thought. It is a crucial tool for creativity, allowing the brain to make new associations and connections.",
+   text_he:"בשנים האחרונות, מדענים החלו לראות חלימה בהקיץ אחרת לגמרי. הם הדגימו שחלימה בהקיץ היא תכונה יסודית של המוח האנושי — 'מצב ברירת המחדל' של המוח. היא כלי יצירתיות חשוב שמאפשר למוח לרקום קשרים חדשים.",
+   notes:[
+     {he:"מצב ברירת המחדל (default mode) = האופן הטבעי שבו המוח פועל כשאינו עסוק",en:"Default mode = the natural way the brain operates when not focused on a task"},
+     {he:"שאלה: 'מה השתנה בדעת החוקרים?' — פעם: עצלות. עכשיו: כלי יצירתיות",en:"Exam Q: 'How did researchers' views change?' — Once: laziness. Now: creativity tool"}
+   ]},
+  {num:"5",badge:"badge-expert",badge_text:"ציטוט מומחה",
+   title_he:"שולר: 'נסיעה בזמן מנטלית'",title_en:"Schooler: 'Mental time travel'",
+   text_en:"\"If your mind didn't wander, then you'd be largely shackled to whatever you are doing right now,\" says Jonathan Schooler. \"But instead you can engage in mental time travel and other kinds of simulation. During a daydream, your thoughts are really unbounded.\"",
+   text_he:"'אם המחשבה שלך לא הייתה נודדת, היית כבול כמעט לחלוטין למה שאתה עושה עכשיו,' אומר ג'ונתן שולר, פסיכולוג מאוניברסיטת קליפורניה. 'אבל כך אתה יכול לעסוק בנסיעה בזמן מנטלית וסימולציות אחרות. בחלום הקיץ, המחשבות שלך באמת ללא גבולות.'",
+   notes:[
+     {he:"שולר = פסיכולוג מאוניברסיטת קליפורניה (UC Santa Barbara)",en:"Schooler = psychologist at University of California, Santa Barbara"},
+     {he:"'כבול' (shackled) = לא חופשי לחשוב על דברים אחרים",en:"'Shackled' = not free to think about other things"}
+   ]},
+  {num:"6",badge:"badge-key",badge_text:"יתרון חברתי",
+   title_he:"היתרון החברתי של חלימה בהקיץ",title_en:"The social benefit of daydreaming",
+   text_en:"The ability to think abstractly that flourishes during daydreams also has important social benefits. Mostly, what we daydream about is each other — the mind retrieves memories, contemplates 'what if' scenarios, and thinks about how it should behave in the future.",
+   text_he:"היכולת לחשוב באופן מופשט שמשגשגת בזמן חלימה בהקיץ גם מועילה מבחינה חברתית. לרוב, אנחנו חולמים על אחרים — המוח שולף זכרונות, שוקל תרחישי 'מה היה קורה אם', וחושב כיצד להתנהג בעתיד.",
+   notes:[
+     {he:"יתרון חברתי = תכנון יחסים, הבנת אחרים, חשיבה על התנהגות עתידית",en:"Social benefit = planning relationships, understanding others, thinking about future behaviour"},
+     {he:"שאלה: 'תן יתרון חברתי אחד' — חשיבה על אינטראקציות חברתיות ותכנון עתידי",en:"Exam Q: 'Give ONE social benefit' — thinking about social interactions and future planning"}
+   ]},
+  {num:"7",badge:"badge-expert",badge_text:"ציטוט מומחה",
+   title_he:"מייסון: בלי חלימה — יצורים מוגבלים",title_en:"Mason: without daydreaming we'd be limited",
+   text_en:"\"Daydreaming builds on this fundamental capacity people have for being able to project themselves into imaginary situations, like the future,\" Malia Mason says. \"Without that skill, we'd be pretty limited creatures.\"",
+   text_he:"'חלימה בהקיץ בנויה על היכולת הבסיסית שיש לבני אדם להשליך את עצמם לתוך מצבים דמיוניים, כמו העתיד,' אומרת מאליה מייסון, מדענית עצבים מקולומביה. 'בלי הכישרון הזה, היינו יצורים מוגבלים למדי.'",
+   notes:[
+     {he:"מייסון = מדענית עצבים מאוניברסיטת קולומביה",en:"Mason = neuroscientist at Columbia University"},
+     {he:"שאלה: 'מה לדעת מייסון היינו חסרים?' — היכולת לדמיין עתיד; היינו יצורים מוגבלים",en:"Exam Q: 'What does Mason think we'd lack?' — ability to imagine the future; very limited creatures"}
+   ]},
+  {num:"8–11",badge:"badge-science",badge_text:"מחקר",
+   title_he:"בלטון: ילדים שכותבים סיפורים משעממים",title_en:"Belton: children writing boring stories",
+   text_en:"Teresa Belton noticed that children's stories were very tedious and unimaginative. After monitoring their daily schedules, she concluded this was caused by a lack of 'empty time.' As soon as they were bored, they turned on the television — so they never learned how to daydream. \"The capacity to daydream requires real practice. Too many kids never get the practice.\"",
+   text_he:"תרזה בלטון שמה לב שסיפורי הילדים היו משעממים ולא מקוריים. לאחר שעקבה אחר לוחות הזמנים שלהם, היא הסיקה שהסיבה היא חוסר 'זמן ריק'. ברגע שהילדים התשעממו — הם פתחו טלוויזיה. כך מעולם לא למדו לחלום בהקיץ. 'היכולת לחלום בהקיץ דורשת תרגול אמיתי. יותר מדי ילדים לא מקבלים את התרגול הזה.'",
+   notes:[
+     {he:"מסקנת בלטון: אין זמן ריק → אין תרגול חלימה → אין דמיון",en:"Belton's conclusion: no empty time → no daydream practice → no imagination"},
+     {he:"טלוויזיה = אשמה כי מונעת שעמום → מונעת חלימה בהקיץ",en:"TV = villain because it prevents boredom → prevents daydreaming"},
+     {he:"חלימה בהקיץ היא כישרון הדורש תרגול!",en:"Daydreaming is a skill that requires practice!"}
+   ]},
+  {num:"12–13",badge:"badge-science",badge_text:"הוכחה מחקרית",
+   title_he:"מחקר שולר: חולמים = יצירתיים יותר",title_en:"Schooler's research: more daydreaming = more creative",
+   text_en:"Schooler's lab showed that people who daydream more score higher on measures of creativity — tests that require making unusual connections. \"Daydreams involve a more relaxed style of thinking, with people more willing to contemplate ideas that seem silly or far-fetched.\"",
+   text_he:"המעבדה של שולר הראתה שאנשים שחולמים יותר בהקיץ מצטיינים יותר במדדי יצירתיות — בדיקות שדורשות יצירת קשרים יוצאי דופן. 'חלומות הקיץ כרוכים בסגנון חשיבה רגוע יותר, עם נכונות רבה יותר לשקול רעיונות שנראים טיפשיים.'",
+   notes:[
+     {he:"הוכחה ניסיונית: יותר חלימה = ציונים גבוהים יותר במבחני יצירתיות",en:"Experimental proof: more daydreaming = higher creativity test scores"},
+     {he:"חשיבה רגועה מאפשרת לשקול רעיונות 'מוזרים' שהם מקור היצירתיות",en:"Relaxed thinking allows considering 'weird' ideas that are the source of creativity"}
+   ]},
+  {num:"14–16",badge:"badge-key",badge_text:"הבחנה חשובה",
+   title_he:"שני סוגי חולמים — מודעות היא המפתח",title_en:"Two types of daydreamers — awareness is key",
+   text_en:"Schooler distinguishes two types: Type 1 — those who notice they are daydreaming only when asked (no increase in creativity). Type 2 — those who catch themselves daydreaming without being asked (increased creativity). \"The hard part is maintaining enough awareness so that even when you start to daydream you can interrupt yourself and notice a creative insight.\" That's why Fry — with 20+ patents — is not just a prolific daydreamer but one who pays attention to his daydreams.",
+   text_he:"שולר מבחין בין שני סוגים: סוג 1 — מי שמבחין שהוא חולם רק כשנשאל (אין עלייה ביצירתיות). סוג 2 — מי שמבחין בעצמו שהוא חולם (יצירתיות גבוהה יותר). 'החלק הקשה הוא לשמור מספיק מודעות כך שגם כשאתה מתחיל לחלום תוכל להפסיק את עצמך ולשים לב לתובנה יצירתית.' לכן פריי — עם 20+ פטנטים — הוא לא רק חולם מרובה, אלא מישהו ששם לב לחלומותיו.",
+   notes:[
+     {he:"לא כל חלימה מובילה ליצירתיות — רק חלימה מודעת!",en:"NOT all daydreaming leads to creativity — only AWARE daydreaming!"},
+     {he:"המפתח: להבחין ברגע שרעיון יצירתי צץ בתוך החלום",en:"The key: noticing the moment a creative idea emerges in the daydream"},
+     {he:"שאלה: 'האם כל חלימה = יצירתיות?' — לא. רק סוג 2 (מודעים)",en:"Exam Q: 'Does all daydreaming = creativity?' — No. Only Type 2 (aware ones)"}
+   ]},
+  {num:"17–18",badge:"badge-science",badge_text:"מדע המוח",
+   title_he:"רשת ברירת המחדל — המוח אף פעם לא נח",title_en:"The default network — the brain never truly rests",
+   text_en:"Every time we slip into a daydream, a distinct pattern of brain areas called the 'default network' is activated. The brain is very active during this state, making new creative connections. Dr. Marcus Raichle: \"When your brain is supposedly doing nothing, it's really doing a tremendous amount. We call it the 'resting state,' but the brain isn't resting at all.\"",
+   text_he:"בכל כניסה לחלימה בהקיץ, מופעל דפוס של אזורי מוח הנקרא 'רשת ברירת המחדל'. המוח פעיל מאוד במצב זה ויוצר קשרים יצירתיים חדשים. פרופ' מרקוס ריישל: 'כשהמוח שלך אמנם לא עושה כלום, הוא בעצם עושה דבר עצום. אנחנו קוראים לזה 'מצב מנוחה', אבל המוח בכלל לא נח.'",
+   notes:[
+     {he:"אין 'מצב מנוחה' אמיתי — המוח תמיד פעיל!",en:"There is NO true 'resting state' — the brain is always active!"},
+     {he:"רשת ברירת המחדל = דפוס מוחי שמופעל בזמן חלימה בהקיץ",en:"Default network = brain pattern activated during daydreaming"},
+     {he:"שאלה: 'האם יש מצב מנוחה לפי ריישל?' — לא! המוח תמיד עסוק",en:"Exam Q: 'Is there a resting state according to Raichle?' — No! Brain is always busy"}
+   ]},
+  {num:"19–20",badge:"badge-warning",badge_text:"הפרעות",
+   title_he:"אוטיזם וסכיזופרניה — שני קצוות",title_en:"Autism and schizophrenia — two extremes",
+   text_en:"People with autism engage in less daydreaming — with reduced default network activity — and tend to fixate on their environment instead. This correlates with more severe social deficits. The opposite occurs in schizophrenia: an overactive default network may explain the inability to differentiate between reality and imagination.",
+   text_he:"אנשים עם אוטיזם חולמים בהקיץ פחות — עם פעילות מופחתת של רשת ברירת המחדל — ונוטים להתמקד בסביבתם. זה קשור לקשיים חברתיים חמורים יותר. ההפך מתרחש בסכיזופרניה: רשת יתר-פעילה עשויה להסביר את חוסר היכולת להבחין בין מציאות לדמיון.",
+   notes:[
+     {he:"אוטיזם = רשת פחות פעילה → חולמים פחות → נטייה להתמקד בדברים קונקרטיים",en:"Autism = less active network → less daydreaming → tend to fixate on concrete things"},
+     {he:"סכיזופרניה = רשת יתר-פעילה → לא מבדילים בין מציאות לדמיון",en:"Schizophrenia = overactive network → cannot distinguish reality from imagination"},
+     {he:"שאלה: 'תאר קבוצה אחת' — בחר אוטיזם או סכיזופרניה עם פרטים",en:"Exam Q: 'Describe ONE group' — choose autism or schizophrenia with details"}
+   ]},
+  {num:"21–22",badge:"badge-science",badge_text:"הזדקנות",
+   title_he:"הזדקנות וחלימה בהקיץ",title_en:"Aging and daydreaming",
+   text_en:"Harvard researchers found that aging causes reduced coordination in the default network — brain areas that normally work in sync start to fire at different times. This makes it harder for elderly people to control the timing and duration of their daydreams. It is important to be able to switch off the default network when focus is needed.",
+   text_he:"חוקרי הרווארד גילו שהזדקנות גורמת לתיאום מופחת ברשת ברירת המחדל — אזורי מוח שעובדים בסנכרון מתחילים לפעול בזמנים שונים. זה מקשה על קשישים לשלוט בעיתוי ומשך החלימה. חשוב מאוד לדעת לכבות את הרשת כשצריך להתרכז.",
+   notes:[
+     {he:"גיל = תיאום פחות טוב של הרשת → קשה לשלוט בחלימה",en:"Age = less coordination in the network → harder to control daydreaming"},
+     {he:"חשוב להיות מסוגל לכבות חלימה כשצריך (למשל בנהיגה בפקק)",en:"Important to be able to turn off daydreaming when needed (e.g. in heavy traffic)"}
+   ]},
+  {num:"23–24",badge:"badge-conclusion",badge_text:"מסקנה",
+   title_he:"המוח אף פעם לא ריק — קחו חלימה ברצינות",title_en:"The mind is never empty — take daydreaming seriously",
+   text_en:"What these studies demonstrate is that proper daydreaming is a crucial feature of the healthy human brain. The mind is never empty — it's always bubbling over with ideas and connections. When we are stuck on a particularly difficult problem, a good daydream isn't just an escape — it may be the most productive thing we can do.",
+   text_he:"כל המחקרים הללו מדגימים שחלימה בהקיץ נכונה היא תכונה חיונית של המוח הבריא. המוח אף פעם לא ריק — הוא תמיד רותח ברעיונות וקשרים. כשאנחנו תקועים בבעיה קשה במיוחד, חלימה בהקיץ טובה אינה רק בריחה — היא עשויה להיות הדבר הפרודוקטיבי ביותר שנוכל לעשות.",
+   notes:[
+     {he:"עצה אחרונה: קח חלימה בהקיץ ברצינות — זה לא בזבוז זמן",en:"Final advice: take daydreaming seriously — it's not wasting time"},
+     {he:"שאלה: 'המוח אף פעם לא ריק — נכון/לא נכון?' — נכון! תמיד עסוק ביצירת קשרים",en:"Exam Q: 'Mind is never empty — TRUE/FALSE?' — TRUE! Always busy making connections"},
+     {he:"שאלה: 'מה העצה בפסקה האחרונה?' — לקחת חלימה בהקיץ ברצינות ולהשתמש בה לפתרון בעיות",en:"Exam Q: 'What is the advice in the last paragraph?' — take daydreams seriously; use them to solve problems"}
+   ]}
+];
+
+const questions = [
+  {he:"מה הרעיון המרכזי שממחיש הסיפור של ארתור פריי?",en:"What main idea is illustrated by the example of Arthur Fry?",
+   opts:[{t:"חלימה בהקיץ מובילה לפריצות דרך יצירתיות",c:true},{t:"מהנדסים הם היצירתיים ביותר",c:false},{t:"כנסיות הן מקום טוב לחשוב",c:false},{t:"חברות כמו 3M צריכות לעודד שינה",c:false}],
+   explain:"פריי חלם בהקיץ בזמן הדרשה ומחשבתו הנודדת הובילה להמצאת ה-Post-it — ראיה לכך שחלימה בהקיץ יכולה להוביל לפריצות דרך יצירתיות."},
+  {he:"איזו עצה ניתנת בפסקה האחרונה?",en:"What advice is given in the last paragraph?",
+   opts:[{t:"להפסיק לחלום ולהתרכז יותר",c:false},{t:"לקחת חלימה בהקיץ ברצינות — זה יכול להיות הדבר הפרודוקטיבי ביותר",c:true},{t:"לישון יותר במהלך היום",c:false},{t:"לצפות פחות בטלוויזיה",c:false}],
+   explain:"הפסקה האחרונה (24) אומרת שכשאנחנו תקועים בבעיה קשה, חלימה בהקיץ אינה בריחה — היא עשויה להיות הדבר הפרודוקטיבי ביותר שנוכל לעשות."},
+  {he:"מה היתרון של חלימה בהקיץ? (פסקה 2) — בחר את תשובתך",en:"What advantage does the daydream have? (paragraph 2)",
+   opts:[{t:"היא עוזרת לנו להירדם מהר יותר",c:false},{t:"היא מאפשרת למחשבה לנדוד חופשית ולהגיע לרעיונות יצירתיים",c:true},{t:"היא משפרת את הזיכרון",c:false},{t:"היא עוזרת לנו להתרכז טוב יותר",c:false}],
+   explain:"בפסקה 2, מחשבתו הנודדת של פריי אפשרה לו לחשוב על בעיית הסימנייה — ולהגיע לפתרון יצירתי. החלימה שחררה את מחשבתו מהנוכחות (הדרשה)."},
+  {he:"למה מוזכר איינשטיין בטקסט?",en:"Why is Einstein mentioned?",
+   opts:[{t:"הוא המציא את ה-Post-it",c:false},{t:"הוא דוגמה לגאון ידוע שהיה לו שכל נודד",c:true},{t:"הוא חקר את רשת ברירת המחדל",c:false},{t:"הוא היה מהנדס בחברת 3M",c:false}],
+   explain:"איינשטיין מוזכר כדוגמה לאחד הגאונים הגדולים בהיסטוריה שהיה ידוע בשכלו הנודד — כדי לתמוך בטיעון שחלימה בהקיץ מובילה לתגליות חשובות."},
+  {he:"כיצד השתנתה דעת החוקרים על חלימה בהקיץ?",en:"How have researchers' views on daydreaming changed?",
+   opts:[{t:"פעם: יצירתיות. עכשיו: מסוכנת",c:false},{t:"פעם: עצלות וחוסר משמעת. עכשיו: כלי יצירתיות חשוב",c:true},{t:"פעם: חיובית. עכשיו: שלילית",c:false},{t:"לא השתנתה — תמיד נחשבה חיובית",c:false}],
+   explain:"בפסקה 3 רואים את הדעה הישנה (עצלות, חוסר משמעת). בפסקה 4 רואים את השינוי: עכשיו מדענים רואים בחלימה בהקיץ 'מצב ברירת המחדל' וכלי יצירתיות."},
+  {he:"מה התוצאה של חלימה בהקיץ? (פסקה 4)",en:"What is the outcome of daydreaming? (paragraph 4)",
+   opts:[{t:"המוח יוצר קשרים חדשים ומקשרים יצירתיים בין רעיונות",c:true},{t:"המוח מאחסן זכרונות בצורה יעילה יותר",c:false},{t:"הגוף מתאושש מלחץ",c:false},{t:"המוח מפסיק לעבד מידע",c:false}],
+   explain:"פסקה 4 אומרת שחלימה בהקיץ מאפשרת למוח לרקום 'קשרים ואסוציאציות חדשות' — זהו הבסיס של יצירתיות."},
+  {he:"תן יתרון חברתי אחד של חלימה בהקיץ",en:"Give ONE social benefit of daydreaming",
+   opts:[{t:"עוזרת לנו לישון טוב יותר",c:false},{t:"עוזרת לנו לחשוב על קשרים חברתיים ולתכנן התנהגות עתידית",c:true},{t:"משפרת את מהירות הקריאה",c:false},{t:"מסייעת לזכור שמות של אנשים",c:false}],
+   explain:"פסקה 6 מסבירה שאנחנו חולמים בעיקר על אחרים — שחזור זכרונות, תרחישי 'מה אם', תכנון כיצד להתנהג. זו יכולת שמבדילה את האדם מכל יצור אחר."},
+  {he:"מה לדעת מאליה מייסון היינו חסרים בלי חלימה בהקיץ?",en:"What does Malia Mason think we would lack without daydreaming?",
+   opts:[{t:"יכולת לדבר שפות שונות",c:false},{t:"יכולת להרגיש רגשות",c:false},{t:"יכולת לדמיין מצבים עתידיים — היינו יצורים מוגבלים",c:true},{t:"יכולת לזכור אירועים",c:false}],
+   explain:"פסקה 7: מייסון אומרת שבלי היכולת 'להשליך את עצמנו לתוך מצבים דמיוניים כמו העתיד', היינו 'יצורים מוגבלים למדי'."},
+  {he:"מה מסקנת בלטון לגבי סיבת הסיפורים המשעממים של הילדים?",en:"What conclusion does Belton reach about the children's boring stories?",
+   opts:[{t:"הילדים לא קוראים מספיק",c:false},{t:"המורים לא מעודדים יצירתיות",c:false},{t:"חוסר 'זמן ריק' מנע מהם לתרגל חלימה בהקיץ ולפתח דמיון",c:true},{t:"הטלוויזיה לימדה אותם לכתוב רע",c:false}],
+   explain:"פסקאות 10-11: בלטון הסיקה שהילדים מיד פתחו טלוויזיה כשהתשעממו, כך לא הייתה להם הזדמנות לתרגל חלימה בהקיץ — כישרון שדורש תרגול."},
+  {he:"מה הוכיח המחקר של שולר?",en:"What did Schooler's research prove?",
+   opts:[{t:"כל החולמים בהקיץ הם יצירתיים",c:false},{t:"אנשים שחולמים יותר בהקיץ מצטיינים יותר במבחני יצירתיות",c:true},{t:"יצירתיות משפרת הישגים לימודיים",c:false},{t:"חלימה בהקיץ מזיקה לזיכרון",c:false}],
+   explain:"פסקה 12: המעבדה של שולר הראתה שמי שחולם יותר בהקיץ — מצליח יותר במדדים של יצירתיות שמודדים יצירת קשרים יוצאי דופן."},
+  {he:"האם כל חלימה בהקיץ מובילה ליצירתיות?",en:"Does all daydreaming lead to creativity?",
+   opts:[{t:"כן — כל חלימה בהקיץ מגבירה יצירתיות",c:false},{t:"לא — רק חולמים מודעים (סוג 2) מראים יצירתיות מוגברת",c:true},{t:"כן — ככל שהחלום ארוך יותר כך הוא יצירתי יותר",c:false},{t:"לא — חלימה בהקיץ לעולם לא מובילה ליצירתיות",c:false}],
+   explain:"פסקאות 14-15: שולר הבחין בין שני סוגים. רק מי שמבחין בעצמו שהוא חולם (סוג 2) מראה יצירתיות מוגברת. מי שלא שם לב — לא מרוויח."},
+  {he:"מהי רשת ברירת המחדל? (פסקה 17)",en:"What is the default network? (paragraph 17)",
+   opts:[{t:"מערכת השינה של המוח",c:false},{t:"דפוס של אזורי מוח שמופעל בחלימה בהקיץ ויוצר קשרים יצירתיים",c:true},{t:"הרשת האחראית על שפה",c:false},{t:"רשת מחשבים בשימוש במחקר",c:false}],
+   explain:"פסקה 17: הרשת היא 'דפוס ייחודי של אזורי מוח' שמופעל בכל כניסה לחלימה בהקיץ. בזמן זה המוח יוצר קשרים חדשים בין רעיונות."},
+  {he:"האם קיים 'מצב מנוחה' לפי ריישל?",en:"Is there a 'resting state' according to Raichle?",
+   opts:[{t:"כן — המוח נח לחלוטין בשינה",c:false},{t:"כן — המוח נח בזמן משימות פשוטות",c:false},{t:"לא — המוח תמיד פעיל מאוד, גם בחלימה בהקיץ",c:true},{t:"לא — רק מדיטציה מאפשרת מנוחה אמיתית",c:false}],
+   explain:"פסקה 18: ריישל אומר שאין מצב מנוחה אמיתי. בעוד שריר לא פעיל לא עושה כמעט כלום — המוח בחלימה בהקיץ 'עושה דבר עצום'."},
+  {he:"האם אוטיסטים וסכיזופרנים משתמשים בחלימה בהקיץ בצורה יעילה?",en:"Do autistics and schizophrenics use daydreaming effectively?",
+   opts:[{t:"כן — שתי הקבוצות חולמות בהקיץ יעילה",c:false},{t:"לא — אוטיסטים חולמים פחות ונוטים להתמקד בסביבתם",c:true},{t:"כן — שתיהן נהנות מיצירתיות מוגברת",c:false},{t:"לא — סכיזופרנים לעולם לא חולמים",c:false}],
+   explain:"פסקה 19: אוטיסטים חולמים פחות ומתמקדים בסביבתם הפיזית. סכיזופרנים חולמים יותר מדי וקשה להם להבדיל בין מציאות לדמיון."},
+  {he:"'המוח אף פעם לא ריק' — נכון או לא נכון?",en:"'The mind is never empty' — TRUE or FALSE?",
+   opts:[{t:"לא נכון — המוח נח לחלוטין בשינה",c:false},{t:"נכון — המוח תמיד פעיל ורותח ברעיונות וקשרים",c:true},{t:"לא נכון — מדיטציה מרוקנת את המוח",c:false},{t:"נכון — אבל רק בקרב אנשים יצירתיים",c:false}],
+   explain:"פסקה 23: 'המוח אף פעם לא ריק — הוא תמיד רותח ברעיונות וקשרים.' רשת ברירת המחדל פעילה גם כשנדמה לנו שאנחנו לא חושבים."},
+  {he:"מה ההבדל בין שני סוגי החולמים שמזהה שולר?",en:"What is the difference between the two types of daydreamers Schooler identifies?",
+   opts:[{t:"אחד חולם בלילה והשני ביום",c:false},{t:"אחד מבחין בעצמו שהוא חולם — רק הוא מרוויח יצירתיות",c:true},{t:"אחד חולם יותר מהשני",c:false},{t:"אחד צעיר יותר מהשני",c:false}],
+   explain:"פסקאות 14-15: סוג 1 מבחין שהוא חולם רק כשנשאל — לא מצליח ליצירתיות. סוג 2 מבחין בעצמו — מצליח ליצירתיות. המודעות העצמית היא המפתח."},
+  {he:"מה שולר מתכוון ב'החלק הקשה' של חלימה בהקיץ?",en:"What does Schooler mean by 'the hard part' of daydreaming?",
+   opts:[{t:"להיכנס למצב של חלימה בהקיץ",c:false},{t:"לשמור מספיק מודעות בחלום כדי לזהות תובנות יצירתיות כשצצות",c:true},{t:"לזכור את תוכן החלום בשקיצה",c:false},{t:"לחלום יותר מ-10 דקות רצוף",c:false}],
+   explain:"פסקה 15: 'החלק הקשה הוא לשמור מספיק מודעות כך שגם כשאתה מתחיל לחלום תוכל להפסיק את עצמך ולשים לב לתובנה יצירתית.' הכניסה לחלום היא הקלה."},
+  {he:"למה לדעת בלטון טלוויזיה מזיקה ליצירתיות ילדים?",en:"Why does Belton think television is harmful for children's creativity?",
+   opts:[{t:"היא מלאה באלימות",c:false},{t:"היא מונעת שעמום ולכן מונעת תרגול חלימה בהקיץ",c:true},{t:"היא גורמת לילדים להיות עצלנים",c:false},{t:"היא מלמדת עובדות שגויות",c:false}],
+   explain:"פסקאות 10-11: הילדים מיד פנו לטלוויזיה כשהתשעממו. בלי שעמום — אין חלימה בהקיץ. בלי חלימה — לא מתפתח הדמיון. כישרון שדורש תרגול."},
+  {he:"מה קורה לרשת ברירת המחדל עם הגיל?",en:"What happens to the default network as people age?",
+   opts:[{t:"היא הופכת חזקה ופעילה יותר",c:false},{t:"התיאום שלה פוחת — קשה יותר לשלוט בחלימה",c:true},{t:"היא נעלמת לחלוטין",c:false},{t:"היא הופכת יתר-פעילה כמו בסכיזופרניה",c:false}],
+   explain:"פסקאות 21-22: חוקרי הרווארד גילו שהזדקנות גורמת לתיאום מופחת — אזורים שבדרך כלל פועלים בסנכרון מתחילים לפעול בזמנים שונים. קשה לשלוט בחלימה."},
+  {he:"למה לפריי יש יותר מ-20 פטנטים לפי הכותב?",en:"Why does Fry have 20+ patents according to the author?",
+   opts:[{t:"הוא עובד קשה ומתרכז מאוד",c:false},{t:"הוא גם חולם בהקיץ וגם שם לב לחלומותיו — ותופס רעיונות יצירתיים",c:true},{t:"חברת 3M מעניקה פטנטים לכל המהנדסים שלה",c:false},{t:"הוא למד בבית ספר טכני מיוחד",c:false}],
+   explain:"פסקה 16: פריי מצליח לא רק כי הוא חולם הרבה — אלא כי הוא שם לב לחלומותיו ומזהה את הרגעים שבהם הם מובילים לרעיון שימושי."}
+];
+
+// ══════════════════════════════ STATE ══════════════════════════════
+let knownSet = new Set();
+let shuffledVocab = [...vocab];
+let showOnlyUnknown = false;
+
+let matchBatches=[], matchBatchIdx=0, matchTotalDone=0;
+let matchSelectedEn=null, matchSelectedHe=null;
+
+let quizIdx=0, quizCorrect=0, quizWrong=0, quizOrder=[];
+
+// ══════════════════════════════ TABS ══════════════════════════════
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const btns=document.querySelectorAll('.tab-btn');
+  const map={vocab:0,text:1,quiz:2};
+  if(map[id]!==undefined) btns[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════ MODE ══════════════════════════════
+function setMode(m) {
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.mode-btn')[m==='cards'?0:1].classList.add('active');
+  document.getElementById('mode-cards').style.display = m==='cards'?'block':'none';
+  document.getElementById('mode-match').style.display = m==='match'?'block':'none';
+  if(m==='match') startMatch();
+}
+
+// ══════════════════════════════ FLASHCARDS ══════════════════════════════
+function renderCards() {
+  const grid = document.getElementById('fc-grid');
+  grid.innerHTML='';
+  const list = showOnlyUnknown ? shuffledVocab.filter(w=>!knownSet.has(w.en)) : shuffledVocab;
+  if(!list.length){grid.innerHTML='<p style="direction:rtl;color:var(--green);font-weight:700">🎉 ידעת את כל המילים! מעולה!</p>';return;}
+  list.forEach(w=>{
+    const known = knownSet.has(w.en);
+    const wrap = document.createElement('div');
+    wrap.className='fc-wrap'+(known?' known':'');
+    wrap.innerHTML=`<div class="fc-inner"><div class="fc-face fc-front"><div class="fc-known-mark">${known?'✓ ידוע':''}</div><div class="fc-word">${w.en}</div><div class="fc-hint">לחץ להפוך</div></div><div class="fc-face fc-back"><div class="fc-he">${w.he}</div><div class="fc-en-small">${w.en}</div></div></div>`;
+    wrap.addEventListener('click',()=>wrap.classList.toggle('flipped'));
+    wrap.addEventListener('dblclick',e=>{e.preventDefault();knownSet.has(w.en)?knownSet.delete(w.en):knownSet.add(w.en);renderCards();});
+    grid.appendChild(wrap);
+  });
+  updateProgress();
+}
+function updateProgress(){
+  const p=Math.round(knownSet.size/vocab.length*100);
+  document.getElementById('progress-fill').style.width=p+'%';
+  document.getElementById('progress-label').textContent=knownSet.size+' / '+vocab.length;
+}
+function shuffleCards(){shuffledVocab=[...shuffledVocab].sort(()=>Math.random()-0.5);document.querySelectorAll('.fc-wrap').forEach(w=>w.classList.remove('flipped'));renderCards();}
+function resetKnown(){knownSet.clear();showOnlyUnknown=false;renderCards();}
+function showUnknown(){showOnlyUnknown=!showOnlyUnknown;document.getElementById('show-unknown-btn').textContent=showOnlyUnknown?'הצג הכל':'👁 הצג לא ידועות';renderCards();}
+
+// ══════════════════════════════ MATCHING GAME ══════════════════════════════
+function startMatch(){
+  const shuffled=[...vocab].sort(()=>Math.random()-0.5);
+  matchBatches=[];
+  for(let i=0;i<shuffled.length;i+=6) matchBatches.push(shuffled.slice(i,i+6));
+  matchBatchIdx=0; matchTotalDone=0; matchSelectedEn=null; matchSelectedHe=null;
+  document.getElementById('match-celebrate').classList.remove('show');
+  renderMatchBatch();
+}
+function renderMatchBatch(){
+  const batch=matchBatches[matchBatchIdx];
+  const total=matchBatches.length;
+  document.getElementById('match-round-label').textContent=`סיבוב ${matchBatchIdx+1} מתוך ${total}`;
+  document.getElementById('match-score-disp').textContent=matchTotalDone+' זוגות מותאמו ✓';
+  updateMatchProgress();
+  const enCol=document.getElementById('match-en-col');
+  const heCol=document.getElementById('match-he-col');
+  enCol.innerHTML=''; heCol.innerHTML='';
+  const heShuffled=[...batch].sort(()=>Math.random()-0.5);
+  batch.forEach(w=>{
+    const el=document.createElement('div');
+    el.className='match-item match-en'; el.dataset.word=w.en; el.textContent=w.en;
+    el.addEventListener('click',()=>matchSelectEn(el,w.en));
+    enCol.appendChild(el);
+  });
+  heShuffled.forEach(w=>{
+    const el=document.createElement('div');
+    el.className='match-item match-he'; el.dataset.word=w.en; el.textContent=w.he;
+    el.addEventListener('click',()=>matchSelectHe(el,w.en));
+    heCol.appendChild(el);
+  });
+}
+function updateMatchProgress(){
+  const pct=Math.round(matchTotalDone/vocab.length*100);
+  document.getElementById('match-prog-fill').style.width=pct+'%';
+  document.getElementById('match-prog-text').textContent=matchTotalDone+' / '+vocab.length;
+}
+function matchSelectEn(el,word){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-en-col .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected'); matchSelectedEn={el,word};
+  if(matchSelectedHe) checkMatch();
+}
+function matchSelectHe(el,word){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-he-col .match-item').forEach(e=>e.classList.remove('selected'));
+  el.classList.add('selected'); matchSelectedHe={el,word};
+  if(matchSelectedEn) checkMatch();
+}
+function checkMatch(){
+  const en=matchSelectedEn, he=matchSelectedHe;
+  if(en.word===he.word){
+    en.el.classList.remove('selected'); he.el.classList.remove('selected');
+    en.el.classList.add('matched'); he.el.classList.add('matched');
+    matchTotalDone++;
+    document.getElementById('match-score-disp').textContent=matchTotalDone+' זוגות מותאמו ✓';
+    updateMatchProgress();
+    const batchDone=[...document.querySelectorAll('#match-en-col .matched')].length===matchBatches[matchBatchIdx].length;
+    if(batchDone){
+      setTimeout(()=>{
+        matchBatchIdx++;
+        if(matchBatchIdx>=matchBatches.length) document.getElementById('match-celebrate').classList.add('show');
+        else renderMatchBatch();
+      },700);
+    }
+  } else {
+    en.el.classList.add('wrong'); he.el.classList.add('wrong');
+    setTimeout(()=>{en.el.classList.remove('wrong','selected');he.el.classList.remove('wrong','selected');},700);
+  }
+  matchSelectedEn=null; matchSelectedHe=null;
+}
+
+// ══════════════════════════════ TEXT PARAGRAPHS ══════════════════════════════
+function renderParagraphs(){
+  const list=document.getElementById('para-list');
+  paragraphs.forEach((p,i)=>{
+    const block=document.createElement('div');
+    block.className='para-block';
+    const notesHtml=p.notes.map(n=>`<div class="note-item"><div class="note-dot"></div><div class="note-texts"><div class="note-he">${n.he}</div><div class="note-en">${n.en}</div></div></div>`).join('');
+    block.innerHTML=`
+      <div class="para-trigger" id="pt-${i}">
+        <div class="para-num">${p.num}</div>
+        <div class="para-info"><div class="para-title-he">${p.title_he}</div><div class="para-title-en">${p.title_en}</div></div>
+        <span class="para-badge ${p.badge}">${p.badge_text}</span>
+        <span class="para-chevron">▼</span>
+      </div>
+      <div class="para-body" id="pb-${i}">
+        <div class="para-text-en"><span class="para-label">English text</span>${p.text_en}</div>
+        <div class="para-text-he"><span class="para-label">תרגום לעברית</span>${p.text_he}</div>
+        <div class="para-notes"><div class="para-notes-title">⭐ נקודות חשובות לבחינה</div>${notesHtml}</div>
+      </div>`;
+    block.querySelector('.para-trigger').addEventListener('click',function(){
+      const body=document.getElementById('pb-'+i);
+      const open=body.classList.toggle('open');
+      this.classList.toggle('open',open);
+    });
+    list.appendChild(block);
+  });
+}
+
+// ══════════════════════════════ QUIZ ══════════════════════════════
+function startQuiz(){
+  quizOrder=[...questions].sort(()=>Math.random()-0.5);
+  quizIdx=0; quizCorrect=0; quizWrong=0;
+  document.getElementById('quiz-start').style.display='none';
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('quiz-game').style.display='block';
+  document.getElementById('q-correct').textContent='0';
+  document.getElementById('q-wrong').textContent='0';
+  renderQuestion();
+}
+function renderQuestion(){
+  const q=quizOrder[quizIdx];
+  const total=quizOrder.length;
+  document.getElementById('quiz-q-num').textContent=`שאלה ${quizIdx+1} מתוך ${total}`;
+  document.getElementById('quiz-prog').style.width=Math.round((quizIdx/total)*100)+'%';
+  document.getElementById('quiz-q-he').textContent=q.he;
+  document.getElementById('quiz-q-en').textContent=q.en;
+  document.getElementById('quiz-feedback').className='quiz-feedback';
+  document.getElementById('quiz-next-btn').classList.remove('show');
+  const optDiv=document.getElementById('quiz-options');
+  optDiv.innerHTML='';
+  const shuffled=[...q.opts].sort(()=>Math.random()-0.5);
+  shuffled.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-opt'; btn.textContent=opt.t;
+    btn.addEventListener('click',()=>answerQ(opt.c,q.explain,btn,shuffled));
+    optDiv.appendChild(btn);
+  });
+}
+function answerQ(correct,explain,clickedBtn,opts){
+  document.querySelectorAll('.quiz-opt').forEach((b,i)=>{
+    b.disabled=true;
+    if(opts[i].c) b.classList.add('correct');
+  });
+  if(!correct) clickedBtn.classList.add('wrong');
+  correct?quizCorrect++:quizWrong++;
+  document.getElementById('q-correct').textContent=quizCorrect;
+  document.getElementById('q-wrong').textContent=quizWrong;
+  const fb=document.getElementById('quiz-feedback');
+  fb.className='quiz-feedback '+(correct?'correct':'wrong');
+  fb.innerHTML='<strong>'+(correct?'✓ נכון!':'✗ לא מדויק')+'</strong> '+explain;
+  document.getElementById('quiz-next-btn').classList.add('show');
+}
+function nextQuestion(){
+  quizIdx++;
+  if(quizIdx>=quizOrder.length) showResult();
+  else renderQuestion();
+}
+function showResult(){
+  document.getElementById('quiz-game').style.display='none';
+  const res=document.getElementById('quiz-result');
+  res.style.display='block';
+  const pct=quizCorrect/quizOrder.length;
+  document.getElementById('result-score').textContent=quizCorrect+'/'+quizOrder.length;
+  let stars='⭐',msg='',sub='';
+  if(pct>=0.9){stars='⭐⭐⭐';msg='מצוין! אתה מוכן לבחינה!';sub='תוצאה מדהימה — כל הכבוד!';}
+  else if(pct>=0.7){stars='⭐⭐';msg='טוב מאוד! עוד קצת ואתה מושלם';sub='חזור על הפסקאות שטעית בהן.';}
+  else{stars='⭐';msg='ממשיכים להתאמן';sub='קרא שוב את הטקסט המוסבר ונסה שוב!';}
+  document.getElementById('result-stars').textContent=stars;
+  document.getElementById('result-msg').textContent=msg;
+  document.getElementById('result-sub').textContent=sub;
+}
+function restartQuiz(){document.getElementById('quiz-result').style.display='none';document.getElementById('quiz-start').style.display='block';}
+
+// ══════════════════════════════ INIT ══════════════════════════════
+renderCards();
+renderParagraphs();
+</script>
+</body>
+</html>
