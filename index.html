@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daydream Achiever</title>
+<title>Daydream Achiever – Study Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -200,10 +200,10 @@ footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);bord
 <body>
 
 <div class="hero">
-  <h1>Daydream Achiever☁️ </h1>
-  <p class="hero-sub">מאת Jonah Lehrer ·</p>
+  <h1>☁️ Daydream Achiever – Study Guide</h1>
+  <p class="hero-sub">מאת Jonah Lehrer · הכנה לבחינה באנגלית</p>
   <div class="hero-chips">
-    <span class="chip">📚 מילים</span>
+    <span class="chip">📚 19 מילים</span>
     <span class="chip">🔗 משחק התאמה</span>
     <span class="chip">📄 טקסט + תרגום</span>
     <span class="chip">🎯 חידון באנגלית</span>
@@ -289,27 +289,27 @@ footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);bord
 <!-- ════════════════ QUIZ ════════════════ -->
 <div class="section" id="tab-quiz">
   <div class="sec-header">
-    <h2 class="sec-title">🎯 שאלות לדוגמה</h2>
+    <h2 class="sec-title">🎯 שאלות לתרגול</h2>
+    <p class="sec-sub">20 שאלות על הטקסט — השאלות והתשובות באנגלית. בחר את התשובה הנכונה!</p>
   </div>
   <div class="quiz-container">
-<body dir="rtl">
-    <div class="quiz-start" id="התחל חידון">
+
+    <div class="quiz-start" id="quiz-start">
       <div style="font-size:2.8rem;margin-bottom:.7rem">🎯</div>
-      <h3>מוכן לחידון?</h3>
+      <h3 style="direction:rtl">מוכן לחידון?</h3>
+      <p style="direction:rtl">20 שאלות הבנה על "Daydream Achiever" — שאלות המורה + תרגול נוסף. השאלות והתשובות באנגלית.</p>
       <ul class="quiz-rules">
-        <body dir="rtl">
-        <li>לכל שאלה יש 4 אפשרויות</li>
-        <li>בחר/י את התשובה הנכונה ביותר</li>
-        <li>ראה הסבר לכל שאלה</li>
-        <li>קבל/י ציון בסוף</li>
+        <li>לכל שאלה יש 4 אפשרויות — בחר את הנכונה</li>
+        <li>קרא את ההסבר אחרי כל שאלה</li>
+        <li>קבל ציון בסוף!</li>
       </ul>
       <button class="btn btn-primary" style="font-size:1rem;padding:.8rem 2rem" onclick="startQuiz()">התחל חידון ▶</button>
     </div>
 
     <div id="quiz-game" style="display:none">
       <div class="quiz-scoreboard">
-        <span class="score-chip correct">✓ <span id="q-correct">0</span> correct</span>
-        <span class="score-chip wrong">✗ <span id="q-wrong">0</span> wrong</span>
+        <span class="score-chip correct">✓ <span id="q-correct">0</span> נכון</span>
+        <span class="score-chip wrong">✗ <span id="q-wrong">0</span> טעות</span>
       </div>
       <div class="quiz-progress">
         <span class="quiz-q-num" id="q-num-lbl">Question 1 of 20</span>
@@ -320,7 +320,7 @@ footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);bord
         <div class="quiz-options" id="quiz-opts"></div>
         <div class="quiz-feedback" id="quiz-fb"></div>
       </div>
-      <button class="quiz-next-btn" id="quiz-next" onclick="nextQ()">שאלה הבאה →</button>
+      <button class="quiz-next-btn" id="quiz-next" onclick="nextQ()">שאלה הבאה ←</button>
     </div>
 
     <div id="quiz-result" style="display:none" class="quiz-result">
@@ -328,12 +328,12 @@ footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);bord
       <div class="result-score" id="res-score">0/20</div>
       <div class="result-msg" id="res-msg"></div>
       <div class="result-sub" id="res-sub"></div>
-      <button class="btn btn-primary" style="margin-top:1rem;font-size:1rem;padding:.8rem 2rem" onclick="restartQuiz()">Try again 🔄</button>
+      <button class="btn btn-primary" style="margin-top:1rem;font-size:1rem;padding:.8rem 2rem" onclick="restartQuiz()">נסה שוב 🔄</button>
     </div>
   </div>
 </div>
 
-<footer>· Daydream Achiever by Jonah Lehrer ·</footer>
+<footer>Study guide · Daydream Achiever by Jonah Lehrer · Created for exam preparation</footer>
 
 <script>
 // ════════════════════════ DATA ════════════════════════
@@ -635,7 +635,7 @@ function startQuiz(){
 }
 function renderQ(){
   const q=qOrder[qIdx], total=qOrder.length;
-  document.getElementById('q-num-lbl').textContent='Question '+(qIdx+1)+' of '+total;
+  document.getElementById('q-num-lbl').textContent='שאלה '+(qIdx+1)+' מתוך '+total;
   document.getElementById('quiz-prog').style.width=Math.round(qIdx/total*100)+'%';
   document.getElementById('quiz-q-text').textContent=q.q;
   document.getElementById('quiz-fb').className='quiz-feedback';
@@ -658,7 +658,7 @@ function answerQ(correct,ex,clicked,sh){
   document.getElementById('q-wrong').textContent=qWrong;
   const fb=document.getElementById('quiz-fb');
   fb.className='quiz-feedback '+(correct?'correct':'wrong');
-  fb.innerHTML='<strong>'+(correct?'✓ Correct!':'✗ Not quite.')+'</strong> '+ex;
+  fb.innerHTML='<strong>'+(correct?'✓ נכון!':'✗ לא מדויק.')+'</strong> '+ex;
   document.getElementById('quiz-next').classList.add('show');
 }
 function nextQ(){
@@ -673,9 +673,9 @@ function showResult(){
   const pct=qCorrect/qOrder.length;
   document.getElementById('res-score').textContent=qCorrect+'/'+qOrder.length;
   let stars,msg,sub;
-  if(pct>=.9){stars='⭐⭐⭐';msg='Excellent! You\'re ready for the exam!';sub='Outstanding result — well done!';}
-  else if(pct>=.7){stars='⭐⭐';msg='Good work! Almost there!';sub='Review the paragraphs you found tricky and try again.';}
-  else{stars='⭐';msg='Keep practising!';sub='Re-read the annotated text and try the quiz again!';}
+  if(pct>=.9){stars='⭐⭐⭐';msg='מצוין! אתה מוכן לבחינה!';sub='תוצאה מדהימה — כל הכבוד!';}
+  else if(pct>=.7){stars='⭐⭐';msg='טוב מאוד! עוד קצת ואתה מושלם!';sub='חזור על הפסקאות שבהן טעית ונסה שוב.';}
+  else{stars='⭐';msg='ממשיכים להתאמן!';sub='קרא שוב את הטקסט המוסבר ונסה שוב!';}
   document.getElementById('res-stars').textContent=stars;
   document.getElementById('res-msg').textContent=msg;
   document.getElementById('res-sub').textContent=sub;
