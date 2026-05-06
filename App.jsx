@@ -27,61 +27,61 @@ const TEXT_SECTIONS = [
   {
     title: "1. The Invention of the Post-it",
     paragraphs: "1-2",
-    content: "סיפורו של ארתור פריי שפתר את בעיית הסימניות שלו בכנסייה בזמן שחלם בהקיץ. המחשבה ה'תועה' שלו הפכה לאחד המוצרים המצליחים בעולם.",
+    content: `סיפורו של ארתור פריי שפתר את בעיית הסימניות שלו בכנסייה בזמן שחלם בהקיץ. המחשבה ה"תועה" שלו הפכה לאחד המוצרים המצליחים בעולם.`,
     keyPoints: ["Arthur Fry (3M engineer)", "Problem: Bookmarks falling out", "Solution: Post-it notes"]
   },
   {
     title: "2. The Negative Reputation",
     paragraphs: "3",
-    content: "באופן מסורתי, חלימה בהקיץ נתפסת כשלילית, סימן לעצלנות, חוסר משמעת או גורם לתאונות דרכים. היא נחשבת להיפך מפרודוקטיביות.",
+    content: `באופן מסורתי, חלימה בהקיץ נתפסת כשלילית, סימן לעצלנות, חוסר משמעת או גורם לתאונות דרכים. היא נחשבת להיפך מפרודוקטיביות.`,
     keyPoints: ["Cast in a negative light", "Associated with procrastination", "Seen as a lazy habit"]
   },
   {
     title: "3. Modern Scientific View",
     paragraphs: "4-5",
-    content: "מדענים רואים זאת כעת כ-'Default mode' (מצב ברירת מחדל) חיוני. זהו כלי המאפשר למוח ליצור קשרים חדשים ולעסוק בחשיבה מופשטת.",
+    content: `מדענים רואים זאת כעת כ-"Default mode" (מצב ברירת מחדל) חיוני. זהו כלי המאפשר למוח ליצור קשרים חדשים ולעסוק בחשיבה מופשטת.`,
     keyPoints: ["Fundamental feature of the human mind", "Crucial tool for creativity", "Unbounded thoughts"]
   },
   {
     title: "4. Mental Time Travel & Social Benefits",
     paragraphs: "6-7",
-    content: "חלימה בהקיץ מאפשרת 'מסע בזמן מנטלי' וסימולציות חברתיות. אנחנו חושבים על אחרים, על העתיד ועל איך להתנהג בסיטואציות דמיוניות.",
+    content: `חלימה בהקיץ מאפשרת "מסע בזמן מנטלי" וסימולציות חברתיות. אנחנו חושבים על אחרים, על העתיד ועל איך להתנהג בסיטואציות דמיוניות.`,
     keyPoints: ["Mental time travel", "Social benefits (thinking about others)", "Imagining 'what if' scenarios"]
   },
   {
     title: "5. The Boredom Gap in Children",
     paragraphs: "8-11",
-    content: "תרזה בלטון מצאה שילדים כיום כותבים סיפורים לא יצירתיים כי אין להם 'זמן ריק'. כשהם משתעממים הם פונים מיד למסכים במקום להפעיל דמיון.",
+    content: `תרזה בלטון מצאה שילדים כיום כותבים סיפורים לא יצירתיים כי אין להם "זמן ריק". כשהם משתעממים הם פונים מיד למסכים במקום להפעיל דמיון.`,
     keyPoints: ["Teresa Belton's study", "Lack of 'empty time' due to TV", "Daydreaming requires practice"]
   },
   {
     title: "6. Awareness and Creativity (Schooler)",
     paragraphs: "12-16",
-    content: "יונתן סקולר מצא שחלימה בהקיץ מעלה ציוני יצירתיות. עם זאת, זה עובד רק אם אנחנו מודעים לכך שאנחנו חולמים בהקיץ ויכולים לזהות את התובנה היצירתית.",
+    content: `יונתן סקולר מצא שחלימה בהקיץ מעלה ציוני יצירתיות. עם זאת, זה עובד רק אם אנחנו מודעים לכך שאנחנו חולמים בהקיץ ויכולים לזהות את התובנה היצירתית.`,
     keyPoints: ["High scores on creativity measures", "Two types of daydreaming", "Awareness is necessary to catch insights"]
   },
   {
     title: "7. The Default Network & Marcus Raichle",
     paragraphs: "17-18",
-    content: 'כשהמוח "לא עושה כלום", ה-Default Network פועל בעוצמה. ד"ר רייכל מסביר שהמוח רחוק מלנוח במצב הזה; הוא מעבד מידע פנימי רב.',
+    content: `כשהמוח "לא עושה כלום", ה-Default Network פועל בעוצמה. ד"ר רייכל מסביר שהמוח רחוק מלנוח במצב הזה; הוא מעבד מידע פנימי רב.`,
     keyPoints: ["Default network activation", "Cortex is very active", "The brain isn't resting at all"]
   },
   {
     title: "8. Clinical Cases (Autism, Schizophrenia, Aging)",
     paragraphs: "19-22",
-    content: "בעיות ברשת זו קשורות לאוטיזם (פעילות מופחתת), סכיזופרניה (פעילות יתר) והזדקנות (חוסר סנכרון), מה שמשפיע על היכולת לשלוט במחשבות.",
+    content: `בעיות ברשת זו קשורות לאוטיזם (פעילות מופחתת), סכיזופרניה (פעילות יתר) והזדקנות (חוסר סנכרון), מה שמשפיע על היכולת לשלוט במחשבות.`,
     keyPoints: ["Autism: Social deficits", "Schizophrenia: Reality vs. Imagination", "Aging: Coordination issues"]
   },
   {
     title: "9. Summary & Advice",
     paragraphs: "23-24",
-    content: "המוח לעולם אינו ריק. חלימה בהקיץ היא סימן לבריאות ועוזרת לנו לתכנן את העתיד. לפעמים זו הדרך הכי פרודוקטיבית לפתור בעיות.",
+    content: `המוח לעולם אינו ריק. חלימה בהקיץ היא סימן לבריאות ועוזרת לנו לתכנן את העתיד. לפעמים זו הדרך הכי פרודוקטיבית לפתור בעיות.`,
     keyPoints: ["Mind is never empty", "Productive problem solving", "Take daydreams seriously"]
   }
 ];
 
 const QUIZ_QUESTIONS = [
-  { id: 1, type: "open", q: "1. What main idea is illustrated by the example of Arthur Fry?", a: "The idea that a wandering mind (daydreaming) can lead to important creative breakthroughs and successful inventions like the Post-it note.", source: "Para 1-2" },
+  { id: 1, type: "open", q: "1. What main idea is illustrated by the example of Arthur Fry?", a: "The idea that a wandering mind (daydreaming) can lead to important creative breakthroughs and inventions like the Post-it note.", source: "Para 1-2" },
   { id: 2, type: "open", q: "2. What advice is given in the last paragraph?", a: "We should take daydreams more seriously. When stuck on a difficult problem, a good daydream isn't just an escape - it may be the most productive thing we can do.", source: "Para 24" },
   { id: 3, type: "open", q: "3. What advantage does the daydream have? (Para 2) Choose your own words.", a: "It provides a mental space where 'errant thoughts' can occur, allowing the mind to solve specific problems (like the bookmark) that focused thinking might miss.", source: "Para 2" },
   { id: 4, type: "open", q: "4. Why is Einstein mentioned?", a: "He is mentioned as a famous example of a person who was notorious for his wandering mind, showing that daydreaming is associated with high levels of creativity and breakthroughs.", source: "Para 3" },
@@ -182,25 +182,25 @@ export default function App() {
 
       <main className="max-w-4xl w-full">
         
-        {/* Vocabulary */}
+        {/* Vocabulary Flashcards */}
         {activeTab === 'vocab' && (
           <div className="flex flex-col items-center gap-8">
             <div className="w-full max-w-sm h-64 perspective-1000">
               <div onClick={() => setIsFlipped(!isFlipped)} className={`relative w-full h-full duration-500 preserve-3d cursor-pointer shadow-2xl rounded-3xl ${isFlipped ? 'rotate-y-180' : ''}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-200 rounded-3xl flex flex-col items-center justify-center p-8">
                   <span className="text-indigo-400 text-xs font-black tracking-widest mb-4">ENGLISH</span>
-                  <h2 className="text-4xl font-black text-slate-800">{VOCABULARY[vocabIndex].en}</h2>
-                  <p className="mt-8 text-slate-300 text-xs">לחץ להיפוך</p>
+                  <h2 className="text-4xl font-black text-slate-800 text-center">{VOCABULARY[vocabIndex].en}</h2>
+                  <p className="mt-8 text-slate-300 text-xs">Click to flip</p>
                 </div>
                 <div className="absolute inset-0 backface-hidden rotate-y-180 bg-indigo-600 text-white rounded-3xl flex flex-col items-center justify-center p-8">
-                  <span className="text-indigo-200 text-xs font-black tracking-widest mb-4">עברית</span>
-                  <h2 className="text-4xl font-black">{VOCABULARY[vocabIndex].he}</h2>
+                  <span className="text-indigo-200 text-xs font-black tracking-widest mb-4">HEBREW</span>
+                  <h2 className="text-4xl font-black text-center">{VOCABULARY[vocabIndex].he}</h2>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-6">
               <button onClick={() => setVocabIndex(i => (i-1+VOCABULARY.length)%VOCABULARY.length)} className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200 text-indigo-600 hover:scale-110 transition-transform"><ArrowRight/></button>
-              <span className="font-black text-slate-400 bg-white px-6 py-2 rounded-full border border-slate-100">{vocabIndex+1} / {VOCABULARY.length}</span>
+              <div className="font-black text-slate-400 bg-white px-6 py-2 rounded-full border border-slate-100">{vocabIndex+1} / {VOCABULARY.length}</div>
               <button onClick={() => setVocabIndex(i => (i+1)%VOCABULARY.length)} className="p-4 bg-white rounded-2xl shadow-sm border border-slate-200 text-indigo-600 hover:scale-110 transition-transform"><ArrowLeft/></button>
             </div>
           </div>
@@ -211,7 +211,7 @@ export default function App() {
           <div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 text-center animate-in zoom-in duration-300">
             <div className="flex justify-between items-center mb-10">
               <span className="bg-indigo-100 text-indigo-700 px-6 py-2 rounded-full font-black">Score: {gameScore}</span>
-              <h2 className="text-xl font-black text-slate-400">Match the Translation</h2>
+              <h2 className="text-xl font-black text-slate-400">Match Translation</h2>
             </div>
             <h3 className="text-6xl font-black text-slate-800 mb-16">{gameQuestion.en}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -236,17 +236,17 @@ export default function App() {
         {activeTab === 'text' && (
           <div className="space-y-6">
             <div className="bg-indigo-900 text-white p-6 rounded-3xl shadow-lg mb-8">
-              <h2 className="text-2xl font-black mb-2">ניתוח תוכן מפורט (פסקאות 1-24)</h2>
-              <p className="text-indigo-200">סיכום נקודות המפתח בעברית ובאנגלית</p>
+              <h2 className="text-2xl font-black mb-2 text-right">ניתוח תוכן מפורט (פסקאות 1-24)</h2>
+              <p className="text-indigo-200 text-right">סיכום נקודות המפתח בעברית ובאנגלית</p>
             </div>
             {TEXT_SECTIONS.map((s, i) => (
               <div key={i} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200 group hover:shadow-md transition-shadow">
                 <div className="bg-slate-50 px-8 py-4 border-b flex justify-between items-center">
-                  <h3 className="font-black text-indigo-900 text-lg">{s.title}</h3>
+                  <h3 className="font-black text-indigo-900 text-lg text-right">{s.title}</h3>
                   <span className="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-xl text-xs font-black uppercase">Paras {s.paragraphs}</span>
                 </div>
                 <div className="p-8">
-                  <p className="text-slate-700 font-bold mb-6 text-lg leading-relaxed">{s.content}</p>
+                  <p className="text-slate-700 font-bold mb-6 text-lg leading-relaxed text-right">{s.content}</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3" dir="ltr">
                     {s.keyPoints.map((kp, j) => (
                       <div key={j} className="flex items-center gap-3 text-sm text-slate-500 bg-slate-50 p-3 rounded-2xl border border-slate-100">
@@ -276,7 +276,7 @@ export default function App() {
               </div>
 
               <div className="p-10">
-                <div className="text-indigo-500 text-xs font-black mb-4 uppercase tracking-widest">{QUIZ_QUESTIONS[quizIndex].source}</div>
+                <div className="text-indigo-500 text-xs font-black mb-4 uppercase tracking-widest text-left" dir="ltr">{QUIZ_QUESTIONS[quizIndex].source}</div>
                 <h3 className="text-2xl font-black text-slate-800 mb-10 text-left" dir="ltr">{QUIZ_QUESTIONS[quizIndex].q}</h3>
 
                 {/* Open Ended */}
@@ -301,7 +301,7 @@ export default function App() {
                     ) : (
                       <div className="animate-in slide-in-from-top-4 duration-500">
                         <div className="bg-emerald-50 border-2 border-emerald-100 p-8 rounded-3xl mb-6">
-                          <span className="text-emerald-600 font-black text-xs block mb-3 uppercase tracking-widest">Correct Answer Guidance:</span>
+                          <span className="text-emerald-600 font-black text-xs block mb-3 uppercase tracking-widest text-left" dir="ltr">Correct Answer Guidance:</span>
                           <p className="text-emerald-900 font-bold text-xl text-left leading-relaxed" dir="ltr">{QUIZ_QUESTIONS[quizIndex].a}</p>
                         </div>
                         <button onClick={nextQuestion} className="w-full py-5 bg-slate-800 text-white rounded-2xl font-black text-xl hover:bg-black transition-all">Next Question</button>
