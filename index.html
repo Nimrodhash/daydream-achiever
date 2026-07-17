@@ -1,689 +1,3057 @@
-<!DOCTYPE html>
-<html lang="he">
+
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daydream Achiever</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Data Structures Course — Quizzes</title>
+<script>
+window.MathJax = { tex: { inlineMath: [['$', '$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
 <style>
-:root {
-  --blue:#2563eb;--blue-light:#eff6ff;--blue-mid:#bfdbfe;
-  --amber:#d97706;--amber-light:#fffbeb;
-  --green:#059669;--green-light:#ecfdf5;--green-mid:#a7f3d0;
-  --red:#dc2626;--red-light:#fef2f2;--red-mid:#fecaca;
-  --purple:#7c3aed;--purple-light:#f5f3ff;
-  --border:#e2e8f0;--bg:#f8fafc;--surface:#ffffff;
-  --text:#0f172a;--muted:#64748b;
-  --radius:14px;--shadow:0 4px 20px rgba(0,0,0,0.07);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:'Heebo','Arial',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  :root{
+    --bg:#0f1220;
+    --panel:#171b2e;
+    --panel2:#1f2440;
+    --border:#2b3156;
+    --text:#e9ebf7;
+    --muted:#a3a8c9;
+    --primary:#7c8cff;
+    --primary-dark:#5f6de0;
+    --correct:#2ecc71;
+    --correct-bg:rgba(46,204,113,0.12);
+    --wrong:#ff5c5c;
+    --wrong-bg:rgba(255,92,92,0.12);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:radial-gradient(1200px 600px at 20% -10%, #22265a 0%, transparent 60%),
+               radial-gradient(1000px 500px at 100% 0%, #1c2a4a 0%, transparent 55%),
+               var(--bg);
+    color:var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height:100vh;
+    padding:32px 20px 64px;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+  header.app-header{text-align:center;margin-bottom:32px;}
+  header.app-header h1{
+    font-size:clamp(24px,4vw,34px);
+    margin:0 0 8px;
+    background:linear-gradient(90deg,#9db4ff,#c39bff);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header.app-header p{color:var(--muted);margin:0;font-size:15px;}
 
-/* ── HERO ── */
-.hero{background:linear-gradient(135deg,#1d4ed8 0%,#4f46e5 100%);color:#fff;padding:2rem 1rem 1.6rem;text-align:center;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
-.hero h1{font-size:clamp(1.25rem,4vw,2rem);font-weight:800;letter-spacing:-.5px;position:relative;}
-.hero-sub{font-size:.88rem;opacity:.85;margin-top:.3rem;position:relative;direction:rtl;}
-.hero-chips{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:1rem;position:relative;}
-.chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:3px 12px;font-size:.78rem;font-weight:500;}
+  /* HOME */
+  .topic-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:16px;
+    margin-top:24px;
+  }
+  .topic-card{
+    background:linear-gradient(160deg,var(--panel2),var(--panel));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    text-align:left;
+  }
+  .topic-card:hover{
+    transform:translateY(-3px);
+    border-color:var(--primary);
+    box-shadow:0 10px 30px -12px rgba(124,140,255,0.45);
+  }
+  .topic-card .icon{font-size:26px;margin-bottom:10px;display:block;}
+  .topic-card h3{margin:0 0 6px;font-size:17px;}
+  .topic-card span.count{color:var(--muted);font-size:13px;}
 
-/* ── TABS ── */
-.tabs{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;}
-.tabs-inner{display:flex;justify-content:center;max-width:700px;margin:0 auto;}
-.tab-btn{flex:1;padding:.85rem .4rem;border:none;background:transparent;cursor:pointer;font-family:'Heebo',sans-serif;font-size:clamp(.8rem,2.5vw,.95rem);font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;}
-.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
-.tab-btn:hover:not(.active){color:var(--text);background:var(--bg);}
+  .full-quiz-card{
+    margin-top:24px;
+    background:linear-gradient(120deg,rgba(124,140,255,0.18),rgba(195,155,255,0.12));
+    border:1px solid var(--primary);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .full-quiz-card .desc h3{margin:0 0 6px;font-size:18px;}
+  .full-quiz-card .desc p{margin:0;color:var(--muted);font-size:14px;}
 
-/* ── SECTIONS ── */
-.section{display:none;max-width:860px;margin:0 auto;padding:1.5rem 1rem 4rem;}
-.section.active{display:block;}
-.sec-title{font-size:clamp(1.1rem,3vw,1.35rem);font-weight:800;color:var(--text);direction:rtl;}
-.sec-sub{font-size:.85rem;color:var(--muted);margin-top:.25rem;direction:rtl;}
-.sec-header{margin-bottom:1.3rem;}
+  button{
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .btn{
+    background:var(--primary);
+    color:#0d0f1e;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    font-weight:600;
+    font-size:14px;
+    transition:background .15s ease, transform .1s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--primary-dark);color:#fff;}
+  .btn:active{transform:scale(0.98);}
+  .btn.secondary{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--border);
+  }
+  .btn.secondary:hover{border-color:var(--primary);}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;}
 
-/* ── MODE SWITCH ── */
-.mode-switch{display:flex;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:4px;gap:4px;margin-bottom:1.3rem;}
-.mode-btn{flex:1;padding:.5rem;border-radius:7px;border:none;background:transparent;cursor:pointer;font-family:'Heebo',sans-serif;font-size:.85rem;font-weight:600;color:var(--muted);transition:all .2s;}
-.mode-btn.active{background:#fff;color:var(--blue);box-shadow:0 1px 6px rgba(0,0,0,.1);}
+  /* QUIZ VIEW */
+  .quiz-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .quiz-header h2{margin:0;font-size:19px;}
+  .quiz-header .meta{color:var(--muted);font-size:13px;}
 
-/* ── PROGRESS ── */
-.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:1rem;direction:rtl;}
-.progress-bar{flex:1;height:8px;background:var(--border);border-radius:99px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:99px;transition:width .5s;}
-.progress-text{font-size:.82rem;font-weight:600;color:var(--blue);white-space:nowrap;}
+  .progress-bar{
+    height:6px;
+    border-radius:999px;
+    background:var(--panel2);
+    overflow:hidden;
+    margin-bottom:24px;
+    border:1px solid var(--border);
+  }
+  .progress-bar > div{
+    height:100%;
+    background:linear-gradient(90deg,#7c8cff,#c39bff);
+    transition:width .25s ease;
+  }
 
-/* ── BUTTONS ── */
-.btn{padding:.5rem 1rem;border-radius:9px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-family:'Heebo',sans-serif;font-size:.85rem;font-weight:600;color:var(--text);transition:all .15s;min-height:40px;}
-.btn:hover{background:var(--bg);}
-.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue);}
-.btn-primary:hover{opacity:.88;}
-.fc-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;direction:rtl;}
+  .question-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:26px;
+  }
+  .source-tag{
+    display:inline-block;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--primary);
+    background:rgba(124,140,255,0.12);
+    border:1px solid rgba(124,140,255,0.35);
+    padding:3px 9px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .question-text{
+    font-size:18px;
+    line-height:1.5;
+    margin:0 0 18px;
+  }
 
-/* ── FLASHCARDS ── */
-.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px;}
-.fc-wrap{perspective:900px;height:125px;cursor:pointer;}
-.fc-wrap.known{opacity:.4;}
-.fc-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1);border-radius:var(--radius);}
-.fc-wrap.flipped .fc-inner{transform:rotateY(180deg);}
-.fc-face{position:absolute;inset:0;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.8rem;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-.fc-front{background:#fff;border:1.5px solid var(--border);box-shadow:var(--shadow);}
-.fc-word{font-size:1rem;font-weight:700;color:var(--blue);direction:ltr;}
-.fc-hint{font-size:.68rem;color:var(--muted);margin-top:4px;}
-.fc-known-mark{font-size:.68rem;color:var(--green);font-weight:700;margin-bottom:3px;min-height:14px;}
-.fc-back{background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);transform:rotateY(180deg);}
-.fc-he{font-size:1.05rem;font-weight:700;color:#fff;direction:rtl;}
-.fc-en-small{font-size:.75rem;color:rgba(255,255,255,.7);direction:ltr;margin-top:3px;}
+  .hint-row{margin-bottom:18px;}
+  .hint-btn{
+    background:none;
+    border:1px dashed var(--border);
+    color:var(--muted);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+  }
+  .hint-btn:hover{border-color:var(--primary);color:var(--text);}
+  .hint-box{
+    margin-top:10px;
+    padding:12px 14px;
+    background:rgba(255,255,255,0.03);
+    border-left:3px solid var(--primary);
+    border-radius:6px;
+    font-size:14px;
+    color:var(--muted);
+  }
 
-/* ── MATCHING GAME ── */
-.match-header{text-align:center;margin-bottom:1rem;}
-.match-round{font-size:.82rem;color:var(--muted);margin-bottom:.2rem;}
-.match-score-display{font-size:1.1rem;font-weight:800;color:var(--blue);}
-.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;}
-.match-col{display:flex;flex-direction:column;gap:7px;}
-.match-col-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px;text-align:center;}
-.match-item{padding:.6rem .8rem;border-radius:10px;border:2px solid var(--border);background:#fff;cursor:pointer;font-weight:600;font-size:.85rem;text-align:center;transition:all .2s;user-select:none;min-height:48px;display:flex;align-items:center;justify-content:center;line-height:1.3;}
-.match-item:hover:not(.matched):not(.selected){border-color:var(--blue-mid);background:var(--blue-light);}
-.match-item.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15);}
-.match-item.matched{background:var(--green-light);border-color:var(--green);color:var(--green);cursor:default;opacity:.7;}
-.match-item.wrong{border-color:var(--red);background:var(--red-light);animation:shake .4s ease;}
-.match-en{direction:ltr;}
-.match-he{direction:rtl;}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.match-celebrate{text-align:center;padding:1.8rem;background:var(--green-light);border:2px solid var(--green);border-radius:var(--radius);margin-top:1rem;display:none;}
-.match-celebrate.show{display:block;}
-.match-celebrate h3{font-size:1.3rem;color:var(--green);direction:rtl;}
+  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;}
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    text-align:left;
+    background:var(--panel2);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:15px;
+    line-height:1.4;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .option:hover:not(.answered):not(:disabled){border-color:var(--primary);}
+  .option .letter{
+    flex:0 0 auto;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.06);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:var(--muted);
+  }
+  .option.correct{
+    background:var(--correct-bg);
+    border-color:var(--correct);
+  }
+  .option.correct .letter{background:var(--correct);color:#06240f;}
+  .option.wrong{
+    background:var(--wrong-bg);
+    border-color:var(--wrong);
+  }
+  .option.wrong .letter{background:var(--wrong);color:#3a0505;}
+  .option:disabled{cursor:default;}
 
-/* ── TEXT ── */
-.text-banner{background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);color:#fff;border-radius:var(--radius);padding:1.1rem 1.3rem;margin-bottom:1.3rem;direction:rtl;}
-.text-banner h3{font-size:.95rem;font-weight:700;margin-bottom:.25rem;}
-.text-banner p{font-size:.85rem;opacity:.9;}
-.para-block{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:.8rem;overflow:hidden;transition:box-shadow .2s;}
-.para-block:hover{box-shadow:var(--shadow);}
-.para-trigger{display:flex;align-items:center;gap:9px;padding:.85rem 1rem;cursor:pointer;direction:rtl;}
-.para-num-bubble{width:34px;height:34px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:800;flex-shrink:0;}
-.para-info{flex:1;min-width:0;}
-.para-title-he{font-size:.88rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.para-title-en{font-size:.75rem;color:var(--muted);direction:ltr;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.para-ref-tag{font-size:.68rem;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px;display:inline-block;margin-top:2px;direction:ltr;}
-.para-badge{font-size:.68rem;padding:2px 9px;border-radius:99px;font-weight:600;flex-shrink:0;}
-.badge-key{background:#fff7ed;color:#c2410c;}
-.badge-science{background:#eff6ff;color:#1d4ed8;}
-.badge-expert{background:#f5f3ff;color:#6d28d9;}
-.badge-warning{background:#fef2f2;color:#b91c1c;}
-.badge-conclusion{background:#ecfdf5;color:#065f46;}
-.para-chevron{font-size:.9rem;color:var(--muted);transition:transform .3s;margin-right:auto;margin-left:0;flex-shrink:0;}
-.para-trigger.open .para-chevron{transform:rotate(180deg);}
-.para-body{border-top:1px solid var(--border);display:none;}
-.para-body.open{display:block;}
-.section-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);display:block;margin-bottom:.35rem;}
-.para-text-en{background:#f8fafc;padding:.9rem 1.1rem;font-size:.88rem;line-height:1.75;color:var(--text);direction:ltr;border-bottom:1px solid var(--border);}
-.para-text-he{padding:.9rem 1.1rem;font-size:.9rem;line-height:1.8;color:var(--text);direction:rtl;border-bottom:1px solid var(--border);background:#fffbf5;}
-.para-notes{padding:.85rem 1.1rem;direction:rtl;}
-.para-notes-title{font-size:.8rem;font-weight:700;color:var(--amber);margin-bottom:.55rem;display:flex;align-items:center;gap:4px;}
-.note-item{display:flex;gap:7px;margin-bottom:.45rem;align-items:flex-start;}
-.note-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:8px;}
-.note-texts{display:flex;flex-direction:column;gap:1px;}
-.note-he{font-size:.85rem;font-weight:500;direction:rtl;}
-.note-en{font-size:.78rem;color:var(--muted);direction:ltr;}
+  .explanation{
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .explanation.correct-fb{
+    background:var(--correct-bg);
+    border:1px solid var(--correct);
+    color:#c8f7d8;
+  }
+  .explanation.wrong-fb{
+    background:var(--wrong-bg);
+    border:1px solid var(--wrong);
+    color:#ffd9d9;
+  }
+  .explanation .label{font-weight:700;display:block;margin-bottom:4px;}
+  .explanation .also-correct{
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid rgba(255,255,255,0.12);
+    color:var(--muted);
+  }
 
-/* ── QUIZ ── */
-.quiz-container{max-width:640px;margin:0 auto;}
-.quiz-start{text-align:center;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:2rem 1.5rem;box-shadow:var(--shadow);}
-.quiz-start h3{font-size:1.3rem;font-weight:800;color:var(--text);margin-bottom:.5rem;direction:ltr;}
-.quiz-start p{color:var(--muted);font-size:.9rem;margin-bottom:1.3rem;direction:ltr;}
-.quiz-rules{background:var(--blue-light);border-radius:10px;padding:.9rem 1.1rem;text-align:left;margin-bottom:1.3rem;list-style:none;}
-.quiz-rules li{font-size:.85rem;color:var(--text);margin-bottom:.25rem;padding-left:1rem;position:relative;}
-.quiz-rules li::before{content:'•';position:absolute;left:0;color:var(--blue);}
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:22px;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .nav-row .left-group, .nav-row .right-group{display:flex;gap:10px;}
 
-.quiz-scoreboard{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
-.score-chip{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.45rem 1rem;font-size:.88rem;font-weight:700;direction:ltr;}
-.score-chip.correct{color:var(--green);border-color:var(--green);}
-.score-chip.wrong{color:var(--red);border-color:var(--red);}
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+  }
 
-.quiz-progress{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
-.quiz-q-num{font-size:.8rem;font-weight:600;color:var(--muted);white-space:nowrap;direction:ltr;}
+  /* SUMMARY */
+  .summary-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:36px;
+    text-align:center;
+  }
+  .summary-score{
+    font-size:48px;
+    font-weight:800;
+    background:linear-gradient(90deg,#9db4ff,#c39bff);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    margin:10px 0;
+  }
+  .summary-card p{color:var(--muted);}
+  .summary-actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    margin-top:22px;
+    flex-wrap:wrap;
+  }
 
-.quiz-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);margin-bottom:.9rem;}
-.quiz-q-text{font-size:1rem;font-weight:700;color:var(--text);direction:ltr;margin-bottom:1.1rem;line-height:1.5;}
-.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.quiz-opt{padding:.7rem .85rem;border:2px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-family:'Heebo',sans-serif;font-size:.85rem;font-weight:500;color:var(--text);transition:all .18s;text-align:left;direction:ltr;line-height:1.4;min-height:52px;display:flex;align-items:center;}
-.quiz-opt:hover:not(:disabled){border-color:var(--blue-mid);background:var(--blue-light);}
-.quiz-opt.correct{background:var(--green-light);border-color:var(--green);color:var(--green);}
-.quiz-opt.wrong{background:var(--red-light);border-color:var(--red);color:var(--red);}
-.quiz-opt:disabled{cursor:default;}
-.quiz-feedback{border-radius:10px;padding:.85rem 1rem;margin-top:.9rem;font-size:.85rem;direction:ltr;display:none;line-height:1.6;}
-.quiz-feedback.correct{background:var(--green-light);border:1.5px solid var(--green);color:#065f46;display:block;}
-.quiz-feedback.wrong{background:var(--red-light);border:1.5px solid var(--red);color:#b91c1c;display:block;}
-.quiz-feedback strong{font-weight:700;}
-.quiz-next-btn{width:100%;padding:.85rem;border-radius:10px;border:none;background:var(--blue);color:#fff;font-family:'Heebo',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;margin-top:.7rem;transition:opacity .2s;display:none;}
-.quiz-next-btn.show{display:block;}
-.quiz-next-btn:hover{opacity:.88;}
-
-.quiz-result{text-align:center;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:2rem 1.5rem;box-shadow:var(--shadow);}
-.result-stars{font-size:2.2rem;margin-bottom:.4rem;}
-.result-score{font-size:2.8rem;font-weight:800;color:var(--blue);}
-.result-msg{font-size:1rem;font-weight:700;margin:.4rem 0 .2rem;direction:ltr;}
-.result-sub{color:var(--muted);font-size:.85rem;margin-bottom:1.2rem;direction:ltr;}
-
-footer{text-align:center;padding:1.5rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);direction:rtl;}
-
-/* ════════════════ MOBILE ════════════════ */
-@media(max-width:540px){
-  .hero{padding:1.4rem .9rem 1.2rem;}
-  .hero h1{font-size:1.2rem;}
-  .tab-btn{font-size:.78rem;padding:.75rem .3rem;gap:3px;}
-  .section{padding:1.2rem .8rem 3rem;}
-  /* Flashcards: 2 per row */
-  .fc-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
-  .fc-wrap{height:115px;}
-  .fc-word{font-size:.9rem;}
-  .fc-he{font-size:.95rem;}
-  /* Matching: tighter */
-  .match-grid{gap:7px 10px;}
-  .match-item{font-size:.78rem;padding:.5rem .5rem;min-height:44px;}
-  /* Quiz: single column options */
-  .quiz-options{grid-template-columns:1fr;}
-  .quiz-opt{min-height:46px;}
-  .quiz-card{padding:1.2rem 1rem;}
-  .quiz-q-text{font-size:.92rem;}
-  .para-title-he{font-size:.82rem;}
-  .para-title-en{font-size:.72rem;}
-  .para-badge{display:none;}
-}
-@media(max-width:360px){
-  .fc-grid{grid-template-columns:repeat(2,1fr);}
-  .match-item{font-size:.73rem;}
-}
+  @media (max-width:520px){
+    .question-card{padding:18px;}
+    .summary-card{padding:24px;}
+  }
 </style>
 </head>
 <body>
-
-<div class="hero">
-  <h1> Daydream Achiever </h1>
-  <p class="hero-sub">מאת Jonah Lehrer ·</p>
-  <div class="hero-chips">
-    <span class="chip">📚 19 מילים</span>
-    <span class="chip">🔗 משחק התאמה</span>
-    <span class="chip">📄 טקסט + תרגום</span>
-    <span class="chip">🎯 חידון באנגלית</span>
-  </div>
-</div>
-
-<div class="tabs">
-  <div class="tabs-inner">
-    <button class="tab-btn active" onclick="showTab('vocab')">📚 מילים</button>
-    <button class="tab-btn" onclick="showTab('text')">📄 טקסט</button>
-    <button class="tab-btn" onclick="showTab('quiz')">🎯 שאלות</button>
-  </div>
-</div>
-
-<!-- ════════════════ VOCAB ════════════════ -->
-<div class="section active" id="tab-vocab">
-  <div class="sec-header">
-    <h2 class="sec-title">📚 מילים ללמידה</h2>
-    <p class="sec-sub">19 מילים חשובות — כרטיסיות ומשחק התאמה</p>
-  </div>
-  <div class="mode-switch">
-    <button class="mode-btn active" onclick="setMode('cards')">🃏 כרטיסיות</button>
-    <button class="mode-btn" onclick="setMode('match')">🔗 משחק התאמה</button>
-  </div>
-
-  <!-- Flashcards -->
-  <div id="mode-cards">
-    <div class="fc-controls">
-      <button class="btn btn-primary" onclick="shuffleCards()">🔀 ערבוב</button>
-      <button class="btn" onclick="resetKnown()">↺ אפס</button>
-      <button class="btn" id="unk-btn" onclick="toggleUnknown()">👁 רק לא ידועות</button>
-    </div>
-    <div class="progress-row">
-      <span class="progress-text" id="prog-label">0 / 19 ידועות</span>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-    </div>
-    <p style="font-size:.75rem;color:var(--muted);direction:rtl;margin-bottom:.9rem">לחץ להפוך • לחץ פעמיים לסמן כ"ידוע" ✓</p>
-    <div class="fc-grid" id="fc-grid"></div>
-  </div>
-
-  <!-- Matching -->
-  <div id="mode-match" style="display:none">
-    <div class="match-header">
-      <div class="match-round" id="match-round-lbl">Round 1 of 3</div>
-      <div class="match-score-display" id="match-score">0 pairs matched ✓</div>
-    </div>
-    <div class="progress-row">
-      <span class="progress-text" id="match-prog-txt">0 / 19</span>
-      <div class="progress-bar"><div class="progress-fill" id="match-prog-fill" style="width:0%"></div></div>
-    </div>
-    <div class="match-grid">
-      <div class="match-col">
-        <div class="match-col-label" style="direction:ltr">English</div>
-        <div id="match-en-col"></div>
-      </div>
-      <div class="match-col">
-        <div class="match-col-label" style="direction:rtl">עברית</div>
-        <div id="match-he-col"></div>
-      </div>
-    </div>
-    <div class="match-celebrate" id="match-win">
-      <div style="font-size:2rem;margin-bottom:.5rem">🎉</div>
-      <h3>כל הכבוד! התאמת את כל 19 המילים!</h3>
-      <p style="color:var(--green);font-weight:600;margin-top:.4rem">אתה מוכן לבחינה!</p>
-      <button class="btn btn-primary" style="margin-top:1rem" onclick="startMatch()">שחק שוב 🔄</button>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════ TEXT ════════════════ -->
-<div class="section" id="tab-text">
-  <div class="sec-header">
-    <h2 class="sec-title">📄 הטקסט עם תרגום</h2>
-    <p class="sec-sub">לחץ על פסקה לפתיחה • מספרי הפסקאות בהדגשה כדי שתוכל למצוא בטקסט</p>
-  </div>
-  <div class="text-banner">
-    <h3>📌 על מה הטקסט?</h3>
-    <p>מדענים גילו שחלימה בהקיץ היא <strong>תכונה יסודית של המוח</strong> — לא עצלות! היא חיונית ליצירתיות, לפיתוח חברתי ולבריאות הנפשית.</p>
-  </div>
-  <div id="para-list"></div>
-</div>
-
-<!-- ════════════════ QUIZ ════════════════ -->
-<div class="section" id="tab-quiz">
-  <div class="sec-header">
-    <h2 class="sec-title">🎯 שאלות לתרגול</h2>
-    <p class="sec-sub">20 שאלות על הטקסט — השאלות והתשובות באנגלית. בחר את התשובה הנכונה!</p>
-  </div>
-  <div class="quiz-container">
-
-    <div class="quiz-start" id="quiz-start">
-      <div style="font-size:2.8rem;margin-bottom:.7rem">🎯</div>
-      <h3 style="direction:rtl">מוכן לחידון?</h3>
-      <ul class="quiz-rules">
-        <li>לכל שאלה יש 4 אפשרויות — בחר את הנכונה</li>
-        <li>קרא את ההסבר אחרי כל שאלה</li>
-        <li>קבל ציון בסוף!</li>
-      </ul>
-      <button class="btn btn-primary" style="font-size:1rem;padding:.8rem 2rem" onclick="startQuiz()">התחל חידון ▶</button>
-    </div>
-
-    <div id="quiz-game" style="display:none">
-      <div class="quiz-scoreboard">
-        <span class="score-chip correct">✓ <span id="q-correct">0</span> נכון</span>
-        <span class="score-chip wrong">✗ <span id="q-wrong">0</span> טעות</span>
-      </div>
-      <div class="quiz-progress">
-        <span class="quiz-q-num" id="q-num-lbl">Question 1 of 20</span>
-        <div class="progress-bar" style="flex:1"><div class="progress-fill" id="quiz-prog" style="width:5%"></div></div>
-      </div>
-      <div class="quiz-card">
-        <div class="quiz-q-text" id="quiz-q-text"></div>
-        <div class="quiz-options" id="quiz-opts"></div>
-        <div class="quiz-feedback" id="quiz-fb"></div>
-      </div>
-      <button class="quiz-next-btn" id="quiz-next" onclick="nextQ()">שאלה הבאה ←</button>
-    </div>
-
-    <div id="quiz-result" style="display:none" class="quiz-result">
-      <div class="result-stars" id="res-stars">⭐⭐⭐</div>
-      <div class="result-score" id="res-score">0/20</div>
-      <div class="result-msg" id="res-msg"></div>
-      <div class="result-sub" id="res-sub"></div>
-      <button class="btn btn-primary" style="margin-top:1rem;font-size:1rem;padding:.8rem 2rem" onclick="restartQuiz()">נסה שוב 🔄</button>
-    </div>
-  </div>
-</div>
-
-<footer>Study guide · Daydream Achiever by Jonah Lehrer · Created for exam preparation</footer>
+  <div class="wrap" id="app"></div>
 
 <script>
-// ════════════════════════ DATA ════════════════════════
+const QUIZZES = [{
+  "title": "Overview and Basic DS",
+  "questions": [
+    {
+      "question": "In computational thinking, which process involves focusing on high-level constraints and high-level decisions while filtering out unnecessary details?",
+      "answerOptions": [
+        {
+          "text": "Abstraction",
+          "isCorrect": true,
+          "rationale": "Focusing on essential information while ignoring specific details is the core principle of this problem-solving technique."
+        },
+        {
+          "text": "Decomposition",
+          "isCorrect": false,
+          "rationale": "This technique focuses on breaking a large problem into smaller parts rather than filtering out details."
+        },
+        {
+          "text": "Algorithm Design",
+          "isCorrect": false,
+          "rationale": "This involves creating a step-by-step solution, which usually happens after the details have already been abstracted or decomposed."
+        },
+        {
+          "text": "Pattern Recognition",
+          "isCorrect": false,
+          "rationale": "This process looks for similarities between problems rather than simplifying a single problem by removing detail."
+        }
+      ],
+      "hint": "Think about the phase where you decide on a date and capacity for a party before picking a specific music playlist."
+    },
+    {
+      "question": "When searching for a specific name in a sorted list of $500$ entries, why is binary search significantly more efficient than linear search?",
+      "answerOptions": [
+        {
+          "text": "It reduces the search space by half with each step.",
+          "isCorrect": true,
+          "rationale": "By repeatedly dividing the dataset, the number of required checks is reduced from $500$ to approximately $9$ in the worst case."
+        },
+        {
+          "text": "It checks every element in the list simultaneously.",
+          "isCorrect": false,
+          "rationale": "Standard binary search is a sequential process of comparison, not a parallel operation on all elements."
+        },
+        {
+          "text": "It eliminates the need for the data to be organized.",
+          "isCorrect": false,
+          "rationale": "Binary search actually requires the data to be strictly sorted to function correctly."
+        },
+        {
+          "text": "It uses more memory to speed up the processing time.",
+          "isCorrect": false,
+          "rationale": "The efficiency of binary search comes from its logic of elimination rather than increased memory usage."
+        }
+      ],
+      "hint": "Recall the 'divide and conquer' method used to find 'Sarah Zhang' in the second half of the alphabet."
+    },
+    {
+      "question": "What is a primary characteristic of how an array stores data in a computer's memory?",
+      "answerOptions": [
+        {
+          "text": "Elements are stored in contiguous memory locations.",
+          "isCorrect": true,
+          "rationale": "Storing items side-by-side in a continuous block is what allows for predictable and fast access by index."
+        },
+        {
+          "text": "Elements are scattered across available RAM slots to maximize space.",
+          "isCorrect": false,
+          "rationale": "Scattering elements would prevent the constant-time access that arrays are designed to provide."
+        },
+        {
+          "text": "Each element is stored in a separate long-term storage sector (SSD).",
+          "isCorrect": false,
+          "rationale": "Arrays typically reside in memory (RAM) for speed, as moving data from long-term storage is too slow for basic operations."
+        },
+        {
+          "text": "Elements are stored based on their value rather than their position.",
+          "isCorrect": false,
+          "rationale": "Arrays are specifically organized by numeric position (index), not by the data they contain."
+        }
+      ],
+      "hint": "Think about the 'row of mailboxes' analogy where boxes are physically attached to one another."
+    },
+    {
+      "question": "Which operation is considered a 'disadvantage' of using an array when the collection is large?",
+      "answerOptions": [
+        {
+          "text": "Inserting an element at the beginning or in the middle.",
+          "isCorrect": true,
+          "rationale": "Because memory is contiguous, adding an item in the middle requires shifting all subsequent elements to make room."
+        },
+        {
+          "text": "Accessing an element at a known numeric index.",
+          "isCorrect": false,
+          "rationale": "Direct access by position is the primary advantage of arrays and happens in $O(1)$ time."
+        },
+        {
+          "text": "Storing data of the same type sequentially.",
+          "isCorrect": false,
+          "rationale": "This is a core design feature of arrays that makes them cache-friendly and efficient."
+        },
+        {
+          "text": "Using an array to maintain pixel data in digital images.",
+          "isCorrect": false,
+          "rationale": "This is a common and efficient application for arrays due to the predictable nature of image grids."
+        }
+      ],
+      "hint": "Reflect on what must happen to the other 'mailboxes' if you tried to squeeze a new one into the center of a fixed row."
+    },
+    {
+      "question": "In a Dictionary data structure, why is hashing used for lookups?",
+      "answerOptions": [
+        {
+          "text": "To achieve near-constant time operations regardless of size.",
+          "isCorrect": true,
+          "rationale": "Hashing converts a meaningful key into a specific bucket location, enabling $O(1)$ average time complexity."
+        },
+        {
+          "text": "To ensure that all values in the dictionary are unique.",
+          "isCorrect": false,
+          "rationale": "While keys must be unique, values in a dictionary can be duplicated without any issue."
+        },
+        {
+          "text": "To keep the elements in alphabetical order for easier iteration.",
+          "isCorrect": false,
+          "rationale": "Hashing typically results in an unpredictable order, making iteration order unreliable."
+        },
+        {
+          "text": "To minimize the amount of memory overhead required.",
+          "isCorrect": false,
+          "rationale": "Dictionaries actually have higher memory overhead because they must maintain hash tables and handle potential collisions."
+        }
+      ],
+      "hint": "Consider how you can find a phone number in a book immediately if you know the name, without reading every page."
+    },
+    {
+      "question": "Which of the following is a drawback of using a Dictionary (Hash Map) compared to an Array?",
+      "answerOptions": [
+        {
+          "text": "Items have no guaranteed order during iteration.",
+          "isCorrect": true,
+          "rationale": "Because data is organized by hash buckets rather than index, the sequence of items is often unpredictable."
+        },
+        {
+          "text": "Lookups by a specific identifier are slower.",
+          "isCorrect": false,
+          "rationale": "Dictionaries are specifically designed to make lookups by identifiers (keys) extremely fast."
+        },
+        {
+          "text": "The structure cannot grow dynamically.",
+          "isCorrect": false,
+          "rationale": "One advantage of dictionaries over fixed-size arrays is their ability to grow as more key-value pairs are added."
+        },
+        {
+          "text": "It cannot store different types of data values.",
+          "isCorrect": false,
+          "rationale": "Dictionaries are versatile and can typically store values of any data type."
+        }
+      ],
+      "hint": "Think about the 'No page order needed' point in the phone book analogy."
+    },
+    {
+      "question": "Which scenario would most appropriately be handled using a Queue data structure?",
+      "answerOptions": [
+        {
+          "text": "A web server managing incoming user requests in order of arrival.",
+          "isCorrect": true,
+          "rationale": "Queues follow the First-In-First-Out (FIFO) principle, ensuring fairness and sequential processing of requests."
+        },
+        {
+          "text": "A graphics program allowing a user to 'Undo' their last ten actions.",
+          "isCorrect": false,
+          "rationale": "Undo functionality requires reversing the most recent action first, which is a Last-In-First-Out behavior."
+        },
+        {
+          "text": "A search engine looking up web pages by specific keywords.",
+          "isCorrect": false,
+          "rationale": "Keyword-based lookups are best handled by dictionaries or hash-based structures, not sequential lines."
+        },
+        {
+          "text": "A system managing fixed-size theater seat assignments.",
+          "isCorrect": false,
+          "rationale": "Theater seats are best mapped using an array where each seat corresponds to a specific numeric index."
+        }
+      ],
+      "hint": "Identify which situation requires a 'First-Come, First-Served' policy."
+    },
+    {
+      "question": "What happens during a 'Dequeue' operation in a queue structure?",
+      "answerOptions": [
+        {
+          "text": "The item at the front of the queue is removed and returned.",
+          "isCorrect": true,
+          "rationale": "Following the FIFO principle, items must leave the queue from the front where they have been waiting the longest."
+        },
+        {
+          "text": "A new item is added to the rear of the queue.",
+          "isCorrect": false,
+          "rationale": "Adding an item to the back is known as an 'Enqueue' operation."
+        },
+        {
+          "text": "The item at the top is viewed without being removed.",
+          "isCorrect": false,
+          "rationale": "Viewing without removing is a 'Peek' operation, and 'top' is a term usually reserved for stacks."
+        },
+        {
+          "text": "The entire queue is cleared to free up memory.",
+          "isCorrect": false,
+          "rationale": "Dequeue is a surgical operation on a single element, not a bulk deletion of the entire structure."
+        }
+      ],
+      "hint": "Think about what happens to the person at the very front of a supermarket checkout line."
+    },
+    {
+      "question": "The 'Last-In-First-Out' (LIFO) principle is the defining characteristic of which data structure?",
+      "answerOptions": [
+        {
+          "text": "Stack",
+          "isCorrect": true,
+          "rationale": "A stack only allows access to the most recently added item, mirroring a physical pile of objects."
+        },
+        {
+          "text": "Queue",
+          "isCorrect": false,
+          "rationale": "Queues operate on First-In-First-Out (FIFO), ensuring the oldest items are processed first."
+        },
+        {
+          "text": "Array",
+          "isCorrect": false,
+          "rationale": "Arrays allow random access to any element by index and do not enforce a LIFO or FIFO order by default."
+        },
+        {
+          "text": "Dictionary",
+          "isCorrect": false,
+          "rationale": "Dictionaries are based on key-value associations and do not have a strict entry/exit order."
+        }
+      ],
+      "hint": "Remember the analogy of a stack of plates where you can only safely take the one on top."
+    },
+    {
+      "question": "Why is a Stack used by programming languages to manage function calls?",
+      "answerOptions": [
+        {
+          "text": "It tracks active functions in reverse order to return correctly when one finishes.",
+          "isCorrect": true,
+          "rationale": "Nested function calls must be completed in the reverse order they were started, making the LIFO nature of a stack ideal."
+        },
+        {
+          "text": "It allows the CPU to access any function in memory instantly.",
+          "isCorrect": false,
+          "rationale": "Stacks restrict access to only the top element, which would actually hinder random access to functions."
+        },
+        {
+          "text": "It ensures that the first function called is the first one to finish executing.",
+          "isCorrect": false,
+          "rationale": "The first function called is usually the last one to finish if it calls other sub-functions inside it."
+        },
+        {
+          "text": "It minimizes the amount of RAM required to run the software.",
+          "isCorrect": false,
+          "rationale": "The choice of a stack for function calls is about managing the logical flow and state, not specifically about saving memory."
+        }
+      ],
+      "hint": "Consider what happens when one task is paused to start a sub-task; you must finish the sub-task before resuming the first one."
+    },
+    {
+      "question": "In the context of algorithm analysis, why is it important to distinguish between 'Simple Sorts' and 'Advanced Sorts'?",
+      "answerOptions": [
+        {
+          "text": "The difference in execution time becomes massive as the dataset grows.",
+          "isCorrect": true,
+          "rationale": "For 1,000,000 items, a simple sort like Bubble Sort might take hours, while an advanced sort like Merge Sort takes seconds."
+        },
+        {
+          "text": "Simple sorts are only capable of sorting numbers, not text.",
+          "isCorrect": false,
+          "rationale": "Both types of algorithms can sort any data type as long as a comparison rule exists."
+        },
+        {
+          "text": "Advanced sorts use less memory than simple sorts in all cases.",
+          "isCorrect": false,
+          "rationale": "Advanced sorts like Merge Sort often require extra memory to store temporary subarrays during the process."
+        },
+        {
+          "text": "Simple sorts are required for binary search to work.",
+          "isCorrect": false,
+          "rationale": "Binary search requires sorted data, but it doesn't matter which algorithm was used to sort that data."
+        }
+      ],
+      "hint": "Recall the comparison of 'Hours vs Seconds' for large datasets."
+    },
+    {
+      "question": "What is the primary trade-off when choosing between representing data as a single average versus a detailed record?",
+      "answerOptions": [
+        {
+          "text": "Simplicity versus information richness.",
+          "isCorrect": true,
+          "rationale": "A single average is easy to process but loses specific details, whereas a record keeps all info but is more complex."
+        },
+        {
+          "text": "Human-readability versus math speed.",
+          "isCorrect": false,
+          "rationale": "This trade-off is more common when choosing between different date formats (e.g., text vs. timestamp)."
+        },
+        {
+          "text": "Contiguous memory versus hash-based storage.",
+          "isCorrect": false,
+          "rationale": "This describes the difference between arrays and dictionaries rather than the detail level of a single record."
+        },
+        {
+          "text": "Sorted versus unsorted searching efficiency.",
+          "isCorrect": false,
+          "rationale": "Data representation refers to the structure of the data itself, whereas sorting refers to how that data is ordered."
+        }
+      ],
+      "hint": "Consider the Student Grade example where an average of $85.5$ is compared to a list of assignments and exams."
+    },
+    {
+      "question": "According to the course materials, what is the 'brain' of the computer that performs operations on data?",
+      "answerOptions": [
+        {
+          "text": "Processor (CPU)",
+          "isCorrect": true,
+          "rationale": "The Central Processing Unit is the hardware component responsible for executing instructions and manipulating data."
+        },
+        {
+          "text": "Memory (RAM)",
+          "isCorrect": false,
+          "rationale": "RAM acts as a temporary workspace for data but does not perform the logic operations itself."
+        },
+        {
+          "text": "Storage (SSD/HDD)",
+          "isCorrect": false,
+          "rationale": "Storage is for long-term persistence of data and is much slower than the components that process data."
+        },
+        {
+          "text": "Software",
+          "isCorrect": false,
+          "rationale": "Software refers to the instructions themselves, whereas the question asks for the hardware component that executes them."
+        }
+      ],
+      "hint": "Distinguish between the physical machine's 'workspace' and its 'computational brain'."
+    },
+    {
+      "question": "Why does moving data between hardware components like Storage and Memory represent a 'Key Constraint' in computing?",
+      "answerOptions": [
+        {
+          "text": "It is an expensive and time-consuming operation.",
+          "isCorrect": true,
+          "rationale": "Moving data between components is relatively slow, so good organization aims to minimize these movements to maintain speed."
+        },
+        {
+          "text": "Data is often corrupted when it moves between different devices.",
+          "isCorrect": false,
+          "rationale": "Modern hardware is very reliable at moving data; the primary constraint is performance, not reliability."
+        },
+        {
+          "text": "The CPU cannot access RAM directly without going through Storage first.",
+          "isCorrect": false,
+          "rationale": "The CPU is designed to access RAM directly because it is much faster than going through long-term storage."
+        },
+        {
+          "text": "Software cannot be stored on the same device as the data it processes.",
+          "isCorrect": false,
+          "rationale": "Software and data are commonly stored on the same SSD/HDD and loaded into RAM together."
+        }
+      ],
+      "hint": "Recall the 'Key Constraint' highlighted in the hardware section of Lecture 1."
+    },
+    {
+      "question": "In the 'Party Planning' example, which step corresponds to 'Algorithm Design'?",
+      "answerOptions": [
+        {
+          "text": "Creating a sequential checklist for booking a venue, sending invites, and tracking RSVPs.",
+          "isCorrect": true,
+          "rationale": "Developing a step-by-step solution that can be repeated and followed by anyone is the essence of this stage."
+        },
+        {
+          "text": "Dividing the party into sub-problems like food, guest list, and budget.",
+          "isCorrect": false,
+          "rationale": "This action is actually Decomposition, the first step in the computational thinking framework."
+        },
+        {
+          "text": "Realizing that planning this party is similar to planning a previous wedding.",
+          "isCorrect": false,
+          "rationale": "Recognizing similarities between different events is categorized as Pattern Recognition."
+        },
+        {
+          "text": "Deciding on the maximum guest capacity before choosing specific decorations.",
+          "isCorrect": false,
+          "rationale": "Prioritizing high-level constraints over minor details is an example of Abstraction."
+        }
+      ],
+      "hint": "Look for the part where the problem is turned into an ordered list of clear instructions."
+    }
+  ]
+},
+{
+  "title": "Efficiency & Recursion",
+  "questions": [
+    {
+      "question": "For what value of $n$ does an algorithm with a time complexity of $T(n) = 20n$ become more efficient than one with a time complexity of $T(n) = 2n^{2}$?",
+      "answerOptions": [
+        {
+          "text": "$n > 10$",
+          "isCorrect": true,
+          "rationale": "By setting $20n < 2n^{2}$ and solving for $n$, we find that the linear algorithm becomes faster once the input size exceeds 10."
+        },
+        {
+          "text": "$n > 20$",
+          "isCorrect": false,
+          "rationale": "This value assumes the constants are equal, but the quadratic term grows at a rate that overtakes the linear term much sooner."
+        },
+        {
+          "text": "$n < 10$",
+          "isCorrect": false,
+          "rationale": "For very small values of $n$, the quadratic algorithm is actually faster because the constant factor in the linear algorithm is relatively large."
+        },
+        {
+          "text": "$n = 5$",
+          "isCorrect": false,
+          "rationale": "At this point, the linear algorithm takes 100 operations while the quadratic one only takes 50, making the quadratic one more efficient."
+        }
+      ],
+      "hint": "Try setting the two equations equal to each other to find the crossover point where their performance is identical."
+    },
+    {
+      "question": "Consider Algorithm A with $T(n) = 10 \\log_{2} n$ and Algorithm B with $T(n) = n$. At which of the following input sizes is Algorithm A more efficient than Algorithm B?",
+      "answerOptions": [
+        {
+          "text": "$n = 64$",
+          "isCorrect": true,
+          "rationale": "At $n=64$, Algorithm A performs $10 \\times 6 = 60$ operations, while Algorithm B performs 64, making A more efficient."
+        },
+        {
+          "text": "$n = 8$",
+          "isCorrect": false,
+          "rationale": "At this small size, the logarithmic growth multiplied by its constant (30) is still larger than the linear input (8)."
+        },
+        {
+          "text": "$n = 32$",
+          "isCorrect": false,
+          "rationale": "At $n=32$, Algorithm A requires 50 operations while Algorithm B only requires 32."
+        },
+        {
+          "text": "$n = 16$",
+          "isCorrect": false,
+          "rationale": "The linear algorithm is more efficient here because $16 < 10 \\times 4$."
+        }
+      ],
+      "hint": "Recall that $\\log_{2} 64 = 6$ and $\\log_{2} 32 = 5$."
+    },
+    {
+      "question": "Algorithm A has a complexity of $T(n) = n^{2}$ and Algorithm B has a complexity of $T(n) = 8n + 20$. For which input size $n$ does Algorithm B first become more efficient than Algorithm A?",
+      "answerOptions": [
+        {
+          "text": "$n = 11$",
+          "isCorrect": true,
+          "rationale": "At $n=10$, both algorithms perform 100 operations; at $n=11$, Algorithm A takes 121 while Algorithm B takes only 108."
+        },
+        {
+          "text": "$n = 5$",
+          "isCorrect": false,
+          "rationale": "For $n=5$, $n^{2}$ is 25 while $8n + 20$ is 60, meaning the quadratic algorithm is still faster at this small scale."
+        },
+        {
+          "text": "$n = 8$",
+          "isCorrect": false,
+          "rationale": "At $n=8$, $64 < 84$, so the quadratic algorithm is more efficient."
+        },
+        {
+          "text": "$n = 20$",
+          "isCorrect": false,
+          "rationale": "While Algorithm B is more efficient here, it is not the first point where it overtakes Algorithm A."
+        }
+      ],
+      "hint": "Solve the quadratic inequality $n^{2} > 8n + 20$ to find where the growth rates diverge."
+    },
+    {
+      "question": "Given the following pseudocode for a recursive function, what is the final output of the call `PrintNums(4)`?\n\n`public void PrintNums(int num) {` \n  `if (num > -1) {` \n    `Console.Write(num + \", \");` \n    `PrintNums(num - 1);` \n  `}` \n`}`",
+      "answerOptions": [
+        {
+          "text": "$4, 3, 2, 1, 0$",
+          "isCorrect": true,
+          "rationale": "The function prints the current number before recursing, and stops when the number is no longer greater than -1, thus including 0 in the output."
+        },
+        {
+          "text": "$4, 3, 2, 1$",
+          "isCorrect": false,
+          "rationale": "This ignores the base case condition $num > -1$, which allows the function to execute one last time when $num$ is 0."
+        },
+        {
+          "text": "$3, 2, 1, 0$",
+          "isCorrect": false,
+          "rationale": "This assumes the first print happens after the first recursive call, but the code prints the initial input first."
+        },
+        {
+          "text": "$0, 1, 2, 3, 4$",
+          "isCorrect": false,
+          "rationale": "This would be the output if the print statement occurred after the recursive call on the way back up the stack."
+        }
+      ],
+      "hint": "Look closely at the condition in the `if` statement and whether the print happens before or after the recursive call."
+    },
+    {
+      "question": "If you call the recursive function `factorial(4)` as defined below, what is the total number of function calls made (including the initial call)?\n\n`public int factorial(int num) {` \n  `if (num == 1) return 1;` \n  `else return num * factorial(num - 1);` \n`}`",
+      "answerOptions": [
+        {
+          "text": "4",
+          "isCorrect": true,
+          "rationale": "The calls are `factorial(4)`, `factorial(3)`, `factorial(2)`, and finally `factorial(1)`, which hits the base case and stops."
+        },
+        {
+          "text": "5",
+          "isCorrect": false,
+          "rationale": "This error occurs if one assumes the recursion continues down to `factorial(0)`, but the base case is set at `num == 1`."
+        },
+        {
+          "text": "3",
+          "isCorrect": false,
+          "rationale": "This counts only the subsequent recursive calls, omitting the initial call required to start the process."
+        },
+        {
+          "text": "24",
+          "isCorrect": false,
+          "rationale": "This is the mathematical result of $4!$, not the count of how many times the function was invoked."
+        }
+      ],
+      "hint": "Track the sequence of inputs until the condition `num == 1` is satisfied."
+    },
+    {
+      "question": "What is the total number of recursive calls (including the initial call) for `Fibonachi(4)` using the multiple recursion implementation provided in the source material?\n\n`function int Fibonachi(int n) {` \n  `if (n == 0 || n == 1) return 1;` \n  `return Fibonachi(n - 1) + Fibonachi(n - 2);` \n`}`",
+      "answerOptions": [
+        {
+          "text": "9",
+          "isCorrect": true,
+          "rationale": "The call tree expands such that $C(4) = 1 + C(3) + C(2) = 1 + 5 + 3 = 9$ total calls."
+        },
+        {
+          "text": "5",
+          "isCorrect": false,
+          "rationale": "This is the value of the 4th Fibonacci number ($F(4)$) in this specific sequence, but not the count of calls."
+        },
+        {
+          "text": "15",
+          "isCorrect": false,
+          "rationale": "This is the number of calls for `Fibonachi(5)`, representing the exponential growth of the call tree."
+        },
+        {
+          "text": "7",
+          "isCorrect": false,
+          "rationale": "This reflects a misunderstanding of how the multiple recursion branches double back and repeat work for smaller values."
+        }
+      ],
+      "hint": "Recall that each non-base case call generates two additional calls, and many values are recomputed multiple times."
+    },
+    {
+      "question": "Given the recursive power function below, what is the final result of the call `numPow(5, 2)`?\n\n`function int numPow(int _base, int _power) {` \n  `if (_power == 0) return 1;` \n  `else return _base * numPow(_base, _power - 1);` \n`}`",
+      "answerOptions": [
+        {
+          "text": "25",
+          "isCorrect": true,
+          "rationale": "The function calculates $5 \\times (5 \\times 1)$, representing $5^{2}$ through repeated multiplication until the power reaches 0."
+        },
+        {
+          "text": "10",
+          "isCorrect": false,
+          "rationale": "This is the result of $5 \\times 2$, which is a common mistake when confusing exponentiation with simple multiplication."
+        },
+        {
+          "text": "5",
+          "isCorrect": false,
+          "rationale": "This would only occur if the recursion stopped one step too early or failed to multiply by the base."
+        },
+        {
+          "text": "1",
+          "isCorrect": false,
+          "rationale": "This is the base case value returned when `_power` is 0, but it must be multiplied by the base in the preceding steps."
+        }
+      ],
+      "hint": "Follow the return values back up the stack: the base case returns 1, which is then multiplied by the base for each recursive level."
+    },
+    {
+      "question": "What will be printed to the console if `f1(1)` is called, using the mutual recursion example provided?\n\n`void f1(int x) { Console.Write(x); if (x > 0) f2(x - 1); }` \n`void f2(int x) { Console.Write(x); if (x > 0) f1(x - 1); }`",
+      "answerOptions": [
+        {
+          "text": "$1, 0$",
+          "isCorrect": true,
+          "rationale": "`f1(1)` prints 1 and calls `f2(0)`. `f2(0)` prints 0 but stops there because the condition $x > 0$ is no longer met."
+        },
+        {
+          "text": "$1, 0, 0$",
+          "isCorrect": false,
+          "rationale": "This incorrectly assumes that `f2` calls `f1` again even when its input is 0."
+        },
+        {
+          "text": "$1$",
+          "isCorrect": false,
+          "rationale": "This misses the fact that `f1` successfully triggers a single call to `f2` because 1 is greater than 0."
+        },
+        {
+          "text": "$1, 1$",
+          "isCorrect": false,
+          "rationale": "This assumes the value of $x$ does not decrement between the mutual calls."
+        }
+      ],
+      "hint": "Trace how the value changes as it passes from `f1` to `f2`, checking the stopping condition at each step."
+    },
+    {
+      "question": "What is the final result of calling `factorial(3)` using the following logic?\n\n`public int factorial(int num) {` \n  `if (num == 1) return 1;` \n  `else {` \n    `int temp = factorial(num - 1);` \n    `int result = num * temp;` \n    `return result;` \n  `}` \n`}`",
+      "answerOptions": [
+        {
+          "text": "6",
+          "isCorrect": true,
+          "rationale": "The calculation unfolds as $3 \\times (2 \\times 1)$, which equals 6."
+        },
+        {
+          "text": "3",
+          "isCorrect": false,
+          "rationale": "This might be mistaken for the input value or the number of calls, rather than the mathematical product."
+        },
+        {
+          "text": "2",
+          "isCorrect": false,
+          "rationale": "This is only the result of the intermediate `factorial(2)` call before it is multiplied by the final `num` (3)."
+        },
+        {
+          "text": "9",
+          "isCorrect": false,
+          "rationale": "This is $3^{2}$ or $3+3+3$, neither of which represents the factorial product."
+        }
+      ],
+      "hint": "Factorial is the product of all integers from $n$ down to 1."
+    },
+    {
+      "question": "How many total calls to `PrintNums` are made when executing `PrintNums(2)`?\n\n`public void PrintNums(int num) {` \n  `if (num > -1) {` \n    `Console.Write(num);` \n    `PrintNums(num - 1);` \n  `}` \n`}`",
+      "answerOptions": [
+        {
+          "text": "4",
+          "isCorrect": true,
+          "rationale": "The calls are `PrintNums(2)`, `PrintNums(1)`, `PrintNums(0)`, and finally `PrintNums(-1)`, which fails the `if` condition."
+        },
+        {
+          "text": "3",
+          "isCorrect": false,
+          "rationale": "This count neglects the final call where the input is -1, which is necessary to check the base case condition."
+        },
+        {
+          "text": "2",
+          "isCorrect": false,
+          "rationale": "This only counts the calls where $num$ is strictly positive, ignoring the 0 and the base case check."
+        },
+        {
+          "text": "5",
+          "isCorrect": false,
+          "rationale": "This would imply the recursion continues to -2, which is past the stopping point defined in the code."
+        }
+      ],
+      "hint": "Count every time the function is entered, including the very last time where the condition becomes false."
+    },
+    {
+      "question": "When simplifying an expression for Big O notation, such as $f(n) = 3n^{2} + 100n + 7$, why is the complexity identified as $O(n^{2})$?",
+      "answerOptions": [
+        {
+          "text": "The highest-degree term dominates growth as $n$ becomes very large.",
+          "isCorrect": true,
+          "rationale": "Big O notation focuses on the rate of growth, where constants and lower-order terms become negligible as the input size increases."
+        },
+        {
+          "text": "The constant 3 is added to the 7 to simplify the expression.",
+          "isCorrect": false,
+          "rationale": "Constants are ignored in Big O, but they are not combined with other terms in that manner."
+        },
+        {
+          "text": "Quadratic terms are always preferred over linear terms in analysis.",
+          "isCorrect": false,
+          "rationale": "Big O describes what is there, not a preference; $O(n^{2})$ is actually less efficient than $O(n)$."
+        },
+        {
+          "text": "The term $100n$ is considered a constant because the 100 does not change.",
+          "isCorrect": false,
+          "rationale": "While 100 is a constant, $100n$ is a linear term that grows with $n$, but it grows slower than $n^{2}$."
+        }
+      ],
+      "hint": "Consider which part of the mathematical expression contributes the most to the total value when $n$ is one million."
+    },
+    {
+      "question": "Which of the following best describes the 'Space Efficiency' dimension of an algorithm?",
+      "answerOptions": [
+        {
+          "text": "The amount of memory the program uses during execution as input size grows.",
+          "isCorrect": true,
+          "rationale": "Space efficiency measures memory consumption, often involving trade-offs with time efficiency."
+        },
+        {
+          "text": "The physical disk space required to store the compiled program files.",
+          "isCorrect": false,
+          "rationale": "Efficiency refers to resources consumed during runtime (RAM), not the static size of the executable on the hard drive."
+        },
+        {
+          "text": "The number of lines of code used to implement the algorithm.",
+          "isCorrect": false,
+          "rationale": "While recursive solutions might have fewer lines of code (elegance), this does not define space efficiency in terms of hardware resources."
+        },
+        {
+          "text": "The speed at which the CPU processes individual data items.",
+          "isCorrect": false,
+          "rationale": "Processing speed is a component of time efficiency, not space efficiency."
+        }
+      ],
+      "hint": "This resource is often limited in embedded systems and is tracked by the call stack in recursion."
+    },
+    {
+      "question": "What is the primary function of the Call Stack in the context of recursion?",
+      "answerOptions": [
+        {
+          "text": "To track active function calls and their local variables using a LIFO structure.",
+          "isCorrect": true,
+          "rationale": "The call stack manages the order of execution and stores the state of each recursive call until it completes."
+        },
+        {
+          "text": "To store all global variables in a centralized location for faster access.",
+          "isCorrect": false,
+          "rationale": "Global variables are typically stored elsewhere; the stack is specifically for local function context and return addresses."
+        },
+        {
+          "text": "To provide an alternative to the base case for stopping infinite loops.",
+          "isCorrect": false,
+          "rationale": "The stack does not stop loops; rather, it overflows and causes a crash if a base case is missing."
+        },
+        {
+          "text": "To sort the input data before the recursive function begins processing.",
+          "isCorrect": false,
+          "rationale": "Sorting is a specific algorithmic task, whereas the call stack is a fundamental memory structure for managing function execution."
+        }
+      ],
+      "hint": "Think about how a program remembers where to return after a sub-task is finished."
+    },
+    {
+      "question": "Each time a recursive function is called, a new 'stack frame' is created. According to the source material, which of the following is contained within a stack frame?",
+      "answerOptions": [
+        {
+          "text": "Parameters, local variables, and the return address.",
+          "isCorrect": true,
+          "rationale": "These elements allow the system to maintain the unique state of each call and know where to resume once the call is popped."
+        },
+        {
+          "text": "The entire source code of the function and its Big O complexity.",
+          "isCorrect": false,
+          "rationale": "Source code and complexity labels are not stored in memory frames during execution."
+        },
+        {
+          "text": "Only the base case condition and the final result.",
+          "isCorrect": false,
+          "rationale": "While a result might be returned, the frame must store the intermediate local data needed to calculate that result."
+        },
+        {
+          "text": "A copy of the entire dataset being processed.",
+          "isCorrect": false,
+          "rationale": "Copying the entire dataset into every stack frame would be extremely inefficient and is generally avoided."
+        }
+      ],
+      "hint": "A stack frame must hold everything necessary to resume the function's specific execution instance."
+    },
+    {
+      "question": "Based on the Complexity Review of data structures, which operation is performed in $O(1)$ time for both an Array and a Dictionary (on average)?",
+      "answerOptions": [
+        {
+          "text": "Access",
+          "isCorrect": true,
+          "rationale": "Arrays allow instant access via index, and Dictionaries provide instant access via keys using a hash function."
+        },
+        {
+          "text": "Insert",
+          "isCorrect": false,
+          "rationale": "Inserting into an array is $O(n)$ because it may require shifting elements, whereas Dictionary insertion is $O(1)$."
+        },
+        {
+          "text": "Delete",
+          "isCorrect": false,
+          "rationale": "Deletion in an array typically takes linear time due to shifting, while it is constant time in a dictionary."
+        },
+        {
+          "text": "Search for a value (unsorted)",
+          "isCorrect": false,
+          "rationale": "Searching for an arbitrary value in an unsorted array or dictionary without a key requires a linear scan."
+        }
+      ],
+      "hint": "Think about retrieving an item when you already know its specific location or key."
+    },
+    {
+      "question": "What distinguishes 'Tail Recursion' from other types of recursion?",
+      "answerOptions": [
+        {
+          "text": "The recursive call is the very last instruction in the function.",
+          "isCorrect": true,
+          "rationale": "In tail recursion, there are no pending operations after the recursive call, allowing for compiler optimization."
+        },
+        {
+          "text": "It uses a loop instead of a self-call to improve performance.",
+          "isCorrect": false,
+          "rationale": "Tail recursion is still a self-call, although compilers can often transform it into a loop internally."
+        },
+        {
+          "text": "It requires two or more base cases to terminate properly.",
+          "isCorrect": false,
+          "rationale": "The number of base cases is determined by the problem logic, not by whether the recursion is 'tail' or not."
+        },
+        {
+          "text": "It is only used for calculating mathematical sequences like Fibonacci.",
+          "isCorrect": false,
+          "rationale": "Tail recursion is a general structural pattern applicable to many types of problems."
+        }
+      ],
+      "hint": "Consider the location of the self-call relative to other operations like multiplication or printing."
+    },
+    {
+      "question": "Which of the following growth patterns represents the fastest increase in the number of operations as input $n$ grows?",
+      "answerOptions": [
+        {
+          "text": "$O(2^{n})$",
+          "isCorrect": true,
+          "rationale": "Exponential growth explodes quickly, making it practically impossible for large input sizes."
+        },
+        {
+          "text": "$O(n^{2})$",
+          "isCorrect": false,
+          "rationale": "While quadratic growth is significant, it is still polynomial and grows much slower than exponential growth."
+        },
+        {
+          "text": "$O(n \\log n)$",
+          "isCorrect": false,
+          "rationale": "This is a very efficient growth rate common in advanced sorting algorithms like Merge Sort."
+        },
+        {
+          "text": "$O(n)$",
+          "isCorrect": false,
+          "rationale": "Linear growth is proportional to the input and is much slower than both quadratic and exponential growth."
+        }
+      ],
+      "hint": "The chart in the source material shows one curve 'exploding' vertically almost immediately compared to the others."
+    },
+    {
+      "question": "In the context of recursion, what is the consequence of a missing or unreachable base case?",
+      "answerOptions": [
+        {
+          "text": "The program will experience a stack overflow error and crash.",
+          "isCorrect": true,
+          "rationale": "Without a stopping condition, the function calls itself indefinitely until the allocated memory for the call stack is exhausted."
+        },
+        {
+          "text": "The algorithm will automatically switch to an iterative loop.",
+          "isCorrect": false,
+          "rationale": "Programming languages do not automatically convert infinite recursion into iteration; they simply continue the calls."
+        },
+        {
+          "text": "The function will return a value of zero by default.",
+          "isCorrect": false,
+          "rationale": "There is no default return for missing base cases; the execution path simply never reaches a return statement."
+        },
+        {
+          "text": "The time complexity will simplify to $O(1)$.",
+          "isCorrect": false,
+          "rationale": "Infinite recursion effectively has no bounded complexity and results in an error rather than a valid growth description."
+        }
+      ],
+      "hint": "Think about what happens to a physical stack of boxes if you never stop adding new ones."
+    },
+    {
+      "question": "The 'Handshaking Analogy' (everyone in a room shakes hands with everyone else) is used to illustrate which Big O complexity?",
+      "answerOptions": [
+        {
+          "text": "$O(n^{2})$",
+          "isCorrect": true,
+          "rationale": "Since every new person must shake hands with everyone already there, the number of interactions grows quadratically."
+        },
+        {
+          "text": "$O(n)$",
+          "isCorrect": false,
+          "rationale": "Linear growth would imply each person only performs a constant number of handshakes regardless of group size."
+        },
+        {
+          "text": "$O(\\log n)$",
+          "isCorrect": false,
+          "rationale": "Logarithmic growth would imply the problem halves at each step, which does not fit the scenario of comparing every element to every other."
+        },
+        {
+          "text": "$O(1)$",
+          "isCorrect": false,
+          "rationale": "Constant time would mean the total number of handshakes stays the same even as more people enter the room."
+        }
+      ],
+      "hint": "This complexity involves comparing every element in a set to every other element, often seen in double loops."
+    },
+    {
+      "question": "Which statement best summarizes the concept of 'Performance Scaling'?",
+      "answerOptions": [
+        {
+          "text": "How an algorithm's resource consumption changes as the dataset grows from small to large.",
+          "isCorrect": true,
+          "rationale": "Scaling focuses on the predictability of performance under increased load or data volume."
+        },
+        {
+          "text": "The ability of a program to run on multiple different types of hardware.",
+          "isCorrect": false,
+          "rationale": "This refers to portability or compatibility, not performance scaling in terms of algorithmic complexity."
+        },
+        {
+          "text": "The process of upgrading a computer's RAM to make programs run faster.",
+          "isCorrect": false,
+          "rationale": "The source material emphasizes that a better algorithm is more important than better hardware for long-term scaling."
+        },
+        {
+          "text": "The speed of the internet connection when a server handles requests.",
+          "isCorrect": false,
+          "rationale": "While relevant in real-world apps, scaling in this context is about the internal efficiency of the algorithm's logic."
+        }
+      ],
+      "hint": "It describes the 'Growth Pattern' of work performed relative to the 'Input Size (n)'."
+    }
+  ]
+},
+{
+  "title": "Linked Lists, BST, RBT",
+  "questions": [
+    {
+      "question": "Which traversal method in a Binary Search Tree (BST) is specifically noted for producing output in sorted order?",
+      "answerOptions": [
+        {
+          "text": "Inorder Traversal",
+          "isCorrect": true,
+          "rationale": "By visiting the left subtree, then the current node, and finally the right subtree, this traversal follows the numerical order of the keys."
+        },
+        {
+          "text": "Preorder Traversal",
+          "isCorrect": false,
+          "rationale": "This visits the node before its children, which is useful for copying the tree but does not result in a sorted list of values."
+        },
+        {
+          "text": "Postorder Traversal",
+          "isCorrect": false,
+          "rationale": "This visits children before the parent, typically used for tree deletion or expression evaluation, not sorting."
+        },
+        {
+          "text": "Level-order Traversal",
+          "isCorrect": false,
+          "rationale": "This method visits nodes layer by layer from the root, which does not respect the BST's sorted property."
+        }
+      ],
+      "hint": "Consider the traversal that processes the current node between its left and right subtrees."
+    },
+    {
+      "question": "In a BST preorder traversal of a tree with root 5, left child 3, and right child 7, what is the correct visit sequence?",
+      "answerOptions": [
+        {
+          "text": "5, 3, 7",
+          "isCorrect": true,
+          "rationale": "Preorder follows the Node $\\rightarrow$ Left $\\rightarrow$ Right sequence, processing the root first."
+        },
+        {
+          "text": "3, 5, 7",
+          "isCorrect": false,
+          "rationale": "This sequence represents an inorder traversal (Left $\\rightarrow$ Node $\\rightarrow$ Right)."
+        },
+        {
+          "text": "3, 7, 5",
+          "isCorrect": false,
+          "rationale": "This sequence represents a postorder traversal (Left $\\rightarrow$ Right $\\rightarrow$ Node)."
+        },
+        {
+          "text": "7, 3, 5",
+          "isCorrect": false,
+          "rationale": "This sequence does not follow any standard depth-first traversal pattern for the given tree."
+        }
+      ],
+      "hint": "Recall the meaning of the prefix 'pre' in the context of when the root node is visited."
+    },
+    {
+      "question": "What is a primary use case for Postorder Traversal in tree operations?",
+      "answerOptions": [
+        {
+          "text": "Deleting a tree",
+          "isCorrect": true,
+          "rationale": "Postorder ensures that children are processed (deleted) before their parent, preventing orphans and memory issues."
+        },
+        {
+          "text": "Sorting data",
+          "isCorrect": false,
+          "rationale": "Sorting is the primary function of inorder traversal, not postorder."
+        },
+        {
+          "text": "Prefix expression evaluation",
+          "isCorrect": false,
+          "rationale": "Prefix expressions are associated with preorder traversal, whereas postorder is used for postfix (reverse polish) notation."
+        },
+        {
+          "text": "Searching for a specific key",
+          "isCorrect": false,
+          "rationale": "Searching usually follows the BST property (left or right) rather than a complete postorder scan."
+        }
+      ],
+      "hint": "Think about an operation where you must handle the dependencies (children) before the main object (parent)."
+    },
+    {
+      "question": "When finding the successor of a node in a BST, what is the procedure if the node has a non-null right subtree?",
+      "answerOptions": [
+        {
+          "text": "Find the minimum value in the right subtree",
+          "isCorrect": true,
+          "rationale": "The successor is the smallest value greater than the current node, which resides at the leftmost point of the right subtree."
+        },
+        {
+          "text": "Find the maximum value in the left subtree",
+          "isCorrect": false,
+          "rationale": "Finding the maximum in the left subtree would yield the node's predecessor, not its successor."
+        },
+        {
+          "text": "Move to the parent node",
+          "isCorrect": false,
+          "rationale": "Moving to the parent is only necessary when the right subtree does not exist."
+        },
+        {
+          "text": "The right child itself is always the successor",
+          "isCorrect": false,
+          "rationale": "The right child is only the successor if it has no left children of its own."
+        }
+      ],
+      "hint": "The successor is the immediate next highest value according to the BST property."
+    },
+    {
+      "question": "If a node has no right subtree, how is its successor determined in a BST?",
+      "answerOptions": [
+        {
+          "text": "Go up to the first ancestor where the path was a 'left turn' from a parent",
+          "isCorrect": true,
+          "rationale": "We move upward until we find an ancestor that contains the current node in its left subtree, making that ancestor the next highest value."
+        },
+        {
+          "text": "The node has no successor and is the maximum of the tree",
+          "isCorrect": false,
+          "rationale": "While possible for the tree's overall maximum, nodes in the left subtree without right children still have ancestors as successors."
+        },
+        {
+          "text": "The parent is always the successor",
+          "isCorrect": false,
+          "rationale": "If the current node is the right child of its parent, the parent is smaller and cannot be the successor."
+        },
+        {
+          "text": "Go up to the root and then move left",
+          "isCorrect": false,
+          "rationale": "This logic is inconsistent with finding the immediate next highest value from a specific node."
+        }
+      ],
+      "hint": "Consider the relationship with ancestors when the search for a larger value cannot go 'down' anymore."
+    },
+    {
+      "question": "What is the correct strategy for deleting a node with two children in a BST?",
+      "answerOptions": [
+        {
+          "text": "Replace the node's value with its inorder successor, then delete the successor node",
+          "isCorrect": true,
+          "rationale": "The inorder successor (minimum of the right subtree) is guaranteed to have at most one child, making its deletion simple after the value swap."
+        },
+        {
+          "text": "Simply remove the node and connect the parent to the left child",
+          "isCorrect": false,
+          "rationale": "Removing a node with two children this way would leave the right child disconnected from the tree."
+        },
+        {
+          "text": "Swap the node with its right child and then delete it",
+          "isCorrect": false,
+          "rationale": "A simple swap with a direct child may still leave the node with two children in a new position, not solving the deletion complexity."
+        },
+        {
+          "text": "Promote the node's left child to its position and delete the original node",
+          "isCorrect": false,
+          "rationale": "This would ignore the right child and likely violate the BST property."
+        }
+      ],
+      "hint": "Look for a method that transforms the complex two-child case into a simpler zero- or one-child case."
+    },
+    {
+      "question": "In the context of Red-Black Trees (RBT), what does the 'Red Property' state?",
+      "answerOptions": [
+        {
+          "text": "No red node can have a red parent",
+          "isCorrect": true,
+          "rationale": "This prevents consecutive red nodes on any path, which is critical for limiting the maximum height of the tree."
+        },
+        {
+          "text": "Every red node must have at least one black child",
+          "isCorrect": false,
+          "rationale": "While true, the property is more strictly defined by the relationship with the parent to avoid 'double red' violations."
+        },
+        {
+          "text": "Red nodes can only exist as leaves",
+          "isCorrect": false,
+          "rationale": "Red nodes can be internal nodes; only NIL leaves are required to be black."
+        },
+        {
+          "text": "The number of red nodes must equal the number of black nodes",
+          "isCorrect": false,
+          "rationale": "There is no requirement for red and black node counts to be equal; only the black-height must be balanced."
+        }
+      ],
+      "hint": "This rule prevents red nodes from stacking vertically."
+    },
+    {
+      "question": "According to the 'Black Height Property' of Red-Black Trees, what must be true for every path from a node to its descendant NIL leaves?",
+      "answerOptions": [
+        {
+          "text": "Each path must contain the same number of black nodes",
+          "isCorrect": true,
+          "rationale": "This ensures the tree remains approximately balanced, as the number of black nodes serves as the fundamental measure of path length."
+        },
+        {
+          "text": "Each path must have the same total number of nodes",
+          "isCorrect": false,
+          "rationale": "Red nodes can vary between paths, so the total node count per path can differ."
+        },
+        {
+          "text": "Each path must have more black nodes than red nodes",
+          "isCorrect": false,
+          "rationale": "While often true, the property specifically requires consistency in black node count, not a ratio relative to red nodes."
+        },
+        {
+          "text": "No path can have more than two black nodes in a row",
+          "isCorrect": false,
+          "rationale": "There is no rule against consecutive black nodes; only consecutive red nodes are forbidden."
+        }
+      ],
+      "hint": "Think of black nodes as the 'spacers' that must be distributed equally across all branches."
+    },
+    {
+      "question": "Why is a newly inserted node in a Red-Black Tree always colored red by default?",
+      "answerOptions": [
+        {
+          "text": "It avoids an immediate violation of the black-height property",
+          "isCorrect": true,
+          "rationale": "Adding a red node does not change the black-height of any path, whereas adding a black node would immediately violate Property 5."
+        },
+        {
+          "text": "Red nodes are easier to rotate than black nodes",
+          "isCorrect": false,
+          "rationale": "Color does not affect the computational complexity of the rotation operation itself."
+        },
+        {
+          "text": "Property 2 requires all leaf-level nodes to be red",
+          "isCorrect": false,
+          "rationale": "NIL leaves must be black (Property 3), and there is no property requiring real leaves to be red."
+        },
+        {
+          "text": "It ensures the root always stays red",
+          "isCorrect": false,
+          "rationale": "Property 2 explicitly states that the root must be black, so if the new node is the root, it must be recolored."
+        }
+      ],
+      "hint": "Consider which property (red property or black-height property) is more difficult to maintain during insertion."
+    },
+    {
+      "question": "In RBT insertion, if both the parent and the uncle of the new red node are red (Case 2), what is the required fix?",
+      "answerOptions": [
+        {
+          "text": "Recolor the parent and uncle black, and the grandparent red",
+          "isCorrect": true,
+          "rationale": "This 'pushes' the redness up to the grandparent, fixing the local red-red violation while keeping black-height consistent."
+        },
+        {
+          "text": "Perform a single rotation at the grandparent",
+          "isCorrect": false,
+          "rationale": "Rotations are only necessary if the uncle is black; Case 2 is solved entirely through recoloring."
+        },
+        {
+          "text": "Recolor only the parent to black",
+          "isCorrect": false,
+          "rationale": "Changing only the parent to black would increase the black-height on that specific path, violating Property 5."
+        },
+        {
+          "text": "Delete the uncle and re-insert it",
+          "isCorrect": false,
+          "rationale": "Deleting nodes is not part of the standard insertion-fix procedure."
+        }
+      ],
+      "hint": "This case involves a 'bubble-up' effect where colors are swapped to resolve a local conflict."
+    },
+    {
+      "question": "What shape configuration in RBT Case 3 requires two rotations to fix a red-red violation?",
+      "answerOptions": [
+        {
+          "text": "Triangle (zig-zag) shape",
+          "isCorrect": true,
+          "rationale": "A triangle shape (e.g., Left-Right) must be straightened into a line with a rotation at the parent before the final rotation at the grandparent can fix it."
+        },
+        {
+          "text": "Line (straight) shape",
+          "isCorrect": false,
+          "rationale": "A line shape (e.g., Left-Left) is fixed with only one rotation at the grandparent followed by a color swap."
+        },
+        {
+          "text": "Root-only shape",
+          "isCorrect": false,
+          "rationale": "If the node is the root, Case 0 applies, requiring only a simple recolor to black."
+        },
+        {
+          "text": "Perfectly balanced shape",
+          "isCorrect": false,
+          "rationale": "A perfectly balanced shape would likely not have a red-red violation requiring complex rotation fixes."
+        }
+      ],
+      "hint": "One rotation 'straightens' the path, and the second 'balances' the height."
+    },
+    {
+      "question": "In a Red-Black Tree, what is the maximum possible ratio between the longest path and the shortest path from the root?",
+      "answerOptions": [
+        {
+          "text": "2:1",
+          "isCorrect": true,
+          "rationale": "The shortest path is all black nodes, and the longest path alternates black and red nodes; since they must have the same black nodes, the latter is at most twice as long."
+        },
+        {
+          "text": "1:1",
+          "isCorrect": false,
+          "rationale": "A 1:1 ratio describes a perfectly balanced tree, whereas RBT allows for more relaxed balancing rules."
+        },
+        {
+          "text": "$\\log n : 1$",
+          "isCorrect": false,
+          "rationale": "The total height is $O(\\log n)$, but the relative ratio between paths is bounded by a constant factor."
+        },
+        {
+          "text": "3:1",
+          "isCorrect": false,
+          "rationale": "The prohibition of consecutive red nodes (Property 4) prevents paths from extending beyond twice the black-height."
+        }
+      ],
+      "hint": "Think about the alternating color pattern that forms the longest possible valid path."
+    },
+    {
+      "question": "What is the primary disadvantage of using a standard Binary Search Tree when data is inserted in sorted order?",
+      "answerOptions": [
+        {
+          "text": "It degenerates into a linked list with $O(n)$ performance",
+          "isCorrect": true,
+          "rationale": "Sorted insertion leads to a completely unbalanced tree where each node has only one child, making search as slow as a sequential scan."
+        },
+        {
+          "text": "It becomes impossible to find the minimum value",
+          "isCorrect": false,
+          "rationale": "The minimum is still at the leftmost leaf, but reaching it takes $O(n)$ time instead of $O(\\log n)$."
+        },
+        {
+          "text": "The tree height becomes zero",
+          "isCorrect": false,
+          "rationale": "Height increases with every node in a sorted sequence, reaching $n-1$ for $n$ nodes."
+        },
+        {
+          "text": "Rotations become too expensive to perform",
+          "isCorrect": false,
+          "rationale": "Standard BSTs do not perform rotations; only self-balancing trees like AVL or RBT use them."
+        }
+      ],
+      "hint": "Consider how the tree structure changes if you always insert a value larger than the previous one."
+    },
+    {
+      "question": "How does a Doubly Linked List differ from a Singly Linked List in terms of its node structure?",
+      "answerOptions": [
+        {
+          "text": "Nodes contain references to both the next and the previous elements",
+          "isCorrect": true,
+          "rationale": "This allows for bidirectional traversal, making operations like deleting a node (if given the node reference) more efficient."
+        },
+        {
+          "text": "The tail node points back to the head node",
+          "isCorrect": false,
+          "rationale": "This describes a Circular Linked List, which can be either singly or doubly linked."
+        },
+        {
+          "text": "It uses a contiguous block of memory to store nodes",
+          "isCorrect": false,
+          "rationale": "Linked lists, by definition, use non-contiguous memory; only arrays use contiguous blocks."
+        },
+        {
+          "text": "Nodes can store two different data values",
+          "isCorrect": false,
+          "rationale": "The number of data values is independent of the list type; 'doubly' refers to the number of link references."
+        }
+      ],
+      "hint": "The term 'doubly' refers to the directions in which you can navigate the chain."
+    },
+    {
+      "question": "In a linked list, why is the time complexity for accessing the 10th element $O(n)$ rather than $O(1)$?",
+      "answerOptions": [
+        {
+          "text": "There is no direct indexing; you must traverse from the head through nodes 1-9",
+          "isCorrect": true,
+          "rationale": "Linked lists are sequential access structures because nodes are scattered in memory and only connected by pointers."
+        },
+        {
+          "text": "The nodes are stored in a sorted order that must be verified",
+          "isCorrect": false,
+          "rationale": "Access time is $O(n)$ regardless of whether the data is sorted or unsorted."
+        },
+        {
+          "text": "The size of the list is unknown to the program",
+          "isCorrect": false,
+          "rationale": "Even if the size is known, you still have to follow the pointers one by one to reach a specific index."
+        },
+        {
+          "text": "Memory management requires constant pointer updates",
+          "isCorrect": false,
+          "rationale": "Pointer updates occur during insertion/deletion, not during simple access or traversal."
+        }
+      ],
+      "hint": "Think about the physical layout of nodes in memory compared to an array."
+    },
+    {
+      "question": "What is the time complexity of inserting a new node at the beginning (head) of a linked list?",
+      "answerOptions": [
+        {
+          "text": "$O(1)$",
+          "isCorrect": true,
+          "rationale": "You only need to update the new node's 'next' pointer and the list's 'head' pointer, which takes constant time regardless of list size."
+        },
+        {
+          "text": "$O(n)$",
+          "isCorrect": false,
+          "rationale": "This would be the complexity if we had to shift all other elements, which is required for arrays but not linked lists."
+        },
+        {
+          "text": "$O(\\log n)$",
+          "isCorrect": false,
+          "rationale": "Logarithmic time usually involves tree-based partitioning, which is not applicable to a simple head-insertion in a list."
+        },
+        {
+          "text": "$O(n^2)$",
+          "isCorrect": false,
+          "rationale": "This represents nested iterations, far more complex than a simple pointer reassignment."
+        }
+      ],
+      "hint": "Evaluate how many pointers need to change when adding a node right at the entry point."
+    },
+    {
+      "question": "According to the source material, which real-world analogy best describes the sequential nature of a linked list?",
+      "answerOptions": [
+        {
+          "text": "Treasure Hunt",
+          "isCorrect": true,
+          "rationale": "In a treasure hunt, each clue provides the location of the next clue, and you cannot jump to the end without visiting every step."
+        },
+        {
+          "text": "Books on a shelf",
+          "isCorrect": false,
+          "rationale": "Books on a shelf represent an array, where you can directly see and pick the 5th book (index access)."
+        },
+        {
+          "text": "Phonebook",
+          "isCorrect": false,
+          "rationale": "A phonebook is an analogy for a Dictionary or Map, where you look up values by a specific key."
+        },
+        {
+          "text": "Stack of plates",
+          "isCorrect": false,
+          "rationale": "A stack of plates represents a Stack data structure (LIFO), which is a specific type of container."
+        }
+      ],
+      "hint": "Consider the analogy where you must find one 'clue' to know where the next one is located."
+    },
+    {
+      "question": "What is a 'NIL' leaf in the context of a Red-Black Tree?",
+      "answerOptions": [
+        {
+          "text": "A conceptual, black-colored node representing a null pointer",
+          "isCorrect": true,
+          "rationale": "NIL leaves are essential for calculating black-height and ensuring the properties of the tree are applied consistently at the boundaries."
+        },
+        {
+          "text": "A node with no data but a red color",
+          "isCorrect": false,
+          "rationale": "Property 3 explicitly states that NIL leaves must be considered black."
+        },
+        {
+          "text": "The very first node inserted into an empty tree",
+          "isCorrect": false,
+          "rationale": "The first node is the root; NIL nodes are terminal indicators at the bottom of the structure."
+        },
+        {
+          "text": "A node that has been marked for deletion",
+          "isCorrect": false,
+          "rationale": "Deletion involves structural changes; NIL is a permanent property of how we define tree ends."
+        }
+      ],
+      "hint": "These serve as 'invisible boundary markers' for the tree's structure."
+    },
+    {
+      "question": "Which operation is used to move a 'heavy' right subtree up and to the left to restore balance?",
+      "answerOptions": [
+        {
+          "text": "Left Rotation",
+          "isCorrect": true,
+          "rationale": "A left rotation promotes the right child to the parent's position, effectively reducing the height of the right subtree."
+        },
+        {
+          "text": "Right Rotation",
+          "isCorrect": false,
+          "rationale": "A right rotation is the mirror operation, used when the left subtree is 'heavy'."
+        },
+        {
+          "text": "Recoloring",
+          "isCorrect": false,
+          "rationale": "Recoloring changes the node's properties but does not change the physical structure or height of subtrees."
+        },
+        {
+          "text": "Inorder Successor Swap",
+          "isCorrect": false,
+          "rationale": "This is a step in deletion, not a general balancing rotation used during insertion."
+        }
+      ],
+      "hint": "The name of the rotation reflects the direction the original parent moves."
+    },
+    {
+      "question": "What is the worst-case time complexity for searching a value in a Singly Linked List?",
+      "answerOptions": [
+        {
+          "text": "$O(n)$",
+          "isCorrect": true,
+          "rationale": "In the worst case, the value is at the very end of the list or not present at all, requiring a visit to every node."
+        },
+        {
+          "text": "$O(1)$",
+          "isCorrect": false,
+          "rationale": "This is only the best-case complexity, occurring if the target value is at the head of the list."
+        },
+        {
+          "text": "$O(\\log n)$",
+          "isCorrect": false,
+          "rationale": "Linked lists do not support binary search because they lack direct index access to the middle element."
+        },
+        {
+          "text": "$O(n \\log n)$",
+          "isCorrect": false,
+          "rationale": "This complexity is typical for sorting algorithms, not for a simple linear search."
+        }
+      ],
+      "hint": "Consider the scenario where the target item is at the final position or completely missing."
+    },
+    {
+      "question": "In a Red-Black Tree, what happens if the grandparent of a newly inserted node is the root and is recolored red during a Case 2 fix?",
+      "answerOptions": [
+        {
+          "text": "It must be recolored back to black to satisfy the Root Property",
+          "isCorrect": true,
+          "rationale": "Property 2 (the root is black) is non-negotiable; if a fix makes the root red, it must be changed back."
+        },
+        {
+          "text": "The tree is immediately invalid and must be deleted",
+          "isCorrect": false,
+          "rationale": "This is a standard part of the 'bubble up' process and is easily fixed by a single recolor."
+        },
+        {
+          "text": "A rotation at the root is triggered automatically",
+          "isCorrect": false,
+          "rationale": "Recoloring the root black does not require a rotation as it uniformly increases black-height for all paths."
+        },
+        {
+          "text": "The red grandparent becomes a NIL leaf",
+          "isCorrect": false,
+          "rationale": "NIL leaves are purely conceptual and always black; they do not replace real nodes with data."
+        }
+      ],
+      "hint": "Recall the second property of Red-Black Trees regarding the tree's entry point."
+    },
+    {
+      "question": "Which of the following is NOT one of the five properties of a Red-Black Tree?",
+      "answerOptions": [
+        {
+          "text": "All red nodes must be leaf nodes",
+          "isCorrect": true,
+          "rationale": "Red nodes can be internal nodes; only the requirement that their parent/children are black and they don't violate black-height matters."
+        },
+        {
+          "text": "Every node is either red or black",
+          "isCorrect": false,
+          "rationale": "This is the Color Property (Property 1)."
+        },
+        {
+          "text": "The root is black",
+          "isCorrect": false,
+          "rationale": "This is the Root Property (Property 2)."
+        },
+        {
+          "text": "No red node has a red parent",
+          "isCorrect": false,
+          "rationale": "This is the Red Property (Property 4)."
+        }
+      ],
+      "hint": "Look for a rule that would overly restrict where red nodes can appear in the hierarchy."
+    },
+    {
+      "question": "When deleting a leaf node (a node with no children) from a BST, what is the required action?",
+      "answerOptions": [
+        {
+          "text": "Simply remove the node and disconnect it from its parent",
+          "isCorrect": true,
+          "rationale": "Since it has no children, removing it does not leave any orphaned nodes or break the tree's path structure."
+        },
+        {
+          "text": "Replace it with a NIL leaf and rotate the tree",
+          "isCorrect": false,
+          "rationale": "Standard BST deletion for a leaf does not require rotations; rotations are for self-balancing trees."
+        },
+        {
+          "text": "Move its parent to its position",
+          "isCorrect": false,
+          "rationale": "Moving a parent 'down' would violate the hierarchical structure and BST properties."
+        },
+        {
+          "text": "Leaf nodes cannot be deleted in a standard BST",
+          "isCorrect": false,
+          "rationale": "Every node in a BST can be deleted using the three established cases."
+        }
+      ],
+      "hint": "This is the simplest case of deletion."
+    },
+    {
+      "question": "What is the recursive definition of tree height?",
+      "answerOptions": [
+        {
+          "text": "1 + the maximum height of its left and right subtrees",
+          "isCorrect": true,
+          "rationale": "The height of a node is determined by its longest path to a leaf, which is 1 step plus the taller of its two children subtrees."
+        },
+        {
+          "text": "The total number of nodes divided by two",
+          "isCorrect": false,
+          "rationale": "This would only estimate height for a perfectly balanced complete tree, not define it recursively."
+        },
+        {
+          "text": "The number of red nodes on the longest path",
+          "isCorrect": false,
+          "rationale": "This describes 'red height', which is not a standard general tree metric like total height."
+        },
+        {
+          "text": "The length of the path from the node to the root",
+          "isCorrect": false,
+          "rationale": "This is the definition of 'depth', whereas height measures the path down to the leaves."
+        }
+      ],
+      "hint": "Consider how the root's height depends on the height of the level directly below it."
+    },
+    {
+      "question": "In a Linked List, what happens if you forget to connect a new node's 'next' pointer before updating the previous node's reference during insertion?",
+      "answerOptions": [
+        {
+          "text": "The rest of the list becomes unreachable (orphaned)",
+          "isCorrect": true,
+          "rationale": "If you break the existing link before establishing the new one forward, you lose the reference to the remainder of the chain."
+        },
+        {
+          "text": "The list automatically becomes circular",
+          "isCorrect": false,
+          "rationale": "Circular lists must be explicitly created by pointing the tail back to the head."
+        },
+        {
+          "text": "A memory leak is prevented",
+          "isCorrect": false,
+          "rationale": "Orphaning nodes actually causes memory leaks because the nodes still exist in memory but cannot be accessed or freed."
+        },
+        {
+          "text": "The program will crash with an 'IndexOutOfBounds' error",
+          "isCorrect": false,
+          "rationale": "Linked lists do not use index-based boundaries like arrays; the error would more likely be a NullReference exception during traversal."
+        }
+      ],
+      "hint": "Think about the order of operations needed to maintain a continuous chain."
+    },
+    {
+      "question": "Which traversal method is most suitable for evaluating a prefix expression?",
+      "answerOptions": [
+        {
+          "text": "Preorder Traversal",
+          "isCorrect": true,
+          "rationale": "Preorder processes the operator (the node) before the operands (the children), matching the structure of prefix notation."
+        },
+        {
+          "text": "Inorder Traversal",
+          "isCorrect": false,
+          "rationale": "Inorder is used for standard infix notation (operand-operator-operand)."
+        },
+        {
+          "text": "Postorder Traversal",
+          "isCorrect": false,
+          "rationale": "Postorder is used for postfix notation (operand-operand-operator)."
+        },
+        {
+          "text": "Reverse Inorder Traversal",
+          "isCorrect": false,
+          "rationale": "This would visit the tree in descending sorted order, which is not used for expression evaluation."
+        }
+      ],
+      "hint": "The prefix 'pre' matches the notation style where operators come before values."
+    },
+    {
+      "question": "In a BST, if a node has value $x$, what rule must all nodes $y$ in its right subtree follow?",
+      "answerOptions": [
+        {
+          "text": "$y.key > x.key$",
+          "isCorrect": true,
+          "rationale": "The Right Subtree Rule states that all descendants to the right of a parent must have strictly greater keys."
+        },
+        {
+          "text": "$y.key \\le x.key$",
+          "isCorrect": false,
+          "rationale": "This describes the Left Subtree Rule."
+        },
+        {
+          "text": "$y.key = x.key + 1$",
+          "isCorrect": false,
+          "rationale": "Keys can be any value as long as they are greater; they do not have to be consecutive."
+        },
+        {
+          "text": "$y.key < x.key$",
+          "isCorrect": false,
+          "rationale": "This would violate the fundamental ordering property that enables efficient searching."
+        }
+      ],
+      "hint": "Recall the directional rule for values that are larger than the current node."
+    },
+    {
+      "question": "What is the primary motivation for using Red-Black Trees over standard Binary Search Trees?",
+      "answerOptions": [
+        {
+          "text": "They guarantee $O(\\log n)$ performance even with sorted input",
+          "isCorrect": true,
+          "rationale": "By self-balancing through rotations and recoloring, they prevent the $O(n)$ worst-case scenario of an unbalanced BST."
+        },
+        {
+          "text": "They use significantly less memory per node",
+          "isCorrect": false,
+          "rationale": "RBTs actually require more memory per node to store the color bit and parent pointer."
+        },
+        {
+          "text": "They allow for multiple roots in a single tree",
+          "isCorrect": false,
+          "rationale": "All trees, including RBTs, must have exactly one root node."
+        },
+        {
+          "text": "They perform search operations faster than a balanced BST",
+          "isCorrect": false,
+          "rationale": "Both have $O(\\log n)$ search; RBTs are just one specific, efficient implementation of a balanced BST."
+        }
+      ],
+      "hint": "Focus on how these trees handle 'worst-case' data patterns."
+    },
+    {
+      "question": "Which type of Linked List allows for continuous cycling through elements, such as in a round-robin scheduler?",
+      "answerOptions": [
+        {
+          "text": "Circular Linked List",
+          "isCorrect": true,
+          "rationale": "In a circular list, the last node points back to the first node, allowing for an endless loop of traversal."
+        },
+        {
+          "text": "Singly Linked List",
+          "isCorrect": false,
+          "rationale": "Singly linked lists terminate at a null reference, preventing automatic looping."
+        },
+        {
+          "text": "Doubly Linked List",
+          "isCorrect": false,
+          "rationale": "While a doubly linked list can move backwards, it is not inherently circular unless explicitly constructed as one."
+        },
+        {
+          "text": "Balanced Linked List",
+          "isCorrect": false,
+          "rationale": "The term 'balanced' applies to tree structures, not linear linked lists."
+        }
+      ],
+      "hint": "This structure forms a loop where the end connects back to the start."
+    },
+    {
+      "question": "How is the height of an empty tree and a single-node tree typically defined in the source material?",
+      "answerOptions": [
+        {
+          "text": "Empty tree: -1, Single node: 0",
+          "isCorrect": true,
+          "rationale": "This convention allows the recursive formula ($1 + \\text{max height of children}$) to work correctly, where a leaf's height is $1 + (-1) = 0$."
+        },
+        {
+          "text": "Empty tree: 0, Single node: 1",
+          "isCorrect": false,
+          "rationale": "While used in some contexts, the source material specifically suggests -1 for empty and 0 for a single node."
+        },
+        {
+          "text": "Empty tree: undefined, Single node: 0",
+          "isCorrect": false,
+          "rationale": "An empty tree must have a numeric value to facilitate recursive calculations."
+        },
+        {
+          "text": "Empty tree: 1, Single node: 2",
+          "isCorrect": false,
+          "rationale": "This would count nodes rather than edges (paths), which is a different metric."
+        }
+      ],
+      "hint": "The height of a single node is based on the number of steps to its furthest descendant."
+    }
+  ]
+},
+{
+  "title": "Graphs",
+  "questions": [
+    {
+      "question": "In the context of graph modeling, which of the following real-world scenarios is best represented by a directed graph?",
+      "answerOptions": [
+        {
+          "text": "A Facebook friendship network where connections must be mutual.",
+          "isCorrect": false,
+          "rationale": "Mutual relationships where a connection from person A to B implies B to A are better represented by undirected graphs."
+        },
+        {
+          "text": "Academic course prerequisites where Course A must be taken before Course B.",
+          "isCorrect": true,
+          "rationale": "Direction matters here because the relationship is one-way; you can take Calc I before Calc II, but not the other way around."
+        },
+        {
+          "text": "A map of physical roads where every street allows two-way traffic.",
+          "isCorrect": false,
+          "rationale": "If every connection is bidirectional, an undirected graph is simpler and more accurate for the symmetry of the relationship."
+        },
+        {
+          "text": "A network of neighbors in a housing development sharing a property line.",
+          "isCorrect": false,
+          "rationale": "Sharing a border is a mutual, symmetric relationship, which is a hallmark of undirected graphs."
+        }
+      ],
+      "hint": "Consider which scenario involves a relationship that does not necessarily go both ways.",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "A weighted graph is used to find the shortest path from vertex $A$ to vertex $D$. The edges are: $A\u2014B$ (weight 5), $A\u2014C$ (weight 2), $B\u2014D$ (weight 7), and $C\u2014D$ (weight 3). What is the total weight of the shortest path?",
+      "answerOptions": [
+        {
+          "text": "5",
+          "isCorrect": true,
+          "rationale": "The path $A \\rightarrow C \\rightarrow D$ has a total weight of $2 + 3 = 5$, which is less than the path through $B$."
+        },
+        {
+          "text": "12",
+          "isCorrect": false,
+          "rationale": "This value represents the path $A \\rightarrow B \\rightarrow D$, which is $5 + 7$, but it is not the most optimal route."
+        },
+        {
+          "text": "7",
+          "isCorrect": false,
+          "rationale": "This might be the result of looking at the single heaviest edge rather than calculating a complete path from $A$ to $D$."
+        },
+        {
+          "text": "10",
+          "isCorrect": false,
+          "rationale": "This could be a miscalculation of the weights or an incorrect combination of edges $A-B$ and $C-D$."
+        }
+      ],
+      "hint": "Calculate the sum of weights for every possible sequence of edges that connects the start to the end.",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "Which statement accurately describes the space complexity trade-off when choosing an Adjacency Matrix over an Adjacency List?",
+      "answerOptions": [
+        {
+          "text": "An Adjacency Matrix uses $O(V + E)$ space, making it efficient for sparse graphs.",
+          "isCorrect": false,
+          "rationale": "$O(V + E)$ is actually the space complexity of an Adjacency List, which only stores existing edges."
+        },
+        {
+          "text": "An Adjacency Matrix always uses $O(V^2)$ space, which can be wasteful for graphs with few edges.",
+          "isCorrect": true,
+          "rationale": "Matrices allocate space for every possible connection ($V \\times V$), regardless of whether an edge actually exists."
+        },
+        {
+          "text": "An Adjacency Matrix is preferred when memory constraints are the primary concern.",
+          "isCorrect": false,
+          "rationale": "Due to its $O(V^2)$ requirement, matrices are usually avoided when memory is tight, especially for sparse networks."
+        },
+        {
+          "text": "An Adjacency Matrix is more efficient for iterating through the neighbors of a single vertex.",
+          "isCorrect": false,
+          "rationale": "Iterating through neighbors in a matrix requires checking the entire row ($O(V)$), whereas a list only requires traversing existing neighbors."
+        }
+      ],
+      "hint": "Think about how a 2D array of size $V \\times V$ allocates memory compared to a list of only active connections.",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "Why is it critical to maintain a 'Visited Set' or a boolean 'visited' array during graph traversal?",
+      "answerOptions": [
+        {
+          "text": "To ensure that we process vertices in alphabetical or numerical order.",
+          "isCorrect": false,
+          "rationale": "Order is determined by the data structure (queue/stack) and edge list, not by the tracking of visited status."
+        },
+        {
+          "text": "To prevent the algorithm from entering an infinite loop when a graph contains cycles.",
+          "isCorrect": true,
+          "rationale": "Without tracking visited nodes, the algorithm might visit $A$, then $B$, then return to $A$ indefinitely in a circular path."
+        },
+        {
+          "text": "To allow the algorithm to visit disconnected components of the graph automatically.",
+          "isCorrect": false,
+          "rationale": "Standard BFS/DFS from a single source cannot reach disconnected components; multiple starts are needed for that."
+        },
+        {
+          "text": "To reduce the time complexity from $O(V + E)$ to $O(V)$.",
+          "isCorrect": false,
+          "rationale": "The complexity remains $O(V + E)$ because every edge must still be inspected to see if it leads to an unvisited node."
+        }
+      ],
+      "hint": "Consider what happens if a path allows you to return to a point where you have already been.",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "You are performing a Breadth-First Search (BFS) on a graph with vertices $\\{A, B, C, D, E\\}$ and edges $\\{(A,B), (A,C), (B,D), (B,E), (D,C)\\}$. Starting at $A$, what is the correct traversal order?",
+      "answerOptions": [
+        {
+          "text": "$A \\rightarrow B \\rightarrow C \\rightarrow D \\rightarrow E$",
+          "isCorrect": true,
+          "rationale": "BFS visits all neighbors of $A$ ($B$ and $C$) before moving to the neighbors of $B$ ($D$ and $E$)."
+        },
+        {
+          "text": "$A \\rightarrow B \\rightarrow D \\rightarrow C \\rightarrow E$",
+          "isCorrect": false,
+          "rationale": "This order follows a path deep into the graph before visiting $A$'s other immediate neighbor, which is characteristic of DFS."
+        },
+        {
+          "text": "$A \\rightarrow C \\rightarrow B \\rightarrow E \\rightarrow D$",
+          "isCorrect": false,
+          "rationale": "While technically a valid level-order, BFS typically processes neighbors in the order they were discovered; $D$ is a neighbor of $B$ and should be processed before $E$ if discovered first."
+        },
+        {
+          "text": "$A \\rightarrow B \\rightarrow E \\rightarrow D \\rightarrow C$",
+          "isCorrect": false,
+          "rationale": "This visits neighbors of $B$ before finishing all neighbors of $A$, violating the level-by-level rule."
+        }
+      ],
+      "hint": "BFS explores 'layers' by processing all immediate neighbors of the current node before moving to nodes two steps away.",
+      "type": "multiple_choice"
+    },
+    {
+      "type": "multiple_select",
+      "question": "Given a graph with vertices $\\{1, 2, 3, 4\\}$ and edges $\\{(1,2), (1,3), (2,4)\\}$, what is the output of a Breadth-First Search starting from vertex $1$?",
+      "hasAllOfTheAbove": false,
+      "hasNoneOfTheAbove": false,
+      "answerOptions": [
+        {
+          "text": "$1, 2, 3, 4$",
+          "isCorrect": true,
+          "rationale": "Node $1$ is the source; its neighbors $2$ and $3$ form the next level, followed by $4$, which is a neighbor of $2$."
+        },
+        {
+          "text": "$1, 3, 2, 4$",
+          "isCorrect": true,
+          "rationale": "This is also a valid BFS order, as both $2$ and $3$ are at the same distance from the source and can be visited in either order."
+        },
+        {
+          "text": "$1, 2, 4, 3$",
+          "isCorrect": false,
+          "rationale": "This visits a node at distance 2 ($4$) before finishing nodes at distance 1 ($3$), which violates the BFS strategy."
+        },
+        {
+          "text": "$1, 4, 2, 3$",
+          "isCorrect": false,
+          "rationale": "The node $4$ cannot be visited second because it is not an immediate neighbor of the starting node $1$."
+        }
+      ],
+      "hint": "Identify which nodes are exactly one hop away from the start, and ensure they are all processed before nodes two hops away."
+    },
+    {
+      "question": "You are performing a Depth-First Search (DFS) on a directed \ngraph with vertices $\\{A, B, C, D, E\\}$ and edges $\\{(A,B), (A,C), (B,D), (B,E), (D,C)\\}$. Starting at $A$, what is the traversal order if neighbors are visited in alphabetical order?",
+      "answerOptions": [
+        {
+          "text": "$A \\rightarrow B \\rightarrow D \\rightarrow C \\rightarrow E$",
+          "isCorrect": true,
+          "rationale": "DFS goes from $A$ to $B$, then to $D$, and from $D$ to $C$ (the only unvisited neighbor), before backtracking to $B$ to visit $E$."
+        },
+        {
+          "text": "$A \\rightarrow B \\rightarrow C \\rightarrow D \\rightarrow E$",
+          "isCorrect": false,
+          "rationale": "This is a level-by-level exploration (BFS), not a depth-first exploration."
+        },
+        {
+          "text": "$A \\rightarrow B \\rightarrow E \\rightarrow D \\rightarrow C$",
+          "isCorrect": false,
+          "rationale": "If visiting neighbors in alphabetical order, the algorithm would prioritize $D$ over $E$ when exploring from node $B$."
+        },
+        {
+          "text": "$A \\rightarrow C \\rightarrow D \\rightarrow B \\rightarrow E$",
+          "isCorrect": false,
+          "rationale": "Following alphabetical priority, $B$ would be visited before $C$ when looking at the neighbors of $A$."
+        }
+      ],
+      "hint": "Follow one path as deeply as possible, then use backtracking to explore the next available branch.",
+      "type": "multiple_choice",
+      "imageUrls": [],
+      "edited": true
+    },
+    {
+      "question": "Consider a directed graph with vertices $\\{1, 2, 3, 4, 5\\}$ and edges $\\{(1,2), (2,3), (1,4), (4,5)\\}$. What is the DFS traversal order starting at $1$, assuming neighbors are visited in numerical order?",
+      "answerOptions": [
+        {
+          "text": "$1, 2, 3, 4, 5$",
+          "isCorrect": true,
+          "rationale": "The search moves from $1$ to $2$, then to $3$. Since $3$ has no unvisited neighbors, it backtracks to $1$ to visit $4$, then moves to $5$."
+        },
+        {
+          "text": "$1, 2, 4, 3, 5$",
+          "isCorrect": false,
+          "rationale": "This would imply jumping between branches before fully exploring the depth of the first branch ($1 \\rightarrow 2 \\rightarrow 3$)."
+        },
+        {
+          "text": "$1, 4, 5, 2, 3$",
+          "isCorrect": false,
+          "rationale": "While a valid DFS order, the prompt specifies visiting neighbors in numerical order, so $2$ must be visited before $4$."
+        },
+        {
+          "text": "$1, 2, 3, 5, 4$",
+          "isCorrect": false,
+          "rationale": "Node $5$ is only reachable through $4$, so it cannot be visited before $4$ in a standard traversal."
+        }
+      ],
+      "hint": "Exhaust the path starting with node 2 before returning to node 1 to begin the path starting with node 4.",
+      "type": "multiple_choice",
+      "imageUrls": [],
+      "edited": true
+    },
+    {
+      "question": "What is the primary difference between a Tree and a general Graph according to the source material?",
+      "answerOptions": [
+        {
+          "text": "Graphs must be connected, whereas trees can be disconnected.",
+          "isCorrect": false,
+          "rationale": "It is actually the opposite; a tree must be connected, while a general graph can have separate components."
+        },
+        {
+          "text": "A tree is a restricted type of graph that is connected and acyclic.",
+          "isCorrect": true,
+          "rationale": "Trees are special graphs where no cycles exist and there is exactly one unique path between any two nodes."
+        },
+        {
+          "text": "Trees can have cycles, while graphs must always be acyclic.",
+          "isCorrect": false,
+          "rationale": "Graphs are allowed to have cycles (A-B-C-A), but trees are strictly prohibited from having them."
+        },
+        {
+          "text": "Graphs use vertices and edges, but trees use nodes and branches.",
+          "isCorrect": false,
+          "rationale": "These are simply different names for the same fundamental components used in both structures."
+        }
+      ],
+      "hint": "One structure is a more generalized mathematical framework, while the other imposes specific constraints like being 'acyclic'.",
+      "type": "multiple_choice"
+    },
+    {
+      "question": "Which data structure is typically used to manage the 'backtracking' process in a non-recursive Depth-First Search?",
+      "answerOptions": [
+        {
+          "text": "A Queue (First-In, First-Out).",
+          "isCorrect": false,
+          "rationale": "Queues are used in BFS to ensure nodes are processed in the order they were discovered (level-by-level)."
+        },
+        {
+          "text": "A Stack (Last-In, First-Out).",
+          "isCorrect": true,
+          "rationale": "A stack allows the algorithm to always process the most recently discovered neighbor, moving deeper until a dead end is reached."
+        },
+        {
+          "text": "A Priority Queue.",
+          "isCorrect": false,
+          "rationale": "Priority queues are typically used for weighted graph algorithms like Dijkstra's, not for basic DFS."
+        },
+        {
+          "text": "A 2D Array.",
+          "isCorrect": false,
+          "rationale": "Arrays are used for representation (Adjacency Matrix) but do not inherently drive the traversal logic of DFS."
+        }
+      ],
+      "hint": "Consider the structure where the last item added is the first one to be removed, mimicking a 'deepest-first' approach.",
+      "type": "multiple_choice"
+    }
+  ]
+},
+{
+  "title": "Sorting Algorithms",
+  "questions": [
+    {
+      "question": "Given the initial array $[7, 3, 5, 2, 9, 1, 4]$, what is the state of the array after the first pass of Bubble Sort?",
+      "answerOptions": [
+        {
+          "text": "$[3, 5, 2, 7, 1, 4, 9]$",
+          "isCorrect": true,
+          "rationale": "In the first pass, the largest element (9) is compared against neighbors and swapped repeatedly until it reaches the final position at the end of the array."
+        },
+        {
+          "text": "$[1, 3, 5, 2, 9, 7, 4]$",
+          "isCorrect": false,
+          "rationale": "This reflects the state after a Selection Sort swap where the minimum element is moved to the front."
+        },
+        {
+          "text": "$[3, 7, 5, 2, 9, 1, 4]$",
+          "isCorrect": false,
+          "rationale": "This represents the first insertion step of Insertion Sort, not the 'bubbling up' of the largest element."
+        },
+        {
+          "text": "$[3, 5, 2, 1, 4, 7, 9]$",
+          "isCorrect": false,
+          "rationale": "This is actually the state after the second pass of Bubble Sort, where both the largest and second-largest elements have settled."
+        }
+      ],
+      "hint": "Think about which specific element 'bubbles' to the very end of the list during the first traversal."
+    },
+    {
+      "question": "Using Selection Sort on the array $[7, 3, 5, 2, 9, 1, 4]$, what will the array look like after the first swap occurs?",
+      "answerOptions": [
+        {
+          "text": "$[1, 3, 5, 2, 9, 7, 4]$",
+          "isCorrect": true,
+          "rationale": "Selection Sort scans the entire unsorted portion to find the minimum (1) and swaps it with the element at the first unsorted position (7)."
+        },
+        {
+          "text": "$[3, 7, 5, 2, 9, 1, 4]$",
+          "isCorrect": false,
+          "rationale": "This swap only involves adjacent elements, which is characteristic of Bubble Sort or the start of Insertion Sort."
+        },
+        {
+          "text": "$[1, 2, 3, 4, 5, 7, 9]$",
+          "isCorrect": false,
+          "rationale": "This represents the final sorted state rather than the intermediate result after just one swap."
+        },
+        {
+          "text": "$[2, 3, 5, 7, 9, 1, 4]$",
+          "isCorrect": false,
+          "rationale": "This reflects a partial insertion of 2, whereas Selection Sort strictly looks for the absolute minimum value in the entire unsorted range."
+        }
+      ],
+      "hint": "Identify the smallest value in the entire array and swap it with the element at index 0."
+    },
+    {
+      "question": "In Insertion Sort, if we have processed the first two elements of $[7, 3, 5, 2, 9, 1, 4]$ to get $[3, 7, 5, 2, 9, 1, 4]$, what is the array state after the next element (5) is inserted?",
+      "answerOptions": [
+        {
+          "text": "$[3, 5, 7, 2, 9, 1, 4]$",
+          "isCorrect": true,
+          "rationale": "The element 5 is compared with 7 and 3, finding its place between them, which shifts 7 to the right."
+        },
+        {
+          "text": "$[3, 2, 5, 1, 4, 7, 9]$",
+          "isCorrect": false,
+          "rationale": "This sequence shows elements being sorted from the right side, which is the behavior of Bubble Sort."
+        },
+        {
+          "text": "$[3, 7, 2, 5, 9, 1, 4]$",
+          "isCorrect": false,
+          "rationale": "This represents a simple swap rather than the shifting and inserting logic required by the algorithm."
+        },
+        {
+          "text": "$[2, 3, 5, 7, 9, 1, 4]$",
+          "isCorrect": false,
+          "rationale": "This would happen if the next element processed was 2, skipping the logical order of processing elements from left to right."
+        }
+      ],
+      "hint": "The element being inserted must find its correct position among the already sorted sub-array on the left."
+    },
+    {
+      "question": "If we apply the Counting Sort algorithm to the array $[4, 2, 2, 8, 3, 3, 1]$, what is the value stored in the frequency count array at index 2?",
+      "answerOptions": [
+        {
+          "text": "2",
+          "isCorrect": true,
+          "rationale": "The frequency count array stores the number of occurrences for each value; the value 2 appears exactly twice in the input."
+        },
+        {
+          "text": "1",
+          "isCorrect": false,
+          "rationale": "This would be the count for values like 1, 4, or 8, which only appear once in the provided input."
+        },
+        {
+          "text": "3",
+          "isCorrect": false,
+          "rationale": "This could represent a misconception that the index is added to the count or that a specific value appears more than it actually does."
+        },
+        {
+          "text": "0",
+          "isCorrect": false,
+          "rationale": "Values 5, 6, and 7 would have a count of 0 because they are not present in the original input array."
+        }
+      ],
+      "hint": "Determine how many times the number 2 appears in the input list."
+    },
+    {
+      "question": "During Merge Sort, what are the two resulting sub-arrays after the first level of division for the array $[8, 3, 5, 4, 7, 6, 1, 2]$?",
+      "answerOptions": [
+        {
+          "text": "$[8, 3, 5, 4]$ and $[7, 6, 1, 2]$",
+          "isCorrect": true,
+          "rationale": "Merge Sort follows a top-down approach, splitting the original array into two roughly equal halves at the midpoint."
+        },
+        {
+          "text": "$[3, 8, 4, 5]$ and $[6, 7, 1, 2]$",
+          "isCorrect": false,
+          "rationale": "This describes the sub-arrays after they have undergone partial internal sorting, not the initial splitting phase."
+        },
+        {
+          "text": "$[8, 3]$ and $[5, 4]$",
+          "isCorrect": false,
+          "rationale": "These are results of the second level of splitting, not the first."
+        },
+        {
+          "text": "$[1, 2, 3, 4]$ and $[5, 6, 7, 8]$",
+          "isCorrect": false,
+          "rationale": "This suggests a partitioning based on value, which is common in Quick Sort, rather than the positional split of Merge Sort."
+        }
+      ],
+      "hint": "Split the array exactly in the middle to create two distinct groups."
+    },
+    {
+      "question": "In Quick Sort, given the array $[1, 0, 2, 7, 3, 10, 8]$ and 2 as the pivot, what is the array's state after the first partition is complete?",
+      "answerOptions": [
+        {
+          "text": "$[1, 0, 2, 7, 3, 10, 8]$",
+          "isCorrect": true,
+          "rationale": "With 2 as the pivot, elements smaller (1, 0) are already on the left and larger (7, 3, 10, 8) are on the right, meaning the array appears unchanged but the pivot is locked in place."
+        },
+        {
+          "text": "$[0, 1, 2, 3, 7, 8, 10]$",
+          "isCorrect": false,
+          "rationale": "This is the final sorted state, which requires multiple recursive calls beyond the initial partition."
+        },
+        {
+          "text": "$[2, 1, 0, 7, 3, 10, 8]$",
+          "isCorrect": false,
+          "rationale": "The pivot must be positioned between the smaller and larger elements, not at the beginning of the array."
+        },
+        {
+          "text": "$[1, 0, 3, 7, 2, 10, 8]$",
+          "isCorrect": false,
+          "rationale": "This suggests elements were swapped incorrectly, moving the pivot to a position where larger values are on its left."
+        }
+      ],
+      "hint": "Check if elements smaller than the pivot are already to its left and larger elements are to its right."
+    },
+    {
+      "question": "After the first swap in Selection Sort on $[7, 3, 5, 2, 9, 1, 4]$, we obtained $[1, 3, 5, 2, 9, 7, 4]$. What is the result of the second swap?",
+      "answerOptions": [
+        {
+          "text": "$[1, 2, 5, 3, 9, 7, 4]$",
+          "isCorrect": true,
+          "rationale": "In the second step, the algorithm finds the minimum in the remaining unsorted portion (which is 2) and swaps it with the element at index 1 (which is 3)."
+        },
+        {
+          "text": "$[1, 3, 5, 2, 9, 7, 4]$",
+          "isCorrect": false,
+          "rationale": "This would mean no swap occurred, but 3 is not the smallest element in the remaining unsorted sub-array."
+        },
+        {
+          "text": "$[1, 2, 3, 5, 9, 7, 4]$",
+          "isCorrect": false,
+          "rationale": "This is the result after three swaps have been completed, as both 2 and 3 have reached their final spots."
+        },
+        {
+          "text": "$[1, 2, 3, 4, 5, 7, 9]$",
+          "isCorrect": false,
+          "rationale": "This represents the end of the entire algorithm's execution."
+        }
+      ],
+      "hint": "Focus on the sub-array starting from index 1 to the end, find the smallest value, and swap it with index 1."
+    },
+    {
+      "question": "Starting with an array of $[7, 3, 5, 2, 9, 1, 4]$, what is the state of the sorted portion in Insertion Sort after 'Insert 1' is completed as per the trace?",
+      "answerOptions": [
+        {
+          "text": "$[1, 2, 3, 5, 7, 9, 4]$",
+          "isCorrect": true,
+          "rationale": "When 1 is inserted, it is compared against all elements in the sorted portion $[2, 3, 5, 7, 9]$, forcing them to shift right so 1 can take the front position."
+        },
+        {
+          "text": "$[1, 3, 5, 2, 9, 7, 4]$",
+          "isCorrect": false,
+          "rationale": "This is the result of a single global minimum swap in Selection Sort, not the progressive insertion logic."
+        },
+        {
+          "text": "$[1, 2, 3, 4, 5, 7, 9]$",
+          "isCorrect": false,
+          "rationale": "This result occurs only after the final element (4) is inserted in the last step."
+        },
+        {
+          "text": "$[2, 3, 5, 7, 9, 1, 4]$",
+          "isCorrect": false,
+          "rationale": "This reflects the state before 'Insert 1' occurs, where 9 was the most recent element positioned."
+        }
+      ],
+      "hint": "Consider how the value 1 compares to all previously sorted elements and where it must end up."
+    },
+    {
+      "question": "During the merging phase of Merge Sort, what is the result of merging the groups $[3, 8]$ and $[4, 5]$?",
+      "answerOptions": [
+        {
+          "text": "$[3, 4, 5, 8]$",
+          "isCorrect": true,
+          "rationale": "The merge procedure compares the smallest available elements from each group (3 vs 4, 8 vs 4, 8 vs 5) to build a new sorted sequence."
+        },
+        {
+          "text": "$[3, 8, 4, 5]$",
+          "isCorrect": false,
+          "rationale": "This is simply the two arrays concatenated without applying the sorting logic during the merge."
+        },
+        {
+          "text": "$[4, 5, 3, 8]$",
+          "isCorrect": false,
+          "rationale": "This reverses the order of the sub-arrays but fails to interleave the elements to maintain sorted order."
+        },
+        {
+          "text": "$[3, 4, 8, 5]$",
+          "isCorrect": false,
+          "rationale": "This fails to properly place 5 before 8 during the comparison steps of the merge."
+        }
+      ],
+      "hint": "Pick the smallest available number from the start of either list and add it to the new array."
+    },
+    {
+      "question": "After the third swap in Selection Sort for $[7, 3, 5, 2, 9, 1, 4]$, the array is $[1, 2, 3, 5, 9, 7, 4]$. What is the next logical step according to the algorithm?",
+      "answerOptions": [
+        {
+          "text": "Select the minimum from $[5, 9, 7, 4]$ and swap it with 5",
+          "isCorrect": true,
+          "rationale": "Selection Sort maintains a boundary; after index 2 is sorted, it searches the remaining unsorted portion (indices 3 to 6) for the next minimum."
+        },
+        {
+          "text": "Compare 5 and 9 and swap if necessary",
+          "isCorrect": false,
+          "rationale": "This describes a single comparison in Bubble Sort, whereas Selection Sort must scan the entire remainder."
+        },
+        {
+          "text": "Insert 4 into the sorted portion $[1, 2, 3]$",
+          "isCorrect": false,
+          "rationale": "Insertion Sort would take the next value in sequence (5) to insert, or if jump-sorting, it wouldn't match the selection logic."
+        },
+        {
+          "text": "The array is already sorted and the algorithm terminates",
+          "isCorrect": false,
+          "rationale": "There are still unsorted elements (5, 9, 7, 4) that must be processed to reach the final sorted state."
+        }
+      ],
+      "hint": "The algorithm needs to find the smallest value among the remaining unsorted numbers to continue building the sorted region."
+    },
+    {
+      "question": "Which sorting algorithm is characterized by an $O(n^2)$ worst-case time complexity but is often faster in practice due to being cache-friendly and performing in-place sorting?",
+      "answerOptions": [
+        {
+          "text": "Quick Sort",
+          "isCorrect": true,
+          "rationale": "Quick Sort's partitioning has low overhead and sequential memory access, which benefits CPU caches, often outweighing its rare $O(n^2)$ worst case."
+        },
+        {
+          "text": "Merge Sort",
+          "isCorrect": false,
+          "rationale": "While efficient, Merge Sort is not in-place ($O(n)$ space) and its memory access patterns are generally less cache-friendly than Quick Sort."
+        },
+        {
+          "text": "Bubble Sort",
+          "isCorrect": false,
+          "rationale": "Bubble Sort is in-place but extremely inefficient with $O(n^2)$ complexity, making it slow even with cache benefits."
+        },
+        {
+          "text": "Counting Sort",
+          "isCorrect": false,
+          "rationale": "Counting Sort is not a comparison-based algorithm and typically requires $O(k)$ auxiliary space, so it is not considered an 'in-place' $O(n^2)$ algorithm."
+        }
+      ],
+      "hint": "This algorithm uses a pivot-based partition approach and avoids the large auxiliary arrays required by Merge Sort."
+    },
+    {
+      "question": "What is a significant disadvantage of Selection Sort compared to Bubble Sort and Insertion Sort regarding its time complexity?",
+      "answerOptions": [
+        {
+          "text": "Its best-case complexity is still $O(n^2)$",
+          "isCorrect": true,
+          "rationale": "Selection Sort must always scan the entire unsorted portion to find the minimum, regardless of whether the array is already sorted."
+        },
+        {
+          "text": "It requires $O(n)$ auxiliary space",
+          "isCorrect": false,
+          "rationale": "Selection Sort is actually an in-place algorithm requiring only $O(1)$ extra space."
+        },
+        {
+          "text": "It is a stable sorting algorithm",
+          "isCorrect": false,
+          "rationale": "Actually, Selection Sort is not stable, but stability is generally considered an advantage, not a disadvantage related to time complexity."
+        },
+        {
+          "text": "It performs too many swaps",
+          "isCorrect": false,
+          "rationale": "In fact, Selection Sort is known for minimizing swaps, performing at most $O(n)$ swaps total."
+        }
+      ],
+      "hint": "Consider if the algorithm can stop early or perform fewer operations if the input is already sorted."
+    },
+    {
+      "question": "Which of these algorithms breaks the $O(n \\log n)$ barrier for comparison-based sorts by utilizing a non-comparison approach?",
+      "answerOptions": [
+        {
+          "text": "Counting Sort",
+          "isCorrect": true,
+          "rationale": "Counting Sort achieves $O(n+k)$ time complexity because it counts occurrences instead of comparing elements directly."
+        },
+        {
+          "text": "Quick Sort",
+          "isCorrect": false,
+          "rationale": "Quick Sort is a comparison-based sort and is theoretically bound by the $O(n \\log n)$ average case."
+        },
+        {
+          "text": "Merge Sort",
+          "isCorrect": false,
+          "rationale": "Merge Sort is comparison-based and represents the standard for $O(n \\log n)$ performance."
+        },
+        {
+          "text": "Insertion Sort",
+          "isCorrect": false,
+          "rationale": "Insertion Sort uses comparisons to find the correct insertion point, keeping it within comparison-based bounds."
+        }
+      ],
+      "hint": "Look for an algorithm that works by tracking frequency counts of integers."
+    },
+    {
+      "question": "What is the auxiliary space complexity of Merge Sort, and why is this relevant for large datasets?",
+      "answerOptions": [
+        {
+          "text": "$O(n)$; it requires a temporary array of the same size as the input",
+          "isCorrect": true,
+          "rationale": "The merge step requires extra memory to store elements as they are being combined, which can be a limitation if memory is scarce."
+        },
+        {
+          "text": "$O(\\log n)$; it only requires space for the recursion stack",
+          "isCorrect": false,
+          "rationale": "This describes the space complexity of Quick Sort, not Merge Sort."
+        },
+        {
+          "text": "$O(1)$; it sorts the data in-place",
+          "isCorrect": false,
+          "rationale": "Algorithms like Bubble Sort and Selection Sort are $O(1)$ space, but standard Merge Sort requires significant extra space."
+        },
+        {
+          "text": "$O(k)$; it depends on the range of the input values",
+          "isCorrect": false,
+          "rationale": "This describes the space requirement for Counting Sort's frequency array."
+        }
+      ],
+      "hint": "Think about the resources needed to hold the sorted results during the 'Combine' phase."
+    },
+    {
+      "question": "Which sorting algorithm is typically chosen when stability is a strict requirement and the data to be sorted is in a linked list?",
+      "answerOptions": [
+        {
+          "text": "Merge Sort",
+          "isCorrect": true,
+          "rationale": "Merge Sort is naturally stable and highly efficient for linked lists because it doesn't require random access like Quick Sort."
+        },
+        {
+          "text": "Quick Sort",
+          "isCorrect": false,
+          "rationale": "Quick Sort is not stable and relies heavily on indices for partitioning, making it less ideal for linked lists."
+        },
+        {
+          "text": "Selection Sort",
+          "isCorrect": false,
+          "rationale": "Selection Sort is inefficient ($O(n^2)$) and unstable, making it a poor choice for large linked lists."
+        },
+        {
+          "text": "Counting Sort",
+          "isCorrect": false,
+          "rationale": "Counting Sort requires the data to be integers in a specific range and is not typically the general-purpose choice for arbitrary linked list nodes."
+        }
+      ],
+      "hint": "Stable algorithms preserve the relative order of equal elements; this one is also famous for 'Divide and Conquer'."
+    },
+    {
+      "question": "In the context of the 'Divide and Conquer' paradigm, what does the 'Conquer' step specifically involve?",
+      "answerOptions": [
+        {
+          "text": "Solving the subproblems recursively",
+          "isCorrect": true,
+          "rationale": "The conquer step focuses on processing smaller versions of the original problem until they are simple enough to be solved directly."
+        },
+        {
+          "text": "Breaking the problem into smaller pieces",
+          "isCorrect": false,
+          "rationale": "This describes the 'Divide' step of the paradigm."
+        },
+        {
+          "text": "Merging the results of subproblems",
+          "isCorrect": false,
+          "rationale": "This is the 'Combine' step, where the separate solutions are unified."
+        },
+        {
+          "text": "Choosing a pivot element",
+          "isCorrect": false,
+          "rationale": "Pivot selection is a specific implementation detail of the 'Divide' step in Quick Sort."
+        }
+      ],
+      "hint": "This step involves handling the smaller instances of the problem created in the previous phase."
+    },
+    {
+      "question": "What happens to the inner loop range in Bubble Sort as the algorithm progresses through its passes?",
+      "answerOptions": [
+        {
+          "text": "It shrinks because the largest elements are already sorted at the end",
+          "isCorrect": true,
+          "rationale": "Each pass guarantees that the largest unsorted element reaches its final position, allowing the next pass to skip those elements."
+        },
+        {
+          "text": "It stays the same to ensure everything is compared every time",
+          "isCorrect": false,
+          "rationale": "While some basic versions might do this, the optimized version reduces the range by $i$ elements each pass."
+        },
+        {
+          "text": "It expands from left to right as the sorted region grows",
+          "isCorrect": false,
+          "rationale": "This sounds more like Selection Sort or Insertion Sort, where the sorted region builds at the beginning of the array."
+        },
+        {
+          "text": "It resets only when a swap is not made",
+          "isCorrect": false,
+          "rationale": "The inner loop's bound is fixed for each pass based on the pass number, though the entire algorithm might stop early if no swaps occur."
+        }
+      ],
+      "hint": "Consider why we don't need to check the last few items of the array after the first few traversals."
+    },
+    {
+      "question": "If you have an array that is 'nearly sorted', which of the following $O(n^2)$ algorithms will perform most efficiently in terms of time complexity?",
+      "answerOptions": [
+        {
+          "text": "Insertion Sort",
+          "isCorrect": true,
+          "rationale": "In the best case of a nearly sorted array, Insertion Sort approaches $O(n)$ because the inner while loop terminates almost immediately."
+        },
+        {
+          "text": "Selection Sort",
+          "isCorrect": false,
+          "rationale": "Selection Sort is always $O(n^2)$ because it must verify the minimum for every single position regardless of current order."
+        },
+        {
+          "text": "Standard Bubble Sort",
+          "isCorrect": false,
+          "rationale": "Without early-stop optimization, Bubble Sort is $O(n^2)$; even with it, Insertion Sort typically performs fewer operations for this case."
+        },
+        {
+          "text": "Merge Sort",
+          "isCorrect": false,
+          "rationale": "While $O(n \\log n)$, Merge Sort is not an $O(n^2)$ algorithm, and it will still perform all split/merge operations regardless of initial order."
+        }
+      ],
+      "hint": "Think about which algorithm has a 'best case' time complexity of $O(n)$ when elements are already in or near their final spots."
+    },
+    {
+      "question": "Under what specific condition is Counting Sort's space complexity considered a significant drawback?",
+      "answerOptions": [
+        {
+          "text": "When the range of values $k$ is much larger than the number of elements $n$",
+          "isCorrect": true,
+          "rationale": "Because it requires an array of size $k+1$, a large range requires substantial memory even if there are only a few items to sort."
+        },
+        {
+          "text": "When the input contains negative numbers",
+          "isCorrect": false,
+          "rationale": "While it requires modification for negatives, the primary space drawback is related to the magnitude of the range."
+        },
+        {
+          "text": "When all elements in the array are unique",
+          "isCorrect": false,
+          "rationale": "Uniqueness doesn't inherently increase space usage; only the maximum value (range) determines the count array size."
+        },
+        {
+          "text": "When the array size $n$ is very large",
+          "isCorrect": false,
+          "rationale": "If $n$ is large but the range $k$ is small, the algorithm is actually very efficient in both time and space."
+        }
+      ],
+      "hint": "Space depends on the difference between the minimum and maximum possible values in the input."
+    },
+    {
+      "question": "Why is Quick Sort often preferred over Merge Sort for in-memory sorting despite having a worse worst-case time complexity?",
+      "answerOptions": [
+        {
+          "text": "It is in-place and has smaller constant factors in its time complexity",
+          "isCorrect": true,
+          "rationale": "Quick Sort doesn't require the extra $O(n)$ space of Merge Sort and its basic operations (comparisons/swaps) are faster in the average case."
+        },
+        {
+          "text": "It is guaranteed to be stable",
+          "isCorrect": false,
+          "rationale": "Quick Sort is generally not stable, whereas Merge Sort is, so this would be a reason to choose Merge Sort."
+        },
+        {
+          "text": "It works better for external sorting of large files",
+          "isCorrect": false,
+          "rationale": "Merge Sort is actually preferred for external sorting due to its predictable and sequential access patterns."
+        },
+        {
+          "text": "It always performs exactly $n \\log n$ comparisons",
+          "isCorrect": false,
+          "rationale": "Quick Sort's comparisons vary based on pivot choice, while Merge Sort is the one with highly predictable performance."
+        }
+      ],
+      "hint": "Consider the costs of allocating extra memory and the frequency of the 'worst-case' scenario."
+    }
+  ]
+}];
 
-const vocab=[
-  {en:"Researchers",he:"חוקרים"},{en:"Data",he:"נתונים"},{en:"Survey",he:"סקר"},
-  {en:"Proof",he:"הוכחה"},{en:"Demonstrate",he:"להדגים / להראות"},{en:"The assumption",he:"הנחה"},
-  {en:"The findings",he:"ממצאים / תוצאות"},{en:"The process",he:"תהליך"},{en:"Participants",he:"משתתפים"},
-  {en:"Control group",he:"קבוצת ביקורת"},{en:"Experimental group",he:"קבוצת ניסוי"},{en:"Questionnaire",he:"שאלון"},
-  {en:"Study / Studies",he:"מחקר / מחקרים"},{en:"Theorized",he:"גיבש תיאוריה"},{en:"Analyzed",he:"ניתח"},
-  {en:"Suggest",he:"מציע / השערה"},{en:"Refute",he:"לסתור / לא מסכים"},{en:"Method",he:"שיטה"},
-  {en:"Confirm",he:"לאשר / לאמת"}
-];
+const TOPIC_ICONS = ["🧩","⏱️","🌳","🕸️","🔀"];
 
-const paragraphs=[
-  {num:"1",ref:"Paragraph 1",badge:"badge-key",bl:"Key example",
-   title_he:"ארתור פריי ובעיית הסימנייה",title_en:"Arthur Fry and his bookmark problem",
-   text_en:"On a Sunday morning in 1974, Arthur Fry sat in a Presbyterian church in Minnesota. An engineer at 3M, he also sang in the church choir. He used to insert small paper scraps into his choir book to find the right hymns — but the papers kept falling out.",
-   text_he:"בבוקר יום ראשון, 1974, ישב ארתור פריי בכנסייה. מהנדס ב-3M, הוא שר גם במקהלה. נהג להכניס פתקים לסידור כדי למצוא את ההמנונים — אך הפתקים נפלו שוב ושוב.",
-   notes:[{he:"מציג בעיה פשוטה שתיפתר על ידי חלימה בהקיץ",en:"Sets up a simple problem that daydreaming will solve"},{he:"פריי = אדם רגיל → גדולות קורות לכולם",en:"Fry = ordinary person → big inventions can happen to anyone"}]},
-  {num:"2",ref:"Paragraph 2",badge:"badge-key",bl:"The big idea",
-   title_he:"החלום שיצר את ה-Post-it",title_en:"The daydream that created Post-it notes",
-   text_en:"While listening to the sermon, Fry started to daydream. Instead of focusing on the pastor's words, he thought: \"What I need is a bookmark that will stick but will not tear the paper.\" That errant thought would later become the yellow Post-it note — one of the most successful office products of all time.",
-   text_he:"בזמן הדרשה, פריי התחיל לחלום בהקיץ. הוא חשב: 'אני צריך סימניה שתדבק בלי לקרוע.' אותה מחשבה שוטה הפכה לדף ה-Post-it הצהוב — אחד ממוצרי המשרד המוצלחים ביותר.",
-   notes:[{he:"הדוגמה המרכזית — חלימה בהקיץ = פריצת דרך יצירתית",en:"The central example — daydreaming = creative breakthrough"},{he:"'Errant thought' = מחשבה שחרגה מהנושא",en:"'Errant thought' = a thought that strayed from the topic"}]},
-  {num:"3",ref:"Paragraph 3",badge:"badge-warning",bl:"Old view",
-   title_he:"הדעה השלילית הישנה",title_en:"The old negative view of daydreaming",
-   text_en:"Daydreaming is usually cast in a negative light. Children are told to 'focus.' In a culture obsessed with efficiency, daydreaming is seen as a lazy habit or lack of discipline — a sign of procrastination, not productivity.",
-   text_he:"חלימה בהקיץ נחשבת בדרך כלל לדבר שלילי. ילדים מתבקשים 'להתרכז'. בתרבות שמאדירה יעילות — חלימה = עצלות, חוסר משמעת, דחיינות.",
-   notes:[{he:"שאלה: 'למה מוזכר איינשטיין?' — כדוגמה לגאון שחלם בהקיץ וסתר את הדעה השלילית",en:"Exam Q: 'Why is Einstein mentioned?' — as proof that great minds daydream too"},{he:"הדעה הישנה (לפני המחקר): חלימה = עצלות",en:"Old view (before research): daydreaming = laziness"}]},
-  {num:"4",ref:"Paragraph 4",badge:"badge-key",bl:"Central argument",
-   title_he:"הדעה החדשה: 'מצב ברירת המחדל'",title_en:"The new view: daydreaming as 'default mode'",
-   text_en:"In recent years, scientists have begun to see daydreaming very differently. They've demonstrated that it is a fundamental feature of the human mind — often referred to as our 'default' mode of thought. It is a crucial tool for creativity, allowing the brain to make new associations and connections.",
-   text_he:"בשנים האחרונות, מדענים מסתכלים על חלימה בהקיץ אחרת. היא תכונה יסודית של המוח — 'מצב ברירת המחדל'. כלי יצירתיות חשוב שמאפשר קשרים חדשים.",
-   notes:[{he:"מצב ברירת המחדל = האופן הטבעי של המוח כשאינו עסוק",en:"Default mode = the brain's natural state when not focused on a task"},{he:"שאלה: 'מה השתנה בדעת החוקרים?' — פעם: עצלות. עכשיו: כלי יצירתיות",en:"Exam Q: 'How did views change?' — Once: laziness. Now: creativity tool"}]},
-  {num:"5",ref:"Paragraph 5",badge:"badge-expert",bl:"Expert quote",
-   title_he:"שולר: 'נסיעה בזמן מנטלית'",title_en:"Schooler: 'Mental time travel'",
-   text_en:"\"If your mind didn't wander, then you'd be largely shackled to whatever you are doing right now,\" says Jonathan Schooler (UC Santa Barbara). \"But instead you can engage in mental time travel and other kinds of simulation. During a daydream, your thoughts are really unbounded.\"",
-   text_he:"'אם המחשבה לא הייתה נודדת, היית כבול למה שאתה עושה עכשיו,' אומר שולר. 'אבל כך אתה יכול לעסוק בנסיעה בזמן מנטלית. בחלום הקיץ, המחשבות ממש ללא גבולות.'",
-   notes:[{he:"'Shackled' = כבול, לא חופשי לחשוב על דברים אחרים",en:"'Shackled' = tied down, not free to think about other things"},{he:"שולר = פסיכולוג, אוניברסיטת קליפורניה (UC Santa Barbara)",en:"Schooler = psychologist at UC Santa Barbara"}]},
-  {num:"6–7",ref:"Paragraphs 6–7",badge:"badge-key",bl:"Social benefit",
-   title_he:"היתרון החברתי ומייסון",title_en:"The social benefit + Mason's quote",
-   text_en:"Daydreaming has important social benefits. Mostly, what we daydream about is each other — retrieving memories, contemplating 'what if' scenarios, and thinking about how to behave in the future. Malia Mason (Columbia): \"Without that skill, we'd be pretty limited creatures.\"",
-   text_he:"חלימה בהקיץ מועילה גם חברתית. אנחנו חולמים בעיקר על אחרים — שחזור זכרונות, תרחישי 'מה אם', תכנון התנהגות עתידית. מייסון: 'בלי הכישרון הזה, היינו יצורים מוגבלים מאוד.'",
-   notes:[{he:"יתרון חברתי = תכנון יחסים, הבנת אחרים, חשיבה על עתיד",en:"Social benefit = planning relationships, understanding others, thinking about the future"},{he:"שאלה: 'מה מייסון אומרת שהיינו חסרים?' — יכולת לדמיין עתיד; היינו מוגבלים",en:"Exam Q: 'What does Mason say we'd lack?' — ability to imagine future; very limited"}]},
-  {num:"8–11",ref:"Paragraphs 8–11",badge:"badge-science",bl:"Research",
-   title_he:"בלטון: ילדים, טלוויזיה וחוסר דמיון",title_en:"Belton: children, TV and lack of imagination",
-   text_en:"Teresa Belton noticed children's stories were tedious and unimaginative. After monitoring their schedules, she concluded this was caused by a lack of 'empty time.' As soon as they were bored they turned on the TV — so they never practised daydreaming. \"The capacity to daydream requires real practice. Too many kids never get the practice.\"",
-   text_he:"בלטון שמה לב שסיפורי הילדים היו משעממים. לאחר מעקב, היא הסיקה שהסיבה: חוסר 'זמן ריק'. ברגע שהתשעממו — טלוויזיה. כך מעולם לא תרגלו חלימה. 'היכולת לחלום בהקיץ דורשת תרגול אמיתי.'",
-   notes:[{he:"מסקנת בלטון: אין זמן ריק → לא מתרגלים חלימה → אין דמיון",en:"Belton's conclusion: no empty time → no daydream practice → no imagination"},{he:"טלוויזיה = מונעת שעמום → מונעת חלימה בהקיץ → פוגעת ביצירתיות",en:"TV = prevents boredom → prevents daydreaming → harms creativity"}]},
-  {num:"12–13",ref:"Paragraphs 12–13",badge:"badge-science",bl:"Proof",
-   title_he:"הוכחה: יותר חלימה = יותר יצירתיות",title_en:"Proof: more daydreaming = higher creativity",
-   text_en:"Schooler's lab showed that people who daydream more score higher on creativity tests that require making unusual connections. \"Daydreams involve a more relaxed style of thinking, with people more willing to contemplate ideas that seem silly or far-fetched.\"",
-   text_he:"מחקר שולר: מי שחולם יותר בהקיץ — מצטיין יותר במבחני יצירתיות. 'חלומות הקיץ כרוכים בחשיבה רגועה יותר, עם נכונות רבה לשקול רעיונות שנראים לא הגיוניים.'",
-   notes:[{he:"הוכחה ניסיונית: יותר חלימה = ציונים גבוהים יותר במבחני יצירתיות",en:"Experimental proof: more daydreaming = higher creativity scores"},{he:"חשיבה רגועה מאפשרת רעיונות שנראים 'מוזרים' — שם מקור היצירתיות",en:"Relaxed thinking allows 'weird' ideas — the source of creativity"}]},
-  {num:"14–16",ref:"Paragraphs 14–16",badge:"badge-key",bl:"Key distinction",
-   title_he:"שני סוגי חולמים — מודעות היא המפתח",title_en:"Two types of daydreamers — awareness is key",
-   text_en:"Schooler distinguishes two types: Type 1 — only notice they're daydreaming when asked (NO increase in creativity). Type 2 — catch themselves without prompting (YES, increased creativity). \"The hard part is maintaining enough awareness so that even when you start to daydream you can interrupt yourself and notice a creative insight.\" That's why Fry — with 20+ patents — pays attention to his daydreams.",
-   text_he:"שולר מבחין: סוג 1 — מבחין שחולם רק כשנשאל (אין עלייה ביצירתיות). סוג 2 — מבחין בעצמו (יצירתיות גבוהה יותר). 'החלק הקשה: לשמור מודעות בחלום.' לכן פריי (עם 20+ פטנטים) שם לב לחלומותיו.",
-   notes:[{he:"לא כל חלימה מובילה ליצירתיות — רק חלימה מודעת!",en:"NOT all daydreaming leads to creativity — only AWARE daydreaming!"},{he:"שאלה: 'האם כל חלימה = יצירתיות?' — לא. רק סוג 2 (מודעים לעצמם)",en:"Exam Q: 'Does all daydreaming = creativity?' — No. Only Type 2"}]},
-  {num:"17–18",ref:"Paragraphs 17–18",badge:"badge-science",bl:"Brain science",
-   title_he:"רשת ברירת המחדל — המוח לא נח",title_en:"The default network — the brain never rests",
-   text_en:"Every time we daydream, a distinct pattern of brain areas called the 'default network' activates. Dr. Marcus Raichle (Washington University): \"When your brain is supposedly doing nothing, it's really doing a tremendous amount. We call it the 'resting state,' but the brain isn't resting at all.\"",
-   text_he:"בכל כניסה לחלימה בהקיץ, מופעלת 'רשת ברירת המחדל'. ריישל: 'כשהמוח שלך עושה כלום, הוא בעצם עושה דבר עצום. זה נקרא 'מצב מנוחה', אבל המוח בכלל לא נח.'",
-   notes:[{he:"אין 'מצב מנוחה' אמיתי — המוח תמיד פעיל!",en:"There is NO true 'resting state' — the brain is always active!"},{he:"שאלה: 'האם יש מצב מנוחה לפי ריישל?' — לא! המוח עושה עבודה עצומה",en:"Exam Q: 'Is there a resting state per Raichle?' — No! Brain is working hard"}]},
-  {num:"19–20",ref:"Paragraphs 19–20",badge:"badge-warning",bl:"Disorders",
-   title_he:"אוטיזם וסכיזופרניה — שני קצוות",title_en:"Autism and schizophrenia — two extremes",
-   text_en:"People with autism engage in less daydreaming — with reduced default network activity — and tend to fixate on their environment instead. This correlates with more severe social deficits. The opposite occurs in schizophrenia: an overactive default network may explain the inability to differentiate between reality and imagination.",
-   text_he:"אוטיסטים חולמים פחות (רשת פחות פעילה) ונוטים להתמקד בסביבה → קשיים חברתיים. ההפך בסכיזופרניה: רשת יתר-פעילה → לא מבדילים בין מציאות לדמיון.",
-   notes:[{he:"אוטיזם = פחות חלימה → פחות מיומנות חברתית",en:"Autism = less daydreaming → fewer social skills"},{he:"סכיזופרניה = יותר מדי חלימה → לא מבדילים מציאות מדמיון",en:"Schizophrenia = too much daydreaming → can't tell reality from imagination"}]},
-  {num:"21–22",ref:"Paragraphs 21–22",badge:"badge-science",bl:"Aging",
-   title_he:"הזדקנות: פחות שליטה על חלימה",title_en:"Aging: less control over daydreaming",
-   text_en:"Harvard researchers found that aging causes reduced coordination in the default network — brain areas that normally work in sync start to fire at different times. This makes it harder for elderly people to control the timing and duration of their daydreams. It is important to switch off the default network when focus is needed.",
-   text_he:"חוקרי הרווארד: הזדקנות גורמת לתיאום מופחת ברשת. אזורי מוח שפועלים בסנכרון מתחילים לפעול בזמנים שונים → קשה לשלוט בחלימה. חשוב לדעת לכבות את הרשת כשצריך להתרכז.",
-   notes:[{he:"גיל = תיאום פחות טוב → קשה לשלוט מתי וכמה לחלום",en:"Age = less coordination → harder to control when and how long to daydream"},{he:"חשוב לדעת לכבות חלימה כשצריך (למשל: נהיגה בפקק)",en:"Important to be able to stop daydreaming when needed (e.g. driving in traffic)"}]},
-  {num:"23–24",ref:"Paragraphs 23–24",badge:"badge-conclusion",bl:"Conclusion",
-   title_he:"המוח אף פעם לא ריק — קח חלימה ברצינות",title_en:"The mind is never empty — take daydreaming seriously",
-   text_en:"What these studies demonstrate is that proper daydreaming is a crucial feature of the healthy human brain. The mind is never empty — it's always bubbling over with ideas and connections. When we are stuck on a difficult problem, a good daydream isn't just an escape — it may be the most productive thing we can do.",
-   text_he:"כל המחקרים מדגימים: חלימה בהקיץ נכונה היא תכונה חיונית של המוח הבריא. המוח אף פעם לא ריק — תמיד רותח ברעיונות. כשתקועים בבעיה — חלימה בהקיץ היא הדבר הפרודוקטיבי ביותר.",
-   notes:[{he:"שאלה: 'המוח אף פעם לא ריק — נכון/לא נכון?' — נכון! תמיד עסוק",en:"Exam Q: 'Mind is never empty — TRUE/FALSE?' — TRUE! Always active"},{he:"שאלה: 'מה העצה בפסקה האחרונה?' — לקחת חלימה ברצינות; להשתמש בה לפתרון בעיות",en:"Exam Q: 'What advice is in the last paragraph?' — take daydreams seriously; use them to solve problems"}]}
-];
+let state = { mode: 'home' };
 
-const questions=[
-  {q:"What main idea is illustrated by the example of Arthur Fry?",
-   opts:[{t:"Daydreaming can lead to creative breakthroughs",c:true},{t:"Engineers are the most creative people",c:false},{t:"Churches are good places to think",c:false},{t:"Companies like 3M should encourage napping",c:false}],
-   ex:"Fry daydreamed during the sermon and his wandering mind led to the invention of Post-it notes — proof that a wandering mind can produce valuable, creative ideas."},
-  {q:"What advice is given in the last paragraph (paragraph 24)?",
-   opts:[{t:"Stop daydreaming and focus more at school",c:false},{t:"Take daydreams seriously — it may be the most productive thing we can do",c:true},{t:"Sleep more during the day",c:false},{t:"Watch less television",c:false}],
-   ex:"Paragraph 24 says that when stuck on a difficult problem, a good daydream is not just an escape — it may actually be the most productive thing we can do."},
-  {q:"What advantage does the daydream have? (paragraph 2 — use your own words)",
-   opts:[{t:"It helps us sleep better at night",c:false},{t:"It frees the mind to wander and reach creative ideas beyond the present moment",c:true},{t:"It improves long-term memory",c:false},{t:"It helps us concentrate for longer periods",c:false}],
-   ex:"In paragraph 2, Fry's wandering mind allowed him to think creatively about his bookmark problem instead of staying focused on the sermon. The daydream freed his mind from the present."},
-  {q:"Why is Einstein mentioned in paragraph 3?",
-   opts:[{t:"He invented the Post-it note before Fry did",c:false},{t:"He is a famous example of a great mind known for his wandering thoughts",c:true},{t:"He researched the default network in the brain",c:false},{t:"He was an engineer who worked at 3M",c:false}],
-   ex:"Einstein is mentioned as a counter-example to the negative view of daydreaming — even history's greatest genius was notorious for his wandering mind, suggesting daydreaming leads to great discoveries."},
-  {q:"In what way have researchers' ideas about daydreaming changed? Once ______ but now ______",
-   opts:[{t:"Once seen as healthy; now seen as dangerous",c:false},{t:"Once dismissed as laziness and procrastination; now seen as a crucial creativity tool",c:true},{t:"Once positive; now negative",c:false},{t:"Views have not changed — always seen as positive",c:false}],
-   ex:"Paragraph 3 shows the old view: laziness, lack of discipline. Paragraph 4 shows the shift: scientists now see it as the brain's 'default mode' and a crucial tool for creativity."},
-  {q:"What is the outcome of daydreaming? (paragraph 4)",
-   opts:[{t:"The brain makes new associations and creative connections between ideas",c:true},{t:"The brain stores memories more efficiently",c:false},{t:"The body recovers from stress",c:false},{t:"The brain stops processing external information",c:false}],
-   ex:"Paragraph 4 states that daydreaming allows the brain to make 'new associations and connections.' The mind is free to engage in abstract thought and imagine things that do not yet exist."},
-  {q:"Give ONE social benefit of daydreaming (paragraph 6).",
-   opts:[{t:"It helps us fall asleep faster",c:false},{t:"It helps us think about relationships and plan how to behave in the future",c:true},{t:"It improves our reading speed",c:false},{t:"It helps us remember people's names",c:false}],
-   ex:"Paragraph 6 explains that during daydreams we retrieve memories of social interactions, consider 'what if' scenarios, and think about how we should behave in the future — all important social skills."},
-  {q:"What does Malia Mason think we would lack without daydreaming?",
-   opts:[{t:"The ability to speak multiple languages",c:false},{t:"The ability to feel emotions",c:false},{t:"The ability to project ourselves into imaginary situations like the future — we'd be very limited",c:true},{t:"The ability to form long-term memories",c:false}],
-   ex:"Paragraph 7: Mason says daydreaming gives us the ability to 'project ourselves into imaginary situations, like the future.' Without this skill, 'we'd be pretty limited creatures.'"},
-  {q:"What conclusion does Belton reach about why children write boring stories?",
-   opts:[{t:"Children don't read enough books",c:false},{t:"A lack of 'empty time' meant they never practised daydreaming and developing their imagination",c:true},{t:"Television teaches children bad writing habits",c:false},{t:"Their teachers are not creative enough",c:false}],
-   ex:"Paragraphs 10-11: Belton found that children turned on the TV the moment they were bored, so they never had empty time to practise daydreaming — a skill that requires real practice."},
-  {q:"What did Schooler's research prove? (paragraph 12)",
-   opts:[{t:"All daydreamers are creative people",c:false},{t:"People who daydream more frequently score higher on experimental measures of creativity",c:true},{t:"Creativity directly improves academic grades",c:false},{t:"Daydreaming has a negative effect on memory",c:false}],
-   ex:"Paragraph 12: Schooler's lab showed that people who daydream more score higher on creativity tests requiring unusual connections — providing experimental (scientific) proof that daydreaming boosts creativity."},
-  {q:"Does all daydreaming lead to creativity? YES or NO — support your answer.",
-   opts:[{t:"YES — any kind of daydreaming boosts creativity equally",c:false},{t:"NO — only aware daydreamers (Type 2) show increased creativity; unaware ones do not",c:true},{t:"YES — the longer the daydream, the more creative the outcome",c:false},{t:"NO — daydreaming never leads to creativity according to Schooler",c:false}],
-   ex:"Paragraphs 14-15: Schooler found two types of daydreamers. Only those who catch themselves daydreaming without being asked (Type 2) show creativity gains. Those unaware of their daydreaming (Type 1) do not benefit. Awareness is key."},
-  {q:"What is the default network? (paragraph 17)",
-   opts:[{t:"The brain's sleep and recovery system",c:false},{t:"A distinct pattern of brain areas that activates during daydreaming and creates new creative connections",c:true},{t:"The part of the brain responsible for language processing",c:false},{t:"A computer network used in brain research",c:false}],
-   ex:"Paragraph 17: The default network is 'a distinct pattern of brain areas' activated whenever we slip into a daydream. During this state, the brain contemplates its internal landscape and makes new creative connections."},
-  {q:"Is there a 'resting state' according to Dr. Raichle? YES or NO",
-   opts:[{t:"YES — the brain fully rests during sleep",c:false},{t:"YES — the brain rests when we perform simple routine tasks",c:false},{t:"NO — the brain is always very active, even during daydreaming",c:true},{t:"NO — only deep meditation allows the brain to truly rest",c:false}],
-   ex:"Paragraph 18: Raichle says there is no real resting state. Unlike a muscle that does nothing when not in use, the brain is 'doing a tremendous amount' during daydreaming. It only appears to be resting."},
-  {q:"Do autistic people use daydreaming effectively? YES or NO — describe their behaviour.",
-   opts:[{t:"YES — autistic people daydream more than average people",c:false},{t:"YES — autistic people daydream normally like everyone else",c:false},{t:"NO — they daydream less and tend to fixate on things in their environment instead",c:true},{t:"NO — autistic people are unable to sleep and therefore cannot daydream",c:false}],
-   ex:"Paragraph 19: People with autism have significantly reduced default network activity. Instead of daydreaming, they tend to fixate on concrete things in their environment. More severe reductions correlate with more severe social difficulties."},
-  {q:"'The mind is never empty.' TRUE or FALSE — support your answer.",
-   opts:[{t:"FALSE — the brain completely rests during deep sleep",c:false},{t:"TRUE — the brain is always active, always bubbling over with ideas and connections",c:true},{t:"FALSE — meditation can completely empty the mind",c:false},{t:"TRUE — but only in creative and artistic people",c:false}],
-   ex:"Paragraph 23: 'The mind is never empty: it's always bubbling over with ideas and connections.' The default network is always at work, even when we think we are doing nothing."},
-  {q:"What is the difference between the two types of daydreamers Schooler identifies?",
-   opts:[{t:"One type daydreams at night; the other during the day",c:false},{t:"Type 2 is self-aware of their daydreaming and benefits creatively; Type 1 is not and does not",c:true},{t:"One type is more intelligent than the other",c:false},{t:"One type is significantly older than the other",c:false}],
-   ex:"Paragraphs 14-15: Type 1 only realises they are daydreaming when asked by the researcher — no creative gain. Type 2 catches themselves without prompting — shows increased creativity. Self-awareness is the critical difference."},
-  {q:"What does Schooler mean by 'the hard part' of daydreaming? (paragraph 15)",
-   opts:[{t:"Entering a daydream in the first place",c:false},{t:"Maintaining enough awareness to notice and capture a creative insight when it occurs",c:true},{t:"Remembering what you daydreamed about afterwards",c:false},{t:"Sustaining a single daydream for more than ten minutes",c:false}],
-   ex:"Paragraph 15: Schooler says 'letting your mind drift off is the easy part.' The hard part is 'maintaining enough awareness so that even when you start to daydream you can interrupt yourself and notice a creative insight.'"},
-  {q:"Why does Belton think television is harmful for children's creativity?",
-   opts:[{t:"Because it contains violent and disturbing content",c:false},{t:"Because it prevents boredom, meaning children never practise the skill of daydreaming",c:true},{t:"Because it makes children physically lazy and inactive",c:false},{t:"Because it teaches children incorrect facts about the world",c:false}],
-   ex:"Paragraphs 10-11: The moment children were bored, they turned on the TV. Without boredom, there is no daydreaming. Without daydreaming practice, imagination does not develop. Daydreaming is a skill — and it needs practice."},
-  {q:"What happens to the default network as people get older? (paragraphs 21–22)",
-   opts:[{t:"It becomes stronger and more active with age",c:false},{t:"Its coordination decreases, making it harder to control the timing of daydreams",c:true},{t:"It completely disappears in elderly people",c:false},{t:"It becomes overactive like in schizophrenia",c:false}],
-   ex:"Paragraphs 21-22: Harvard researchers found that brain areas that normally fire in sync start firing at different times with age. This makes it harder for elderly people to control when they daydream and for how long."},
-  {q:"Why does Fry have more than twenty patents, according to the author? (paragraph 16)",
-   opts:[{t:"He works extremely hard and stays focused for long periods",c:false},{t:"He both daydreams frequently AND pays attention to his daydreams to capture creative ideas",c:true},{t:"3M automatically grants patents to all their senior engineers",c:false},{t:"He studied at a special technical engineering school",c:false}],
-   ex:"Paragraph 16: Fry succeeds not simply because he daydreams a lot, but because 'he's able to pay attention to his daydreams, and to detect those moments when his daydreams lead to a useful idea.' Both elements are required."}
-];
-
-// ════════════════════════ STATE ════════════════════════
-let known=new Set(), shuffled=[...vocab], showUnknown=false;
-let batches=[], batchIdx=0, totalDone=0, selEn=null, selHe=null;
-let qOrder=[], qIdx=0, qCorrect=0, qWrong=0;
-
-// ════════════════════════ TABS ════════════════════════
-function showTab(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  const map={vocab:0,text:1,quiz:2};
-  if(map[id]!==undefined) document.querySelectorAll('.tab-btn')[map[id]].classList.add('active');
-  window.scrollTo(0,0);
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
-// ════════════════════════ MODE ════════════════════════
-function setMode(m){
-  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.mode-btn')[m==='cards'?0:1].classList.add('active');
-  document.getElementById('mode-cards').style.display=m==='cards'?'block':'none';
-  document.getElementById('mode-match').style.display=m==='match'?'block':'none';
-  if(m==='match') startMatch();
+function prepareQuestions(rawQuestions, randomizeOrder){
+  let qs = rawQuestions.map(q => ({
+    question: q.question,
+    hint: q.hint,
+    sourceTopic: q.sourceTopic || null,
+    options: shuffle(q.answerOptions)
+  }));
+  if(randomizeOrder) qs = shuffle(qs);
+  return qs;
 }
 
-// ════════════════════════ FLASHCARDS ════════════════════════
-function renderCards(){
-  const grid=document.getElementById('fc-grid');
-  grid.innerHTML='';
-  const list=showUnknown?shuffled.filter(w=>!known.has(w.en)):shuffled;
-  if(!list.length){grid.innerHTML='<p style="color:var(--green);font-weight:700;direction:rtl">🎉 ידעת את כל המילים!</p>';return;}
-  list.forEach(w=>{
-    const k=known.has(w.en);
-    const d=document.createElement('div');
-    d.className='fc-wrap'+(k?' known':'');
-    d.innerHTML=`<div class="fc-inner"><div class="fc-face fc-front"><div class="fc-known-mark">${k?'✓ ידוע':''}</div><div class="fc-word">${w.en}</div><div class="fc-hint">tap to flip</div></div><div class="fc-face fc-back"><div class="fc-he">${w.he}</div><div class="fc-en-small">${w.en}</div></div></div>`;
-    d.addEventListener('click',()=>d.classList.toggle('flipped'));
-    d.addEventListener('dblclick',e=>{e.preventDefault();known.has(w.en)?known.delete(w.en):known.add(w.en);renderCards();});
-    grid.appendChild(d);
+function startTopicQuiz(topicIdx){
+  const topic = QUIZZES[topicIdx];
+  const questions = prepareQuestions(topic.questions, false);
+  state = {
+    mode: 'quiz',
+    quizTitle: topic.title,
+    isFull: false,
+    questions,
+    currentIndex: 0,
+    userAnswers: new Array(questions.length).fill(null),
+    hintsShown: new Array(questions.length).fill(false)
+  };
+  render();
+}
+
+function startFullQuiz(){
+  const all = [];
+  QUIZZES.forEach(topic => {
+    topic.questions.forEach(q => all.push(Object.assign({}, q, { sourceTopic: topic.title })));
   });
-  updateProg();
+  const questions = prepareQuestions(all, true);
+  state = {
+    mode: 'quiz',
+    quizTitle: 'Full Quiz — All Topics (Random Order)',
+    isFull: true,
+    questions,
+    currentIndex: 0,
+    userAnswers: new Array(questions.length).fill(null),
+    hintsShown: new Array(questions.length).fill(false)
+  };
+  render();
 }
-function updateProg(){
-  const p=Math.round(known.size/vocab.length*100);
-  document.getElementById('prog-fill').style.width=p+'%';
-  document.getElementById('prog-label').textContent=known.size+' / '+vocab.length+' ידועות';
-}
-function shuffleCards(){shuffled=[...shuffled].sort(()=>Math.random()-.5);document.querySelectorAll('.fc-wrap').forEach(w=>w.classList.remove('flipped'));renderCards();}
-function resetKnown(){known.clear();showUnknown=false;document.getElementById('unk-btn').textContent='👁 רק לא ידועות';renderCards();}
-function toggleUnknown(){showUnknown=!showUnknown;document.getElementById('unk-btn').textContent=showUnknown?'📚 הצג הכל':'👁 רק לא ידועות';renderCards();}
 
-// ════════════════════════ MATCHING ════════════════════════
-function batchSize(){return window.innerWidth<520?4:6;}
-function startMatch(){
-  const sh=[...vocab].sort(()=>Math.random()-.5);
-  const bs=batchSize(); batches=[];
-  for(let i=0;i<sh.length;i+=bs) batches.push(sh.slice(i,i+bs));
-  batchIdx=0; totalDone=0; selEn=null; selHe=null;
-  document.getElementById('match-win').classList.remove('show');
-  renderBatch();
+function goHome(){
+  state = { mode: 'home' };
+  render();
 }
-function renderBatch(){
-  const b=batches[batchIdx];
-  document.getElementById('match-round-lbl').textContent='Round '+(batchIdx+1)+' of '+batches.length;
-  document.getElementById('match-score').textContent=totalDone+' pairs matched ✓';
-  updateMatchProg();
-  const ec=document.getElementById('match-en-col'), hc=document.getElementById('match-he-col');
-  ec.innerHTML=''; hc.innerHTML='';
-  const hs=[...b].sort(()=>Math.random()-.5);
-  b.forEach(w=>{
-    const el=document.createElement('div');
-    el.className='match-item match-en'; el.dataset.w=w.en; el.textContent=w.en;
-    el.addEventListener('click',()=>pickEn(el,w.en)); ec.appendChild(el);
-  });
-  hs.forEach(w=>{
-    const el=document.createElement('div');
-    el.className='match-item match-he'; el.dataset.w=w.en; el.textContent=w.he;
-    el.addEventListener('click',()=>pickHe(el,w.en)); hc.appendChild(el);
-  });
+
+function selectAnswer(optIdx){
+  if(state.userAnswers[state.currentIndex] !== null) return;
+  state.userAnswers[state.currentIndex] = optIdx;
+  render();
 }
-function updateMatchProg(){
-  document.getElementById('match-prog-fill').style.width=Math.round(totalDone/vocab.length*100)+'%';
-  document.getElementById('match-prog-txt').textContent=totalDone+' / '+vocab.length;
+
+function toggleHint(){
+  state.hintsShown[state.currentIndex] = !state.hintsShown[state.currentIndex];
+  render();
 }
-function pickEn(el,w){
-  if(el.classList.contains('matched')) return;
-  document.querySelectorAll('#match-en-col .match-item').forEach(e=>e.classList.remove('selected'));
-  el.classList.add('selected'); selEn={el,w};
-  if(selHe) check();
+
+function goPrev(){
+  if(state.currentIndex > 0){ state.currentIndex--; render(); }
 }
-function pickHe(el,w){
-  if(el.classList.contains('matched')) return;
-  document.querySelectorAll('#match-he-col .match-item').forEach(e=>e.classList.remove('selected'));
-  el.classList.add('selected'); selHe={el,w};
-  if(selEn) check();
+function goNext(){
+  if(state.currentIndex < state.questions.length - 1){ state.currentIndex++; render(); }
 }
-function check(){
-  const en=selEn, he=selHe; selEn=null; selHe=null;
-  if(en.w===he.w){
-    en.el.classList.remove('selected'); he.el.classList.remove('selected');
-    en.el.classList.add('matched'); he.el.classList.add('matched');
-    totalDone++;
-    document.getElementById('match-score').textContent=totalDone+' pairs matched ✓';
-    updateMatchProg();
-    const done=[...document.querySelectorAll('#match-en-col .matched')].length===batches[batchIdx].length;
-    if(done) setTimeout(()=>{batchIdx++;if(batchIdx>=batches.length)document.getElementById('match-win').classList.add('show');else renderBatch();},650);
-  } else {
-    en.el.classList.add('wrong'); he.el.classList.add('wrong');
-    setTimeout(()=>{en.el.classList.remove('wrong','selected');he.el.classList.remove('wrong','selected');},650);
+function finishQuiz(){
+  state.mode = 'summary';
+  render();
+}
+function retakeQuiz(){
+  if(state.isFull) startFullQuiz();
+  else {
+    const idx = QUIZZES.findIndex(t => t.title === state.quizTitle);
+    startTopicQuiz(idx);
   }
 }
 
-// ════════════════════════ TEXT ════════════════════════
-function renderParagraphs(){
-  const list=document.getElementById('para-list');
-  paragraphs.forEach((p,i)=>{
-    const div=document.createElement('div');
-    div.className='para-block';
-    const notes=p.notes.map(n=>`<div class="note-item"><div class="note-dot"></div><div class="note-texts"><div class="note-he">${n.he}</div><div class="note-en">${n.en}</div></div></div>`).join('');
-    div.innerHTML=`
-      <div class="para-trigger" id="pt${i}">
-        <div class="para-num-bubble">${p.num}</div>
-        <div class="para-info">
-          <div class="para-title-he">${p.title_he}</div>
-          <div class="para-title-en">${p.title_en}</div>
-          <span class="para-ref-tag">📍 ${p.ref}</span>
-        </div>
-        <span class="para-badge ${p.badge}">${p.bl}</span>
-        <span class="para-chevron">▼</span>
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.innerText = str;
+  return d.innerHTML;
+}
+
+function renderHome(){
+  const app = document.getElementById('app');
+  let cards = QUIZZES.map((t, i) => `
+    <div class="topic-card" onclick="startTopicQuiz(${i})">
+      <span class="icon">${TOPIC_ICONS[i % TOPIC_ICONS.length]}</span>
+      <h3>${escapeHtml(t.title)}</h3>
+      <span class="count">${t.questions.length} questions</span>
+    </div>
+  `).join('');
+
+  app.innerHTML = `
+    <header class="app-header">
+      <h1>Data Structures Course — Quizzes</h1>
+      <p>Pick a topic to practice, or take the full randomized quiz.</p>
+    </header>
+    <div class="topic-grid">${cards}</div>
+    <div class="full-quiz-card">
+      <div class="desc">
+        <h3>🎲 Full Quiz — All Topics</h3>
+        <p>All ${QUIZZES.reduce((s,t)=>s+t.questions.length,0)} questions from every topic, in random order.</p>
       </div>
-      <div class="para-body" id="pb${i}">
-        <div class="para-text-en"><span class="section-label">Original English text</span>${p.text_en}</div>
-        <div class="para-text-he"><span class="section-label">תרגום לעברית</span>${p.text_he}</div>
-        <div class="para-notes"><div class="para-notes-title">⭐ Important exam notes</div>${notes}</div>
-      </div>`;
-    div.querySelector('.para-trigger').addEventListener('click',function(){
-      const b=document.getElementById('pb'+i);
-      const o=b.classList.toggle('open');
-      this.classList.toggle('open',o);
-    });
-    list.appendChild(div);
-  });
+      <button class="btn" onclick="startFullQuiz()">Start Full Quiz</button>
+    </div>
+  `;
 }
 
-// ════════════════════════ QUIZ ════════════════════════
-function startQuiz(){
-  qOrder=[...questions].sort(()=>Math.random()-.5);
-  qIdx=0; qCorrect=0; qWrong=0;
-  document.getElementById('quiz-start').style.display='none';
-  document.getElementById('quiz-result').style.display='none';
-  document.getElementById('quiz-game').style.display='block';
-  document.getElementById('q-correct').textContent='0';
-  document.getElementById('q-wrong').textContent='0';
-  renderQ();
-}
-function renderQ(){
-  const q=qOrder[qIdx], total=qOrder.length;
-  document.getElementById('q-num-lbl').textContent='שאלה '+(qIdx+1)+' מתוך '+total;
-  document.getElementById('quiz-prog').style.width=Math.round(qIdx/total*100)+'%';
-  document.getElementById('quiz-q-text').textContent=q.q;
-  document.getElementById('quiz-fb').className='quiz-feedback';
-  document.getElementById('quiz-next').classList.remove('show');
-  const optDiv=document.getElementById('quiz-opts');
-  optDiv.innerHTML='';
-  const sh=[...q.opts].sort(()=>Math.random()-.5);
-  sh.forEach(opt=>{
-    const btn=document.createElement('button');
-    btn.className='quiz-opt'; btn.textContent=opt.t;
-    btn.addEventListener('click',()=>answerQ(opt.c,q.ex,btn,sh));
-    optDiv.appendChild(btn);
-  });
-}
-function answerQ(correct,ex,clicked,sh){
-  document.querySelectorAll('.quiz-opt').forEach((b,i)=>{b.disabled=true;if(sh[i].c) b.classList.add('correct');});
-  if(!correct) clicked.classList.add('wrong');
-  correct?qCorrect++:qWrong++;
-  document.getElementById('q-correct').textContent=qCorrect;
-  document.getElementById('q-wrong').textContent=qWrong;
-  const fb=document.getElementById('quiz-fb');
-  fb.className='quiz-feedback '+(correct?'correct':'wrong');
-  fb.innerHTML='<strong>'+(correct?'✓ נכון!':'✗ לא מדויק.')+'</strong> '+ex;
-  document.getElementById('quiz-next').classList.add('show');
-}
-function nextQ(){
-  qIdx++;
-  if(qIdx>=qOrder.length) showResult();
-  else renderQ();
-}
-function showResult(){
-  document.getElementById('quiz-game').style.display='none';
-  const r=document.getElementById('quiz-result');
-  r.style.display='block';
-  const pct=qCorrect/qOrder.length;
-  document.getElementById('res-score').textContent=qCorrect+'/'+qOrder.length;
-  let stars,msg,sub;
-  if(pct>=.9){stars='⭐⭐⭐';msg='מצוין! אתה מוכן לבחינה!';sub='תוצאה מדהימה — כל הכבוד!';}
-  else if(pct>=.7){stars='⭐⭐';msg='טוב מאוד! עוד קצת ואתה מושלם!';sub='חזור על הפסקאות שבהן טעית ונסה שוב.';}
-  else{stars='⭐';msg='ממשיכים להתאמן!';sub='קרא שוב את הטקסט המוסבר ונסה שוב!';}
-  document.getElementById('res-stars').textContent=stars;
-  document.getElementById('res-msg').textContent=msg;
-  document.getElementById('res-sub').textContent=sub;
-}
-function restartQuiz(){document.getElementById('quiz-result').style.display='none';document.getElementById('quiz-start').style.display='block';}
+function renderQuiz(){
+  const app = document.getElementById('app');
+  const total = state.questions.length;
+  const idx = state.currentIndex;
+  const q = state.questions[idx];
+  const answered = state.userAnswers[idx];
+  const pct = ((idx + 1) / total) * 100;
 
-// ════════════════════════ INIT ════════════════════════
-renderCards();
-renderParagraphs();
+  const letters = ['A','B','C','D','E','F'];
+  let optionsHtml = q.options.map((opt, i) => {
+    let cls = 'option';
+    let disabled = '';
+    if(answered !== null){
+      disabled = 'disabled';
+      if(opt.isCorrect) cls += ' correct';
+      else if(i === answered) cls += ' wrong';
+    }
+    return `
+      <button class="${cls}" ${disabled} onclick="selectAnswer(${i})">
+        <span class="letter">${letters[i] || (i+1)}</span>
+        <span>${opt.text}</span>
+      </button>
+    `;
+  }).join('');
+
+  let feedbackHtml = '';
+  if(answered !== null){
+    const chosen = q.options[answered];
+    if(chosen.isCorrect){
+      feedbackHtml = `
+        <div class="explanation correct-fb">
+          <span class="label">✅ Correct!</span>
+          ${chosen.rationale || ''}
+        </div>`;
+    } else {
+      const correctOpt = q.options.find(o => o.isCorrect);
+      feedbackHtml = `
+        <div class="explanation wrong-fb">
+          <span class="label">❌ Not quite</span>
+          ${chosen.rationale || ''}
+          <div class="also-correct"><strong>Correct answer:</strong> ${correctOpt.text} — ${correctOpt.rationale || ''}</div>
+        </div>`;
+    }
+  }
+
+  const hintHtml = q.hint ? `
+    <div class="hint-row">
+      <button class="hint-btn" onclick="toggleHint()">${state.hintsShown[idx] ? 'Hide hint' : '💡 Show hint'}</button>
+      ${state.hintsShown[idx] ? `<div class="hint-box">${q.hint}</div>` : ''}
+    </div>` : '';
+
+  const sourceTag = q.sourceTopic ? `<span class="source-tag">${escapeHtml(q.sourceTopic)}</span><br/>` : '';
+
+  const isLast = idx === total - 1;
+  const nextBtn = isLast
+    ? `<button class="btn" onclick="finishQuiz()">Finish Quiz</button>`
+    : `<button class="btn secondary" onclick="goNext()">Next →</button>`;
+
+  app.innerHTML = `
+    <div class="topbar">
+      <button class="btn secondary" onclick="goHome()">← Topics</button>
+    </div>
+    <div class="quiz-header">
+      <h2>${escapeHtml(state.quizTitle)}</h2>
+      <span class="meta">Question ${idx + 1} of ${total}</span>
+    </div>
+    <div class="progress-bar"><div style="width:${pct}%"></div></div>
+    <div class="question-card">
+      ${sourceTag}
+      <p class="question-text">${q.question}</p>
+      ${hintHtml}
+      <div class="options">${optionsHtml}</div>
+      ${feedbackHtml}
+    </div>
+    <div class="nav-row">
+      <div class="left-group">
+        <button class="btn secondary" onclick="goPrev()" ${idx === 0 ? 'disabled' : ''}>← Previous</button>
+      </div>
+      <div class="right-group">${nextBtn}</div>
+    </div>
+  `;
+
+  if(window.MathJax && window.MathJax.typesetPromise){
+    window.MathJax.typesetPromise([app]).catch(()=>{});
+  }
+}
+
+function renderSummary(){
+  const app = document.getElementById('app');
+  const total = state.questions.length;
+  let correct = 0;
+  state.userAnswers.forEach((ans, i) => {
+    if(ans !== null && state.questions[i].options[ans].isCorrect) correct++;
+  });
+  const unanswered = state.userAnswers.filter(a => a === null).length;
+  const pct = Math.round((correct / total) * 100);
+
+  app.innerHTML = `
+    <div class="topbar">
+      <button class="btn secondary" onclick="goHome()">← Topics</button>
+    </div>
+    <div class="summary-card">
+      <div style="font-size:15px;color:var(--muted)">${escapeHtml(state.quizTitle)}</div>
+      <div class="summary-score">${correct} / ${total}</div>
+      <p>${pct}% correct${unanswered ? ` · ${unanswered} unanswered` : ''}</p>
+      <div class="summary-actions">
+        <button class="btn" onclick="retakeQuiz()">🔁 Retake Quiz</button>
+        <button class="btn secondary" onclick="goHome()">Back to Topics</button>
+      </div>
+    </div>
+  `;
+}
+
+function render(){
+  if(state.mode === 'home') renderHome();
+  else if(state.mode === 'quiz') renderQuiz();
+  else if(state.mode === 'summary') renderSummary();
+}
+
+render();
 </script>
 </body>
 </html>
